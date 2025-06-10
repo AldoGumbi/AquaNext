@@ -1,0 +1,20 @@
+
+services:
+  sharkids-db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+      - ./my.cnf:/etc/mysql/conf.d/custom.cnf
+      - persistent:/var/lib/mysql
+    networks:
+      - sharkids-net
+    restart: unless-stopped
+volumes:
+  persistent:
+networks:
+  sharkids-net:
+    external: true
