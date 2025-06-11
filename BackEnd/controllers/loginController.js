@@ -27,7 +27,7 @@ export const signIn = async (req, res) => {
 
 		// (5) If the user is not found, return an error
 		if(user.length === 0) {
-			return res.status(404).json({
+			return res.status(401).json({
 				data: false,
 				message: 'Usuario no encontrado'
 			});

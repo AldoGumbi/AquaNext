@@ -2,14 +2,15 @@
 import { Navigate, useLocation, useOutlet } from "react-router";
 
 // Local Imports
-import { useAuthContext } from "app/contexts/auth/context";
 import { GHOST_ENTRY_PATH, REDIRECT_URL_KEY } from "../constants/app.constant";
 
+import { useSelector } from 'react-redux';
 // ----------------------------------------------------------------------
 
 export default function AuthGuard() {
   const outlet = useOutlet();
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
 
   const location = useLocation();
 

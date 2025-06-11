@@ -10,18 +10,18 @@ export const dashboards = {
     id: 'dashboards',
     type: NAV_TYPE_ROOT,
     path: '/dashboards',
-    title: 'Dashboards',
-    transKey: 'nav.dashboards.dashboards',
+    title: 'Dashboard',
+    // transKey: 'nav.dashboards.dashboards',
     Icon: DashboardsIcon,
     childs: [
         {
             id: 'dashboards.home',
             path: path(ROOT_DASHBOARDS, '/home'),
             type: NAV_TYPE_ITEM,
-            title: 'Home',
-            transKey: 'nav.dashboards.home',
+            title: 'Inicio',
+            // transKey: 'nav.dashboards.home',
             Icon: HomeIcon,
-        },
+        }
 
     ]
 }

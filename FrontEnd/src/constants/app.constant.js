@@ -1,9 +1,9 @@
-export const APP_NAME = "Tailux";
-export const APP_KEY = "tailux";
+export const APP_NAME = "Sharkids";
+export const APP_KEY = "sharkids";
 
 // Redirect Paths
 export const REDIRECT_URL_KEY = "redirect";
-export const HOME_PATH = "/"
+export const HOME_PATH = "/dashboards/home"
 export const GHOST_ENTRY_PATH = "/login"
 
 // Navigation Types

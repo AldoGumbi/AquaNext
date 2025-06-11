@@ -52,13 +52,13 @@ axios.interceptors.response.use(
 		let message;
 		switch (error.response?.status) {
 			case 500:
-				message = "Internal Server Error";
+				message = "Error interno del servidor";
 				break;
 			case 401:
-				message = "Invalid credentials";
+				message = "Credenciales inválidas o expiradas";
 				break;
 			case 404:
-				message = "Sorry! the data you are looking for could not be found";
+				message = "No se encontró el recurso solicitado";
 				break;
 			default:
 				message = error.message || error;
@@ -66,7 +66,9 @@ axios.interceptors.response.use(
 		return Promise.reject({
 			status: error.response?.status || 500,
 			message: message,
-			data: error.response?.data || null
+			API_message: error.response?.data?.message || null,
+      API_error: error.response?.data?.error || null,
+      API: error.response?.data || null
 		});
 	}
 );

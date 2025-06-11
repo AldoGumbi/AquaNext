@@ -1,5 +1,5 @@
 // Import Dependencies
-import { Link } from "react-router";
+// import { Link } from "react-router";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -7,31 +7,41 @@ import { useForm } from "react-hook-form";
 // Local Imports
 import Logo from "assets/appLogo.svg?react";
 import { Button, Card, Checkbox, Input, InputErrorMsg } from "components/ui";
-import { useAuthContext } from "app/contexts/auth/context";
+// import { useAuthContext } from "app/contexts/auth/context";
 import { schema } from "./schema";
 import { Page } from "components/shared/Page";
+
+// redux imports
+import {  useSelector, useDispatch } from "react-redux";
+import { signInThunk } from "slices/thunk.js"
 
 // ----------------------------------------------------------------------
 
 export default function SignIn() {
-  const { login, errorMessage } = useAuthContext();
+  // Redux hooks
+  const dispatch = useDispatch();
+  const { isAuthenticated, error_message } = useSelector(
+    (state) => state.auth
+  );
+  console.log(isAuthenticated);
+
+  // const { login, error_message } = useAuthContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: {
-      username: "username",
-      password: "password",
-    },
+    // defaultValues: {
+    //   username: "username",
+    //   password: "password",
+    // },
   });
 
+
+  // event handler for form submission
   const onSubmit = (data) => {
-    login({
-      username: data.username,
-      password: data.password,
-    });
+    dispatch(signInThunk(data));
   };
 
   return (
@@ -81,9 +91,9 @@ export default function SignIn() {
 
               <div className="mt-2">
                 <InputErrorMsg
-                  when={errorMessage && errorMessage?.message !== ""}
+                  when={error_message && error_message?.message !== ""}
                 >
-                  {errorMessage?.message}
+                  {error_message?.message}
                 </InputErrorMsg>
               </div>
 
@@ -101,40 +111,7 @@ export default function SignIn() {
                 Sign In
               </Button>
             </form>
-            <div className="mt-4 text-center text-xs-plus">
-              <p className="line-clamp-1">
-                <span>Dont have Account?</span>{" "}
-                <Link
-                  className="text-primary-600 transition-colors hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-600"
-                  to="/pages/sign-up-v1"
-                >
-                  Create account
-                </Link>
-              </p>
-            </div>
-            <div className="my-7 flex items-center space-x-3 text-xs ">
-              <div className="h-px flex-1 bg-gray-200 dark:bg-dark-500"></div>
-              <p>OR</p>
-              <div className="h-px flex-1 bg-gray-200 dark:bg-dark-500"></div>
-            </div>
-            <div className="flex gap-4">
-              <Button className="h-10 flex-1 gap-3" variant="outlined">
-                <img
-                  className="size-5.5"
-                  src="/images/logos/google.svg"
-                  alt="logo"
-                />
-                <span>Google</span>
-              </Button>
-              <Button className="h-10 flex-1 gap-3" variant="outlined">
-                <img
-                  className="size-5.5"
-                  src="/images/logos/github.svg"
-                  alt="logo"
-                />
-                <span>Github</span>
-              </Button>
-            </div>
+
           </Card>
           <div className="mt-8 flex justify-center text-xs text-gray-400 dark:text-dark-300">
             <a href="##">Privacy Notice</a>

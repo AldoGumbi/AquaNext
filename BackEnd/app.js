@@ -19,7 +19,7 @@ app.use(cors());
 
 
 // Routes
-app.use('/login', login);
+app.use('/auth', login);
 
 // 6. Manejo de errores (Mejorado)
 app.use((req, res, next) => {

@@ -1,13 +1,15 @@
-import { combineReducers } from 'redux';
+import {
+  combineReducers
+} from 'redux';
 
-// productos
-import productosReducer from './products/reducer.js';
-import basketReducer from './basket/reducer.js';
+// Reducers
+import authSlicer from './login/reducer.js';
 
+// Combine all reducers
 const rootReducer = combineReducers({
-	products: productosReducer,
+	// Authentication
+  auth: authSlicer,
 });
 
-
-
+// Export the combined reducer
 export default rootReducer;
