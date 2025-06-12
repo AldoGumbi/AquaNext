@@ -4,8 +4,13 @@ import express from 'express';
 
 import cors from 'cors';
 
-// Importar rutas
+// (1) Importar rutas
+//AUTH
 import login from './routes/loginRouter.js';
+// SALE POINT
+import products from "./routes/products.js";
+import baskets from "./routes/basket.js";
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -20,6 +25,8 @@ app.use(cors());
 
 // Routes
 app.use('/auth', login);
+app.use('/products', products);
+app.use('/baskets', baskets);
 
 // 6. Manejo de errores (Mejorado)
 app.use((req, res, next) => {

@@ -1,9 +1,9 @@
 import { dashboards } from "./dashboards";
-import { pointSale } from "./pointSale";
+import { salePoint } from "./SalePoint.js";
+
 export const navigation = [
-    dashboards,
-    pointSale
+  dashboards,
+  salePoint
+];
 
-]
-
-export { baseNavigation } from './baseNavigation'
+export { baseNavigation } from "./baseNavigation";

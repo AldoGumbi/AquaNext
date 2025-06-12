@@ -9,4 +9,17 @@ const api = new APIClient();
 // AUTHENTICATION
 export const sign_in = (data) => api.create(url.SIGN_IN_REQUEST, data);
 
+// PRODUCTS CRUD
+export const addProduct = (data) => api.create(url.ADD_PRODUCT, data);
+export const getProducts = (data) => api.get(url.GET_PRODUCTS, data);
+export const editAllProducts = (id, data) => api.put(`${url.EDIT_ALL_PRODUCTS}/${id}`, data);
+export const deleteProduct = (id) => api.update(`${url.DELETE_PRODUCT}/${id}`);
 
+// BASKET CRUD
+export const createBasket = (data) => api.create(url.CREATE_BASKET, data);
+export const getBasket = (id) => api.get(`${url.GET_BASKET}/${id}`);
+export const updateBasket = (id, data) => api.put(`${url.UPDATE_BASKET}/${id}`, data);
+export const deleteBasket = (id) => api.delete(`${url.DELETE_BASKET}/${id}`);
+export const allBaskets = () => api.get(url.ALL_BASKETS);
+export const insertBasketItems = (data) => api.create(`${url.INSERT_BASKET_ITEM}`, data);
+export const deleteBasketItem = (id) => api.delete(`${url.DELETE_BASKET_ITEM}/${id}`);

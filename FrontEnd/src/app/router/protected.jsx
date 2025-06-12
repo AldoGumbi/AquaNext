@@ -37,6 +37,30 @@ const protectedRoutes = {
         },
       ],
     },
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/sale-point" />,
+        },
+        {
+          path: "sale-point",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/dashboards/home" />,
+            },
+            {
+              path: "home",
+              lazy: async () => ({
+                Component: (await import("app/pages/sale-point/home")).default,
+              }),
+            },
+          ],
+        },
+      ],
+    },
     // The app layout supports only the main layout. Avoid using it for other layouts.
     {
       Component: AppLayout,

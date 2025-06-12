@@ -8,14 +8,14 @@ import { Store } from 'lucide-react';
 
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM, NAV_TYPE_COLLAPSE } from 'constants/app.constant'
 
-const ROOT_POINT_SALE = '/point-sale';
+const ROOT_POINT_SALE = '/sale-point';
 
 const path = (root, item) => `${root}${item}`;
 
-export const pointSale = {
-  id: 'pointSale',
+export const salePoint = {
+  id: 'salePoint',
   type: NAV_TYPE_ROOT,
-  path: '/point-sale',
+  path: '/sale-point',
   title: 'Punto de Venta',
   // transKey: 'nav.dashboards.dashboards',
   Icon: Store,
