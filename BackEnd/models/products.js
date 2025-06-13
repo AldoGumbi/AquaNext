@@ -21,7 +21,7 @@ class productsModel {
 		INSERT INTO productos (sku, nombre, descripcion, categoria, precio_venta, costo, imagen)
 		VALUES (?, ?, ?,?, ?, ?,? )
 		`, [product.sku, product.nombre, product.descripcion
-		, product.categoria, product.precio_venta, product.costo, product.img]);
+		, product.categoria, product.precio_venta, product.costo, product.imagen]);
 		return result.insertId;
 	}
 
@@ -47,6 +47,14 @@ class productsModel {
 		UPDATE productos SET borrado = 1 WHERE id = ? AND borrado = 0
 		`, [id]);
 		return result.affectedRows > 0;
+	}
+
+	// Verificar si el SKU ya existe
+	static async skuAvailability(sku) {
+		const [result] = await db.query(`
+		SELECT COUNT(*) as count FROM productos WHERE sku = ? AND borrado = 0
+		`, [sku]);
+		return result[0].count > 0;
 	}
 }
 export default productsModel;

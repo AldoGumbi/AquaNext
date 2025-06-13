@@ -10,16 +10,18 @@ export const insertProduct = async (req, res) => {
 			})
 		}
 
-		const { sku ,name, price, is_available, category, cost } = req.body.general;
+		const { sku ,name, price, is_available, category_id, cost } = req.body.general;
 		const { description } = req.body.description;
 		const { cover } = req.body.images;
 
 		if(name.length < 1 || name === undefined || name === null) {
 			return res.status(400).json({
 				data: false,
-				message: 'Name is required'
+				message: 'El nombre es obligatorio para crear un producto.'
 			});
 		}
+
+		console.log(req.body.images);
 
 		const newProduct = {
 			sku : sku,
@@ -27,7 +29,7 @@ export const insertProduct = async (req, res) => {
 			descripcion : description,
 			precio_venta : price,
 			activo : is_available,
-			categoria : category,
+			categoria : category_id,
 			costo : cost,
 			imagen : cover
 		};
@@ -40,6 +42,15 @@ export const insertProduct = async (req, res) => {
 		});
 
 	} catch (error) {
+		// error de duplicado de unique colum de sql
+		if(error.code === 'ER_DUP_ENTRY') {
+			return res.status(400).json({
+				data: false,
+				message: 'El SKU del producto ya existe, por favor utiliza otro.',
+				code : error.errno
+			});
+		}
+		console.log(error);
 		res.status(500).json({
 			data:false,
 			message: 'Ocurrio un error al crear el producto!',
@@ -144,6 +155,39 @@ export const deleteProduct = async (req, res) => {
 			data:false,
 			message: 'Error interno al borrar el producto',
 			error : error.message
+		});
+	}
+}
+
+export const checkSkuAvailability = async (req, res) => {
+	try {
+		const { sku } = req.params;
+
+		if (!sku || sku.trim() === '') {
+			return res.status(400).json({
+				data: false,
+				message: 'El SKU es necesario para verificar su disponibilidad.'
+			});
+		}
+
+		const isAvailable = await productsModel.skuAvailability(sku);
+
+		if (!isAvailable) {
+			return res.status(200).json({
+				data: true,
+				message: 'El SKU está disponible.'
+			});
+		} else {
+			return res.status(409).json({
+				data: false,
+				message: 'El SKU ya está en uso.'
+			});
+		}
+	} catch (error) {
+		res.status(500).json({
+			data: false,
+			message: 'Error interno al verificar la disponibilidad del SKU.',
+			error: error.message
 		});
 	}
 }

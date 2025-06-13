@@ -161,7 +161,7 @@ export function ProductModal({isOpen, onClose, rowData }) {
 
 							<div className="flex flex-col overflow-y-auto px-4 py-4 sm:px-5">
 								<p>
-									Para agregar un producto a la venta, es necesario preguntarle al cliente lo siguiente:
+									Para agregar un producto a la canasta, por favor ingresa la cantidad deseada y cualquier comentario adicional que desees incluir. Asegúrate de que la cantidad sea un número válido entre 1 y 100.
 								</p>
 								<div className="mt-4 space-y-5">
 									<Input
@@ -170,14 +170,14 @@ export function ProductModal({isOpen, onClose, rowData }) {
 										min="0"
 										max="100"
 										name="quantity"
-										placeholder="Total de Tacos : 4"
+										placeholder="Total de googles : 4"
 										defaultValue={formData.quantity || 1}
 										error={errors.quantity}
 									>
 
 									</Input>
 									<Textarea
-										placeholder="Ejemplo: Sin cebolla cruda, pero agregar cebolla dorada."
+										placeholder="Ejemplo: Venta de googles para el agua amarillo"
 										label="Commentarios"
 										rows="4"
 										defaultValue={formData.comment || ''}

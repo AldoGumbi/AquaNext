@@ -42,21 +42,46 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to="/sale-point" />,
+          element: <Navigate to="/sale-point/home" />,
         },
         {
           path: "sale-point",
           children: [
-            {
-              index: true,
-              element: <Navigate to="/dashboards/home" />,
-            },
+            // POS VIEW
             {
               path: "home",
               lazy: async () => ({
-                Component: (await import("app/pages/sale-point/home")).default,
+                Component: (await import("app/pages/sale-point/pos")).default,
               }),
             },
+            // SALES TABLE
+            {
+              path: "sales",
+              lazy: async () => ({
+                Component: (await import("app/pages/sale-point/sales-table")).default,
+              }),
+            },
+            // PRODUCTS - This is a collapse item
+            {
+              path: "products",
+              children: [
+                //ADD NEW PRODUCT
+                {
+                  path: "add-new",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/Products/new-product")).default,
+                  }),
+                },
+                // ALL PRODUCTS
+                {
+                  path: "inventory",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/Products/all-products")).default,
+                  }),
+                },
+
+              ],
+            }
           ],
         },
       ],

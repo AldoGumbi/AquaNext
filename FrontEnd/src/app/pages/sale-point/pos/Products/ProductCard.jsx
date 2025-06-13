@@ -12,6 +12,24 @@ import { useState } from "react";
 
 export function ProductCard({ imagen, nombre, categoria, precio_venta, id }) {
 
+  let cat = '';
+  switch (categoria) {
+    case 'cafeteria':
+      cat = 'Cafetería';
+      break;
+    case 'articulo_deportivo':
+      cat = 'Artículos deportivos';
+      break;
+    case 'accesorios':
+      cat = 'Accesorios';
+      break;
+    case 'otros':
+      cat = 'Otros';
+      break;
+    default:
+      cat = 'INDEFINIDO';
+  }
+
   let img_composted = imagen || "/images/800x600.png";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +46,7 @@ export function ProductCard({ imagen, nombre, categoria, precio_venta, id }) {
             {nombre}
           </p>
           <p className="dark:text-dark-300 truncate text-xs text-gray-400">
-            {categoria}
+            {cat}
           </p>
           <p className="text-primary-600 dark:text-primary-400 text-end font-medium">
             ${precio_venta}

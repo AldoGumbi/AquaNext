@@ -5,8 +5,11 @@ import {
 import { Store } from 'lucide-react';
 
 
-
-import { NAV_TYPE_ROOT, NAV_TYPE_ITEM, NAV_TYPE_COLLAPSE } from 'constants/app.constant'
+import {
+  NAV_TYPE_ROOT,
+  NAV_TYPE_ITEM,
+  NAV_TYPE_COLLAPSE
+} from 'constants/app.constant'
 
 const ROOT_POINT_SALE = '/sale-point';
 
@@ -17,71 +20,78 @@ export const salePoint = {
   type: NAV_TYPE_ROOT,
   path: '/sale-point',
   title: 'Punto de Venta',
-  // transKey: 'nav.dashboards.dashboards',
-  Icon: Store,
+  Icon: Store ,
   childs: [
+    // POS VIEW
     {
-      id: 'pointSale.home',
+      id: 'salePoint.home',
       path: path(ROOT_POINT_SALE, '/home'),
       type: NAV_TYPE_ITEM,
       title: 'Inicio',
       Icon: HomeIcon,
     },
+    // SALES TABLE
     {
-      id: 'pointSale.sales',
-      path: path(ROOT_POINT_SALE, '/home'),
+      id: 'salePoint.sales',
+      path: path(ROOT_POINT_SALE, '/sales'),
       type: NAV_TYPE_ITEM,
       title: 'Ventas',
       Icon: HomeIcon,
     },
+    // PRODUCTS
     {
-      id: 'pointSale.products',
-      path: path(ROOT_POINT_SALE, '/onboarding'),
+      id: 'salePoint.products',
+      path: path(ROOT_POINT_SALE, '/products'),
       type: NAV_TYPE_COLLAPSE,
       title: 'Productos',
       Icon: Store,
       childs: [
+        // ADD NEW PRODUCT
         {
-          id: 'pointSale.newProduct',
+          id: 'salePoint.newProduct',
           type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
+          path: path(ROOT_POINT_SALE, '/products/add-new'),
           title: 'Registrar producto',
           Icon: 'prototypes'
         },
+        // ALL PRODUCTS
         {
-          id: 'pointSale.allProducts',
+          id: 'salePoint.allProducts',
           type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
+          path: path(ROOT_POINT_SALE, '/products/inventory'),
           title: 'Inventario',
           Icon: 'prototypes'
         },
       ]
     },
-    {
-      id: 'pointSale.cashRegister',
-      path: path(ROOT_POINT_SALE, '/onboarding'),
-      type: NAV_TYPE_COLLAPSE,
-      title: 'Caja',
-      Icon: Store,
-      childs: [
-        {
-          id: 'pointSale.cashRegisterActions',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
-          title: 'Inicio',
-          Icon: 'prototypes'
-        },
-        {
-          id: 'pointSale.cashRegisterHistory',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
-          title: 'Historial de cajas',
-          Icon: 'prototypes'
-        },
-
-
-      ]
-    },
+    // // CASH REGISTER
+    // {
+    //   id: 'salePoint.cashRegister',
+    //   path: path(ROOT_POINT_SALE, '/onboarding'),
+    //   type: NAV_TYPE_COLLAPSE,
+    //   title: 'Caja',
+    //   Icon: Store,
+    //   childs: [
+    //     // OPEN CASH REGISTER
+    //     {
+    //       id: 'salePoint.cashRegisterActions',
+    //       type: NAV_TYPE_ITEM,
+    //       path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
+    //       title: 'Inicio',
+    //       Icon: 'prototypes'
+    //     },
+    //     // CASH REGISTER HISTORY
+    //     {
+    //       id: 'salePoint.cashRegisterHistory',
+    //       type: NAV_TYPE_ITEM,
+    //       path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
+    //       title: 'Historial de cajas',
+    //       Icon: 'prototypes'
+    //     },
+    //
+    //
+    //   ]
+    // },
 
   ]
 }

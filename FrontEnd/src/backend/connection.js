@@ -14,6 +14,7 @@ export const addProduct = (data) => api.create(url.ADD_PRODUCT, data);
 export const getProducts = (data) => api.get(url.GET_PRODUCTS, data);
 export const editAllProducts = (id, data) => api.put(`${url.EDIT_ALL_PRODUCTS}/${id}`, data);
 export const deleteProduct = (id) => api.update(`${url.DELETE_PRODUCT}/${id}`);
+export const skuCheckAvailability = (sku) => api.get(`${url.SKU_CHECK_AVAILABILITY}/${sku}`);
 
 // BASKET CRUD
 export const createBasket = (data) => api.create(url.CREATE_BASKET, data);

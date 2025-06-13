@@ -4,7 +4,8 @@ import {
 	addProduct,
 	getProducts,
 	editAllProducts,
-	deleteProduct
+	deleteProduct,
+  skuCheckAvailability
 } from "../../backend/connection.js";
 
 // Create an async thunk for adding a product
@@ -53,4 +54,15 @@ export const deleteProductThunk =
 			return rejectWithValue({ error });
 		}
 	}
+);
+
+// Check SKU availability
+export const skuCheckAvailabilityThunk =
+  createAsyncThunk("products/checkSkuAvailable", async (sku, { rejectWithValue }) => {
+    try {
+      return await skuCheckAvailability(sku);
+    } catch (error) {
+      return rejectWithValue({ error });
+    }
+  }
 );

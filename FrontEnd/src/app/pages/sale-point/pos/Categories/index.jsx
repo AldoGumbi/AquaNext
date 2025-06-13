@@ -14,29 +14,25 @@ import { useIsomorphicEffect } from "hooks";
 const items = [
   {
     uid: "1",
-    name: "Comida",
-    image: "/images/comida.png",
+    name: "Cafeteria",
+    image: "/images/800x800.png",
   },
   {
     uid: "2",
-    name: "Bebidas",
-    image: "/images/drinks.png",
+    name: "Articulos Deportivos",
+    image: "/images/800x800.png",
   },
   {
     uid: "3",
-    name: "Postres",
-    image: "/images/dessert.png",
+    name: "Accesorios",
+    image: "/images/800x800.png",
   },
   {
     uid: "4",
     name: "Otros",
-    image: "/images/others.png",
+    image: "/images/800x800.png",
   },
-  {
-    uid: "5",
-    name: "Tacos",
-    image: "/images/tacos.png",
-  },
+
 
 ];
 

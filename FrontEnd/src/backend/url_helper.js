@@ -13,7 +13,7 @@ export const ADD_PRODUCT = '/products/add';
 export const GET_PRODUCTS = '/products/all-products';
 export const EDIT_ALL_PRODUCTS = '/products/update-product';
 export const DELETE_PRODUCT = '/products/delete-product';
-
+export const SKU_CHECK_AVAILABILITY = '/products/checkSkuAvailable';
 
 // Baskets
 const BASE_BASKET_URL = '/baskets';
