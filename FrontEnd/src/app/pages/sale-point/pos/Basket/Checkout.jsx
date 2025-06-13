@@ -20,6 +20,7 @@ export function Checkout() {
   const [subtotal, setSubTotal] = useState(0);
   const [iva, setIva] = useState(0);
   const [total, setTotal] = useState(0);
+  console.log(basket_items);
 
   useEffect(() => {
     const t = basket_items?.reduce((total, item) => total + (item.price * item.quantity), 0) || 0;

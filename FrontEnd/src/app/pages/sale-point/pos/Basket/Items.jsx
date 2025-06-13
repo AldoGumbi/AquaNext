@@ -46,27 +46,27 @@ export function Items() {
               <div className="flex min-w-0 items-center gap-4">
                 <div className="relative flex shrink-0">
                   <img
-                    src={item.img || '/placeholder-product.png'}
+                    src={item.imagen || '/placeholder-product.png'}
                     className="mask is-star size-11 origin-center object-cover"
-                    alt={item.name}
+                    alt={item.nombre}
                     onError={(e) => {
                       e.currentTarget.src = '/placeholder-product.png';
                     }}
                   />
                   <div className="absolute right-0 top-0 -m-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border border-white bg-gray-200 px-1 text-tiny-plus font-medium leading-none text-gray-800 dark:border-dark-700 dark:bg-dark-450 dark:text-white">
-                    {item.quantity}
+                    {item.cantidad}
                   </div>
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1">
                     <p className="truncate font-medium text-gray-800 dark:text-dark-100">
-                      {item.name}
+                      {item.nombre}
                     </p>
                     <Button
                       isIcon
                       variant="flat"
                       className="size-6 rounded-full opacity-0 group-hover:opacity-100"
-                      aria-label={`Editar ${item.name}`}
+                      aria-label={`Editar ${item.nombre}`}
                     >
                       <PencilSquareIcon
                         className="size-4"
@@ -75,12 +75,12 @@ export function Items() {
                     </Button>
                   </div>
                   <p className="truncate text-xs-plus text-gray-400 dark:text-dark-300">
-                    {item.comment || 'Sin comentario'}
+                    {item.comentario || 'Sin comentario'}
                   </p>
                 </div>
               </div>
               <p className="font-semibold">
-                {item.price ? item.price : '$0.00'}
+                {item.precio_venta ? item.precio_venta : '$0.00'}
               </p>
             </div>
           ))

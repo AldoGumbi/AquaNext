@@ -34,6 +34,7 @@ export const getBasket = async (req, res) => {
 				message: 'No se encontró el carrito.',
 			});
 		}
+		console.log(basket);
 
 		res.status(200).json({
 			data: basket,
@@ -165,6 +166,8 @@ export const insertBasketItems = async (req, res) => {
 			comment
 		}
 
+
+		console.log(items);
 		const newItem = await basketModel.insertItemsBasket(basketId, items);
 
 		if (!newItem) {
