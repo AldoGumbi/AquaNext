@@ -1,48 +1,58 @@
-import { createSlice } from '@reduxjs/toolkit';
-import {
-  signInThunk,
-} from './thunk.js';
-
-import { setAuthorization } from "backend/api_model.js";
-
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
-  loading: false,
-  error: false,
-  error_message: "",
-  isAuthenticated: false,
-}
+    isAuthenticated: false,
+    isLoading: false,
+    isInitialized: false,
+    errorMessage: null,
+    user: null,
+    success: false,
+    isUserLogout: false
+};
 
+const loginSlice = createSlice({
+    name: "login",
+    initialState,
+    reducers: {
+        initialize(state, action) {
+            const { isAuthenticated, user } = action.payload;
+            state.isAuthenticated = isAuthenticated;
+            state.isInitialized = true;
+            state.user = user;
+        },
+        loginRequest(state) {
+            state.isLoading = true;
+            state.errorMessage = null;
+        },
+        loginSuccess(state, action) {
+            state.user = action.payload;
+            state.success = true;
+            state.isAuthenticated = true;
+            state.isLoading = false;
+            state.errorMessage = null;
+        },
+        loginError(state, action) {
+            state.errorMessage = action.payload;
+            state.success = false;
+            state.isLoading = false;
+            state.isAuthenticated = false;
+        },
+        logoutSuccess(state, action) {
+            state.isUserLogout = action.payload;
+            state.isAuthenticated = false;
+            state.user = null;
+            state.success = false;
+            state.errorMessage = null;
+        }
+    },
+});
 
-const authSlicer = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    // SIGN IN
-    builder.addCase(signInThunk.fulfilled, (state, action) => {
-        state.loading = false;
+export const { 
+    initialize, 
+    loginRequest, 
+    loginSuccess, 
+    loginError, 
+    logoutSuccess 
+} = loginSlice.actions;
 
-      const authToken = window.localStorage.getItem("authToken");
-        setAuthorization(authToken); // Set the session with the valid token
-        state.error = false;
-        state.user = action.payload; // Assuming the response contains user data
-        state.isAuthenticated = true; // Set authenticated state to true
-    });
-    builder.addCase(signInThunk.rejected, (state, action) => {
-      state.loading = false;
-      state.error_message = action.payload.error; // Assuming the error payload contains an error message
-      state.error = true;
-      state.isAuthenticated = false; // Set authenticated state to false on error
-    });
-    builder.addCase(signInThunk.pending, (state) => {
-      state.error = false;
-      state.loading = true;
-      state.isAuthenticated = false; // Reset authenticated state while loading
-    });
-
-  }
-})
-
-export default authSlicer.reducer;
+export default loginSlice.reducer;

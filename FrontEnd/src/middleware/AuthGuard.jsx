@@ -11,7 +11,6 @@ export default function AuthGuard() {
   const outlet = useOutlet();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-
   const location = useLocation();
 
   if (!isAuthenticated) {

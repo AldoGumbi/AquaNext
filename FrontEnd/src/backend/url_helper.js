@@ -6,6 +6,8 @@
 // AUTH
 const AUTH_BASE_URL = '/auth';
 export const SIGN_IN_REQUEST = AUTH_BASE_URL + '/sign-in';
+export const GET_PROFILE = AUTH_BASE_URL + '/profile';
+export const LOG_OUT_REQUEST = AUTH_BASE_URL + '/logout';
 
 
 // PRODUCTS

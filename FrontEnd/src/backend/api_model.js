@@ -1,6 +1,12 @@
 // imports
 import axios from 'axios';
 
+let globalLogout = null;
+
+// Función para establecer el logout desde el AuthProvider
+export const setGlobalLogout = (logoutFunction) => {
+	globalLogout = logoutFunction;
+};
 
 // define if out proyect is in development or production mode
 const ENV_MODE = import.meta.env.VITE_ENV_MODE;
@@ -17,30 +23,9 @@ if(ENV_MODE === 'dev') {
 // headers for the API requests
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-// Obtener token del localStorage
-const getToken = () => {
-	const authUser = localStorage.getItem('authUser');
-	return authUser ? JSON.parse(authUser).token : null;
-};
-// Configurar el token inicial
-const token = getToken();
-if (token) {
-	axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-}
+// enable credentials for cross-origin requests
+axios.defaults.withCredentials = true;
 
-// Interceptor de solicitudes simplificado
-axios.interceptors.request.use(
-	(config) => {
-		const token = getToken();
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
-		return config;
-	},
-	(error) => {
-		return Promise.reject(error);
-	}
-);
 
 // Interceptor de respuestas simplificado
 axios.interceptors.response.use(
@@ -48,6 +33,26 @@ axios.interceptors.response.use(
 		return response.data ? response.data : response;
 	},
 	function (error) {
+
+		if (error.response?.status === 401 && 
+			error.response?.error === 'SESSION_EXPIRED') {
+			
+			console.log('🚨 Sesión expirada, redirigiendo al login...');
+
+			if (globalLogout) {
+				globalLogout(); // Esto ejecutará dispatch(logoutUser())
+			} else {
+				console.warn('No se ha definido una función de logout global.');	
+			}
+			
+			// Retornar un error específico para que el componente no siga ejecutándose
+			// return Promise.reject({
+			// 	status: 401,
+			// 	message: "Sesión expirada",
+			// 	isSessionExpired: true,
+			// 	API_message: error.response?.data?.message || null
+			// });
+		}
 
 		let message;
 		switch (error.response?.status) {
@@ -67,8 +72,8 @@ axios.interceptors.response.use(
 			status: error.response?.status || 500,
 			message: message,
 			API_message: error.response?.data?.message || null,
-      API_error: error.response?.data?.error || null,
-      API: error.response?.data || null
+			API_error: error.response?.data?.error || null,
+			API: error.response?.data || null
 		});
 	}
 );

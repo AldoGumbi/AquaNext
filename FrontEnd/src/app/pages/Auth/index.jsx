@@ -13,7 +13,7 @@ import { Page } from "components/shared/Page";
 
 // redux imports
 import {  useSelector, useDispatch } from "react-redux";
-import { signInThunk } from "slices/thunk.js"
+import { loginUser } from "slices/thunk.js"
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export default function SignIn() {
 
   // event handler for form submission
   const onSubmit = (data) => {
-    dispatch(signInThunk(data));
+    dispatch(loginUser(data));
   };
 
   return (

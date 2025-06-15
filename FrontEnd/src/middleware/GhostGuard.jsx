@@ -16,7 +16,6 @@ export default function GhostGuard() {
   // const { isAuthenticated } = useAuthContext();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-
   const url = `${new URLSearchParams(window.location.search).get(
     REDIRECT_URL_KEY,
   )}`;

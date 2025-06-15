@@ -17,6 +17,8 @@ const app = {
 function RootErrorBoundary() {
   const error = useRouteError();
 
+  console.error("RootErrorBoundary error:", error);
+
   if (isRouteErrorResponse(error)) {
     const Component = Loadable(app[error.status]);
     return <Component />;

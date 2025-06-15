@@ -8,6 +8,8 @@ const api = new APIClient();
 
 // AUTHENTICATION
 export const sign_in = (data) => api.create(url.SIGN_IN_REQUEST, data);
+export const getProfile = (data) => api.get(url.GET_PROFILE, { userId: data.id });
+export const logout = () => api.delete(url.LOG_OUT_REQUEST);
 
 // PRODUCTS CRUD
 export const addProduct = (data) => api.create(url.ADD_PRODUCT, data);
