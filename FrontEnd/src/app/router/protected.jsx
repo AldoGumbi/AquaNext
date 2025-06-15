@@ -86,6 +86,28 @@ const protectedRoutes = {
         },
       ],
     },
+    // students routes
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          path: "students",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/students/register" />,
+            },
+            {
+              path: "register",
+              lazy: async () => ({
+                Component: (await import("app/pages/students/register")).default,
+              }),
+            },
+          ],
+        },
+      ],
+    },
+
     // The app layout supports only the main layout. Avoid using it for other layouts.
     {
       Component: AppLayout,

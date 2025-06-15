@@ -11,8 +11,7 @@ import {
 // Create an async thunk for adding a product
 export const addProductThunk = createAsyncThunk("products/add", async (data, { rejectWithValue }) => {
 		try {
-			const response = await addProduct(data);
-			return response;
+			return  await addProduct(data);
 		} catch (error) {
 			console.log("Error 500 al insertar el producto, thunk.js: ",error);
 			return rejectWithValue({error});
