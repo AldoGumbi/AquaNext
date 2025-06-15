@@ -33,7 +33,6 @@ export function Items() {
     setIsModalOpen(true);
   };
 
-  // console.log("Basket items: ", basket_items);
   return (
     <>
       <div className="flex flex-col space-y-3.5">
@@ -94,6 +93,7 @@ export function Items() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         rowData={selectedItem}
+        isEdit={true}
       />
     </>
   );

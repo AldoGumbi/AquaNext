@@ -24,5 +24,10 @@ export const GET_BASKET = BASE_BASKET_URL + '/get-basket';
 export const UPDATE_BASKET = BASE_BASKET_URL + '/update-basket';
 export const DELETE_BASKET = BASE_BASKET_URL + '/delete-basket';
 export const ALL_BASKETS = BASE_BASKET_URL + '/all-baskets';
-export const INSERT_BASKET_ITEM = BASE_BASKET_URL + '/add-items';
-export const DELETE_BASKET_ITEM = BASE_BASKET_URL + '/delete-items';
+
+// Basket Items
+const BASE_BASKET_ITEM_URL = '/basket-items';
+export const INSERT_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/add-items';
+export const DELETE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/delete-items';
+export const UPDATE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/update-items';
+

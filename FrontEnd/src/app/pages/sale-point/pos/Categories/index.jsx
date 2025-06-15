@@ -9,31 +9,30 @@ import { useLocaleContext } from "app/contexts/locale/context";
 import { Button, Card } from "components/ui";
 import { useIsomorphicEffect } from "hooks";
 
+
 // ----------------------------------------------------------------------
 
 const items = [
   {
     uid: "1",
     name: "Cafeteria",
-    image: "/images/800x800.png",
+    image: "/src/assets/POS/cafeteria.svg",
   },
   {
     uid: "2",
     name: "Articulos Deportivos",
-    image: "/images/800x800.png",
+    image: "/src/assets/POS/articulos_deportivos.svg",
   },
   {
     uid: "3",
     name: "Accesorios",
-    image: "/images/800x800.png",
+    image: "/src/assets/POS/accesorios.svg",
   },
   {
     uid: "4",
     name: "Otros",
-    image: "/images/800x800.png",
+    image: "/src/assets/POS/others.svg",
   },
-
-
 ];
 
 register();
@@ -92,14 +91,14 @@ export function Categories() {
 
       {items.map(({ uid, name, image }) => (
         <swiper-slide key={uid} class="w-24">
-          <Card className="w-full shrink-0 cursor-pointer px-2 py-4 text-center text-gray-800 dark:text-dark-100">
+          <Card className="w-[100px] h-[130px]  shrink-0 cursor-pointer px-2 py-4 text-center text-gray-800 dark:text-dark-100">
             <img
               alt={name}
               src={image}
               loading="lazy"
               className="mx-auto w-12"
             />
-            <p className="truncate pt-2 font-medium tracking-wide">{name}</p>
+            <p className="truncate pt-2 text-pretty w-auto  font-medium tracking-wide">{name}</p>
           </Card>
         </swiper-slide>
       ))}

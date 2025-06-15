@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
   // Products
   products: productsSlicer,
   // basket
-  basket: basketSlicer
+  basket: basketSlicer,
 });
 
 // Export the combined reducer

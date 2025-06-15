@@ -58,12 +58,13 @@ export function ProductCard({ imagen, nombre, categoria, precio_venta, id }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         rowData={{
-          img : img_composted,
-          name : nombre,
-          category : categoria,
-          price : precio_venta,
+          imagen : img_composted,
+          nombre,
+          categoria,
+          precio_venta,
           id
       }}
+        isEdit={false}
       />
     </>
   );

@@ -14,7 +14,8 @@ class basketModel {
 			
 			p.nombre,
 			p.precio_venta,
-			p.imagen
+			p.imagen,
+			p.id as producto_id
 			
 			FROM carrito_items CI 
 			INNER JOIN productos p on p.id = CI.producto_id
@@ -92,32 +93,6 @@ class basketModel {
 		}
 	}
 
-	// insert items into basket
-	static async insertItemsBasket(basketId, items) {
-		try {
-			const {product_id, quantity, comment} = items;
-			const [result] = await db.query(`
-				INSERT INTO carrito_items (carrito_id,producto_id,cantidad, comentario) VALUES (?, ?, ?, ?)
-			`, [basketId, product_id, quantity, comment]);
-
-			return result.insertId;
-
-		} catch (error) {
-			throw error;
-		}
-	}
-	// delete items from basket
-	static async deleteItems(id) {
-		try {
-			const [result] = await db.query(`
-				DELETE FROM carrito_items WHERE  id = ?
-			`, [id]);
-
-			return result.affectedRows;
-		} catch (error) {
-			throw error;
-		}
-	}
 }
 
 export default basketModel;

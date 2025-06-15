@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-	createBasket,
-	getBasket,
-	updateBasket,
-	deleteBasket,
-	allBaskets,
-	insertBasketItems,
-	deleteBasketItem
+  createBasket,
+  getBasket,
+  updateBasket,
+  deleteBasket,
+  allBaskets,
+  insertBasketItems,
+  deleteBasketItem,
+  updateBasketItem
 } from "../../backend/connection.js";
 
 // import { setActiveBasket} from "./reducer.js";
@@ -54,8 +55,7 @@ export const deleteBasketThunk = createAsyncThunk("basket/delete", async (id, { 
 // Create an async thunk for getting all baskets
 export const allBasketsThunk = createAsyncThunk("basket/all", async (_, { rejectWithValue }) => {
 	try {
-		const response = await allBaskets();
-		return response;
+		return await allBaskets();
 	} catch (error) {
 		console.log("Error 500 al obtener todas las cestas, thunk.js: ", error);
 		return rejectWithValue({ error });
@@ -63,22 +63,29 @@ export const allBasketsThunk = createAsyncThunk("basket/all", async (_, { reject
 });
 // Create an async thunk for inserting items into a basket
 export const insertBasketItemsThunk = createAsyncThunk("basket/insertItems", async (data, { rejectWithValue }) => {
-	try {
-		const response = await insertBasketItems(data);
-		return response;
-	} catch (error) {
-		console.log("Error 500 al insertar items en la cesta, thunk.js: ", error);
-		return rejectWithValue({ error });
-	}
+  try {
+    return await insertBasketItems(data);
+  } catch (error) {
+    console.log("Error 500 al insertar items en la cesta, thunk.js: ", error);
+    return rejectWithValue({ error });
+  }
 });
 // Create an async thunk for deleting an item from a basket
 export const deleteBasketItemThunk = createAsyncThunk("basket/deleteItem", async (id, { rejectWithValue }) => {
-	try {
-		const response = await deleteBasketItem(id);
-		return response;
-	} catch (error) {
-		console.log("Error 500 al eliminar un item de la cesta, thunk.js: ", error);
-		return rejectWithValue({ error });
-	}
+  try {
+    return await deleteBasketItem(id);
+  } catch (error) {
+    console.log("Error 500 al eliminar un item de la cesta, thunk.js: ", error);
+    return rejectWithValue({ error });
+  }
+});
+// Create an async thunk for updating an item in a basket
+export const updateBasketItemThunk = createAsyncThunk("basket/updateItem", async (data, { rejectWithValue }) => {
+  try {
+    return await updateBasketItem(data.basketItemId, data);
+  } catch (error) {
+    console.log("Error 500 al actualizar un item de la cesta, thunk.js: ", error);
+    return rejectWithValue({ error });
+  }
 });
 

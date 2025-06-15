@@ -6,7 +6,8 @@ import {
 	deleteBasketThunk,
 	allBasketsThunk,
 	insertBasketItemsThunk,
-	deleteBasketItemThunk
+	deleteBasketItemThunk,
+  updateBasketItemThunk
 } from './thunk.js';
 
 const initialState = {
@@ -156,6 +157,26 @@ const basketSlice = createSlice({
 			state.loading = true;
 			state.error = false;
 		});
+
+    // UPDATE BASKET ITEM //updateBasketItemThunk
+    builder.addCase(updateBasketItemThunk.fulfilled, (state, action) => {
+
+      const id = action.payload.data.id;
+      console.log("AHORA TENGO QUE ACTUALIZAR EL ESTADO DEL ITEMS QUE CONATENIA EL ID: ", id);
+      state.loading = false;
+      state.error = false;
+    });
+    builder.addCase(updateBasketItemThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error_message = action.payload;
+      state.error = true;
+    });
+    builder.addCase(updateBasketItemThunk.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+
+
 	}
 });
 

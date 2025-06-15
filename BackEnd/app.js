@@ -15,6 +15,7 @@ import auth from './routes/authRouter.js';
 // SALE POINT
 import products from "./routes/products.js";
 import baskets from "./routes/basket.js";
+import basketItems from "./routes/basketItems.js";
 
 const app = express();
 
@@ -45,6 +46,7 @@ if (NODE_ENV === 'production') {
 app.use('/auth', auth);
 app.use('/products', products);
 app.use('/baskets', baskets);
+app.use('/basket-items', basketItems);
 
 // Manejo de errores
 app.use((req, res, next) => {

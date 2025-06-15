@@ -22,7 +22,7 @@ import {
 
 
 import {  useDispatch, useSelector } from "react-redux";
-import { insertBasketItemsThunk, createBasketThunk } from "slices/thunk.js"
+import { insertBasketItemsThunk, createBasketThunk, updateBasketItemThunk } from "slices/thunk.js"
 
 // ----------------------------------------------------------------------
 
@@ -38,12 +38,11 @@ const productSchema = yup.object().shape({
 		.max(500, 'El comentario no puede exceder los 500 caracteres')
 });
 
-export function ProductModal({isOpen, onClose, rowData }) {
+export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 	const [formData, setFormData] = useState(rowData);
 	const dispatch = useDispatch();
 	const [errors, setErrors] = useState({});
 	const { activeBasket  } = useSelector((state) => state.basket);
-
 	useEffect(() => {
 		setFormData(rowData);
 	}, [rowData]);
@@ -80,7 +79,8 @@ export function ProductModal({isOpen, onClose, rowData }) {
 		const isValid = await validateForm();
 		if (!isValid) return;
 
-
+    // - This will create a new basket if there is no active basket
+    // - No sale will be made if there is no active basket
 		if(!activeBasket) {
 			dispatch(createBasketThunk({ user_id: 1 }));
 			toast.info('No existe ninguna canasta activa, se creará una nueva y' +
@@ -89,26 +89,51 @@ export function ProductModal({isOpen, onClose, rowData }) {
 		}
 		const quantityInput = Number(document.querySelector('input[name="quantity"]').value) || 0 ;
 		const commentInput = document.querySelector('textarea')?.value || '';
-
 		const data = {
+      //BASKET ITEM ID
+      basketItemId: Number(formData.id),
+      // BASKET ID
 			basketId: activeBasket,
-			product_id: Number(formData.id),
+      // PRODUCT ID
+      product_id: Number(formData.producto_id),
+      // QUANTITY
 			quantity: quantityInput,
-			img : formData.img,
-			name: formData.name,
-			price: formData.price,
+      // COMMENT
 			comment: commentInput, // This should be dynamic based on user input
+      // IMAGE
+			img : formData.imagen,
+      // NAME
+			name: formData.nombre,
+      // PRICE
+			price: formData.precio_venta,
 		}
-		dispatch(insertBasketItemsThunk(data))
-			.unwrap() // <- Esto es clave para manejar el estado de la promesa
-			.then(() => {
-				toast.success('Producto agregado a la canasta correctamente.');
-				onClose();
-			})
-			.catch(() => {
-				toast.error('Error al agregar el producto a la canasta, por favor intente de nuevo.');
-			});
-	}
+
+    console.log("formdata: ", formData);
+    if(isEdit) {
+      dispatch(updateBasketItemThunk(data))
+        .unwrap() // <- Esto es clave para manejar el estado de la promesa
+        .then(() => {
+          toast.success('Producto actualizado en la canasta correctamente.');
+          onClose();
+        })
+        .catch((error) => {
+          console.log("Error during the dispatch update!",error);
+          toast.error('Error al actualizar el producto en la canasta, por favor intente de nuevo.');
+        });
+    }else{
+      dispatch(insertBasketItemsThunk(data))
+        .unwrap() // <- Esto es clave para manejar el estado de la promesa
+        .then(() => {
+          toast.success('Producto agregado a la canasta correctamente.');
+          onClose();
+        })
+        .catch((error) => {
+          console.log("Erro during the dispatch insert!",error);
+          toast.error('Error al agregar el producto a la canasta, por favor intente de nuevo.');
+        });
+    }
+  }
+
 
 	return (
 		<>
@@ -147,7 +172,7 @@ export function ProductModal({isOpen, onClose, rowData }) {
 									as="h3"
 									className="text-base font-medium text-gray-800 dark:text-dark-100"
 								>
-									Venta de Producto ({formData.name || " "})
+                  {isEdit ? "Editar Producto" : " Venta de Producto "} ({formData.nombre || " "})
 								</DialogTitle>
 								<Button
 									onClick={onClose}
@@ -160,9 +185,18 @@ export function ProductModal({isOpen, onClose, rowData }) {
 							</div>
 
 							<div className="flex flex-col overflow-y-auto px-4 py-4 sm:px-5">
-								<p>
-									Para agregar un producto a la canasta, por favor ingresa la cantidad deseada y cualquier comentario adicional que desees incluir. Asegúrate de que la cantidad sea un número válido entre 1 y 100.
-								</p>
+                {!isEdit ? (
+                  <p>
+                    Para agregar un producto a la canasta, por favor ingresa la cantidad deseada y cualquier comentario
+                    adicional que desees incluir. Asegúrate de que la cantidad sea un número válido entre 1 y 100.
+                  </p>
+                ) : (
+                  <p>
+                    Edita los detalles del producto antes de agregarlo a la canasta.
+                    Asegúrate de que la cantidad sea un número válido entre 1 y 100.
+                  </p>
+                )}
+
 								<div className="mt-4 space-y-5">
 									<Input
 										label="Cantidad de Producto*"
@@ -171,7 +205,7 @@ export function ProductModal({isOpen, onClose, rowData }) {
 										max="100"
 										name="quantity"
 										placeholder="Total de googles : 4"
-										defaultValue={formData.quantity || 1}
+										defaultValue={formData.cantidad || 1}
 										error={errors.quantity}
 									>
 
@@ -180,7 +214,7 @@ export function ProductModal({isOpen, onClose, rowData }) {
 										placeholder="Ejemplo: Venta de googles para el agua amarillo"
 										label="Commentarios"
 										rows="4"
-										defaultValue={formData.comment || ''}
+										defaultValue={formData.comentario || ''}
 										error={errors.comment}
 
 									/>
@@ -199,7 +233,7 @@ export function ProductModal({isOpen, onClose, rowData }) {
 										ref={saveRef}
 										className="min-w-[7rem] rounded-full"
 									>
-										Vender
+                    {isEdit ? "Guardar Cambios" : "Agregar Producto"}
 									</Button>
 								</div>
 							</div>

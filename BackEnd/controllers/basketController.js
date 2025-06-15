@@ -34,7 +34,6 @@ export const getBasket = async (req, res) => {
 				message: 'No se encontró el carrito.',
 			});
 		}
-		console.log(basket);
 
 		res.status(200).json({
 			data: basket,
@@ -129,103 +128,6 @@ export const allBaskets = async (req, res) => {
 		res.status(500).json({
 			data: false,
 			message: 'Error interno al obtener los carritos',
-			error : error.message
-		});
-	}
-}
-
-export const insertBasketItems = async (req, res) => {
-	try {
-		const { product_id, quantity, comment, basketId, } = req.body;
-		// Validar que el basketId sea un número válido
-		if (!basketId || isNaN(Number(basketId))) {
-			return res.status(400).json({
-				data: false,
-				message: 'Es necesario el ID del carrito para agregar un producto.'
-			});
-		}
-
-		// Validar que el producto_id sea un número válido
-		if (!product_id  || isNaN(Number(product_id))) {
-			return res.status(400).json({
-				data: false,
-				message: 'Es necesario un ID del producto a agregar.'
-			});
-		}
-		// Validar que la cantidad sea un número válido y mayor a 0
-		if(!quantity || isNaN(Number(quantity)) || quantity <= 0) {
-			return res.status(400).json({
-				data: false,
-				message: 'Es necesario una cantidad valida del producto a agregar.'
-			});
-		}
-
-		const items = {
-			product_id,
-			quantity,
-			comment
-		}
-
-
-		console.log(items);
-		const newItem = await basketModel.insertItemsBasket(basketId, items);
-
-		if (!newItem) {
-			return res.status(400).json({
-				data: false,
-				message: 'No se pudo agregar el producto al carrito.'
-			});
-		}
-
-		const ans = {
-			id : newItem,
-			img : req.body.img || '',
-			name : req.body.name || '',
-			price : req.body.price || 0,
-			quantity: quantity || 0,
-			comment: comment || ''
-		}
-
-		res.status(201).json({
-			data: ans,
-			message: 'Producto agregado al carrito exitosamente'
-		});
-	} catch (error) {
-		res.status(500).json({
-			message: 'Error al agregar el producto al carrito',
-			error : error.message
-		});
-	}
-}
-
-export const deleteBasketItem = async (req, res) => {
-	try {
-		const { id } = req.params;
-
-		if (!id || isNaN(Number(id)) ) {
-			return res.status(400).json({
-				data: false,
-				message: 'Es necesario un ID del item a borrar.'
-			});
-		}
-
-		const deletedItem = await basketModel.deleteItems(id);
-
-		if(deletedItem){
-			res.status(200).json({
-				message: 'Item agregado corretamente al carrito.',
-				data: deletedItem
-			});
-		}else {
-			return res.status(404).json({
-				message: 'No se encontro el item en el carrito.'
-			});
-		}
-
-
-	} catch (error) {
-		res.status(500).json({
-			message: 'Error al borrar el item del carrito',
 			error : error.message
 		});
 	}

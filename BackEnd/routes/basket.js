@@ -5,7 +5,7 @@ import {
 	getBasket,
 	deleteBasket,
 	updateBasket,
-	allBaskets, insertBasketItems, deleteBasketItem
+	allBaskets
 } from '../controllers/basketController.js';
 
 const router = express.Router();
@@ -20,9 +20,5 @@ router.put("/update-basket/:id", updateBasket);
 router.delete("/delete-basket/:id", deleteBasket);
 // get all baskets and their items
 router.get("/all-baskets", allBaskets);
-// insert items into basket
-router.post("/add-items", insertBasketItems);
-// delete items from basket
-router.delete("/delete-items/:id", deleteBasketItem);
 
 export default router;
