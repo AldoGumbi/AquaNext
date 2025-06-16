@@ -61,6 +61,7 @@ export const signIn = async (req, res) => {
 			message: 'Error interno del servidor',
 			error: err.message
 		})
+		console.log("Error del signin: " + err.message)
 	}
 }
 
