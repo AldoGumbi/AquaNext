@@ -30,3 +30,5 @@ export const insertBasketItems = (data) => api.create(`${url.INSERT_BASKET_ITEM}
 export const deleteBasketItem = (id) => api.delete(`${url.DELETE_BASKET_ITEM}/${id}`);
 export const updateBasketItem = (id, data) => api.put(`${url.UPDATE_BASKET_ITEM}/${id}`, data);
 
+//ALUMNO CRUD
+export const addAlumno = (data) => api.create(url.ADD_ALUMNO, data);

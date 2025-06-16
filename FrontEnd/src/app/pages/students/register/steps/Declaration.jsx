@@ -20,12 +20,15 @@ import {
 // import { countries } from "constants/countries.constant";
 import { useKYCFormContext } from "../KYCFormContext";
 import { declarationSchema } from "../schema";
+import { useDispatch } from "react-redux";
+import { addAlumnoThunk } from "slices/thunk";
 
 // ----------------------------------------------------------------------
 
 export function Declaration({ setCurrentStep, setFinished }) {
   const kycFormCtx = useKYCFormContext();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     // register,
@@ -38,6 +41,7 @@ export function Declaration({ setCurrentStep, setFinished }) {
   });
 
   const onSubmit = (data) => {
+    console.log(data)
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -52,6 +56,19 @@ export function Declaration({ setCurrentStep, setFinished }) {
       setFinished(true);
     }, 2000);
   };
+
+  const addSubmit = () => {
+    const nuevoAlumno = {
+      general : kycFormCtx.state.formData.personalInfo,
+      domicilio: kycFormCtx.state.formData.addressInfo,
+      foto: ''
+    }
+    console.log('Informacion del alumno: \n');
+    console.log(nuevoAlumno);
+    dispatch(addAlumnoThunk(nuevoAlumno));
+    setFinished(true);
+
+  }
 
   const personalInfo = kycFormCtx.state.formData.personalInfo;
   const addressInfo = kycFormCtx.state.formData.addressInfo;
@@ -219,6 +236,7 @@ export function Declaration({ setCurrentStep, setFinished }) {
           className="min-w-[7rem] space-x-2 "
           color="primary"
           disabled={loading}
+          onClick = {addSubmit}
         >
           {loading && <GhostSpinner className="size-4 border-2" />}
 

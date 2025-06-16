@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import authSlicer from './login/reducer.js';
 import productsSlicer from './products/reducer.js';
 import basketSlicer from './basket/reducer.js';
-
+import alumnosSlicer from './alumnos/reducer.js';
 // Combine all reducers
 const rootReducer = combineReducers({
 	// Authentication
@@ -13,6 +13,8 @@ const rootReducer = combineReducers({
   products: productsSlicer,
   // basket
   basket: basketSlicer,
+  // alumnos
+  alumnos: alumnosSlicer,
 });
 
 // Export the combined reducer

@@ -31,3 +31,7 @@ export const INSERT_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/add-items';
 export const DELETE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/delete-items';
 export const UPDATE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/update-items';
 
+// ALUMNO CRUD
+const BASE_ALUMNO_URL = '/alumnos';
+export const ADD_ALUMNO = BASE_ALUMNO_URL + '/register';
+
