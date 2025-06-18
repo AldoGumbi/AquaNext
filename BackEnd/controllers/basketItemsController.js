@@ -80,7 +80,7 @@ export const deleteBasketItem = async (req, res) => {
     if(deletedItem){
       res.status(200).json({
         message: 'Item agregado corretamente al carrito.',
-        data: deletedItem
+        data: Number(id)
       });
     }else {
       return res.status(404).json({
@@ -100,20 +100,13 @@ export const deleteBasketItem = async (req, res) => {
 export const updateBasketItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { product_id, quantity, comment } = req.body;
+    const { quantity, comment } = req.body;
 
     // Validar que el id sea un número válido
-    if (!id || isNaN(Number(id)) ) {
+    if (!id || isNaN(Number(id))) {
       return res.status(400).json({
         data: false,
-        message: 'Es necesario un ID del item a editar.'
-      });
-    }
-    // Validar que el product_id sea un número válido
-    if (!product_id || isNaN(Number(product_id))) {
-      return res.status(400).json({
-        data: false,
-        message: 'Es necesario un ID del producto a editar.'
+        message: 'Es necesario un ID del carrito_items a editar.'
       });
     }
     // Validar que la cantidad sea un número válido y mayor a 0
@@ -125,10 +118,9 @@ export const updateBasketItem = async (req, res) => {
     }
 
     const items = {
-      product_id,
       quantity,
       comment,
-      id
+      basket_items_id : Number(id)
     }
 
 

@@ -43,13 +43,13 @@ const CategoryOptions = [
   },
   {
     value: 1,
-    label: 'Disponible',
+    // label: 'Disponible',
     color: 'success',
     icon: BadgeCheck
   },
   {
     value: 0,
-    label: 'No disponible',
+    // label: 'No disponible',
     color: 'error',
     icon: CircleX
   },
@@ -68,20 +68,25 @@ export function NameCell({ row }) {
   const img = row.original.imagen || '/public/images/no-image.png';
   return (
     <>
-    <div className="flex items-center space-x-4 ">
-      <div className="size-9">
-        <img
-          className="h-full w-full rounded-lg object-cover object-center"
-          src={img}
-          alt={row.original.nombre}
-        />
+      <div className="flex items-center space-x-4">
+        <div className="size-9">
+          <img
+            className="h-full w-full rounded-lg object-cover object-center"
+            src={img}
+            alt={row.original.nombre}
+          />
+        </div>
+        <div>
+          <p className="font-bold text-gray-800 dark:text-dark-100">
+            {row.original.nombre}
+          </p>
+          {row.original.sku && (
+            <span className="text-sm text-gray-500 dark:text-dark-400">
+        {row.original.sku}
+      </span>
+          )}
+        </div>
       </div>
-      <div>
-        <p className="font-bold text-gray-800 dark:text-dark-100">
-          {row.original.nombre}
-        </p>
-      </div>
-    </div>
     </>
   );
 
@@ -99,13 +104,38 @@ export function Description({ getValue }) {
 }
 
 export function PriceCell({ getValue }) {
-  const val =  Number(getValue());
-  if(!val){
-    return <span className="font-semibold"> $ 0.00</span>;
-  }
-  return <span className="font-semibold"> $ { formatNumber(val,2)}</span>;
+    const val = Number(getValue());
+    const amount = val || 0;
+
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <Badge
+          variant="soft"
+          color="primary"
+          className="font-semibold border border-gray-200 dark:border-dark-500 px-2 py-1"
+        >
+          {`$ ${formatNumber(amount, 2)}`}
+        </Badge>
+      </div>
+    );
 }
 
+export function CostoCell({ getValue }) {
+  const val = Number(getValue());
+  const amount = val || 0;
+
+  return (
+    <div className="flex justify-center items-center h-full w-full">
+      <Badge
+        variant="soft"
+        color="success"
+        className="font-semibold border border-gray-200 dark:border-dark-500 px-2 py-1"
+      >
+        {`$ ${formatNumber(amount, 2)}`}
+      </Badge>
+    </div>
+  );
+}
 
 export function CategoryCell({ getValue }) {
   const val = getValue();
@@ -119,6 +149,61 @@ export function CategoryCell({ getValue }) {
 
       <span>{option.label}</span>
     </Badge>
+  );
+}
+
+export function DateCell({ getValue }) {
+  const date = new Date(getValue());
+
+  // Si la fecha no es válida
+  if (isNaN(date.getTime())) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <span className="text-center">Fecha inválida</span>
+      </div>
+    );
+  }
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = date.toLocaleString('es-ES', { month: 'long' });
+  const year = date.getFullYear();
+
+  return (
+    <div className="flex justify-center items-center h-full w-full">
+      <span className="text-center">
+        {`${day} ${month} ${year}`}
+      </span>
+    </div>
+  );
+}
+
+export function StockCell({ getValue }) {
+  const stock = Number(getValue());
+
+  // Definir clases condicionales
+  const stockClasses = () => {
+    if (stock <= 0) return 'text-red-600 font-bold'; // Stock agotado
+    if (stock <= 5) return 'text-yellow-600 font-medium'; // Stock bajo
+    return 'text-green-600'; // Stock normal
+  };
+
+  const colorClasses = () => {
+    if (stock <= 0) return 'error'; // Stock agotado
+    if (stock <= 5) return 'success'; // Stock bajo
+    return 'primary'; // Stock normal
+  }
+
+  return (
+
+    <div className="flex justify-center items-center h-full w-full">
+      <Badge
+        variant="soft"
+        color={colorClasses()}
+        className={`text-center ${stockClasses()}   border border-this-darker/20 dark:border-this-lighter/20`}
+      >
+        {isNaN(stock) ? 'N/A' : stock.toLocaleString('es-ES')}
+      </Badge>
+    </div>
   );
 }
 
@@ -136,7 +221,18 @@ PriceCell.propTypes = {
   getValue: PropTypes.func,
 };
 
+CostoCell.prototype = {
+  getValue: PropTypes.func,
+};
 
 CategoryCell.propTypes = {
   getValue: PropTypes.func,
 };
+
+DateCell.propTypes = {
+  getValue: PropTypes.func,
+}
+
+StockCell.propTypes = {
+  getValue: PropTypes.func,
+}

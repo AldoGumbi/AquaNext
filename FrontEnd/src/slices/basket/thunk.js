@@ -82,7 +82,7 @@ export const deleteBasketItemThunk = createAsyncThunk("basket/deleteItem", async
 // Create an async thunk for updating an item in a basket
 export const updateBasketItemThunk = createAsyncThunk("basket/updateItem", async (data, { rejectWithValue }) => {
   try {
-    return await updateBasketItem(data.basketItemId, data);
+    return await updateBasketItem(Number(data.id) , data);
   } catch (error) {
     console.log("Error 500 al actualizar un item de la cesta, thunk.js: ", error);
     return rejectWithValue({ error });

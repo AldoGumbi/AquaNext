@@ -1,0 +1,697 @@
+{
+  "data": [
+    {
+      "sku": "GOGGLE-001",
+      "nombre": "GOGGLE NOVO",
+      "descripcion": "Goggle Novo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 91,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-002",
+      "nombre": "GOGGLE TURBO",
+      "descripcion": "Goggle Turbo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 90,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-003",
+      "nombre": "GOGGLE GS-28",
+      "descripcion": "Goggle GS-28 - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 102,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-004",
+      "nombre": "GOGGLE GS-34",
+      "descripcion": "Goggle GS-34 - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 190,
+      "costo": 81,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-005",
+      "nombre": "GOGGLE GS-35",
+      "descripcion": "Goggle GS-35 - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 220,
+      "costo": 69,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-006",
+      "nombre": "GOGGLE KIDS AZUL",
+      "descripcion": "Goggle Kids Azul - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 235,
+      "costo": 96,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-007",
+      "nombre": "GOGGLE KIDS ROSA",
+      "descripcion": "Goggle Kids Rosa - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 235,
+      "costo": 96,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-008",
+      "nombre": "GOGGLE NEMO",
+      "descripcion": "Goggle Nemo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 140,
+      "costo": 57,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-009",
+      "nombre": "GOGGLE BABY",
+      "descripcion": "Goggle Baby - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 150,
+      "costo": 91,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-010",
+      "nombre": "GOGGLE FUNY",
+      "descripcion": "Goggle Funy - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 250,
+      "costo": 130,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-011",
+      "nombre": "GOGGLE THUNDER",
+      "descripcion": "Goggle Thunder - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 170,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-012",
+      "nombre": "GOGGLE AKARY",
+      "descripcion": "Goggle Akary - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 130,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-013",
+      "nombre": "GOGGLE AQUAR AF",
+      "descripcion": "Goggle Aquar AF - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 130,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-014",
+      "nombre": "GOGGLE FLUX",
+      "descripcion": "Goggle Flux - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 265,
+      "costo": 130,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-015",
+      "nombre": "GOGGLE QUANTUM",
+      "descripcion": "Goggle Quantum - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 165,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-016",
+      "nombre": "GOGGLE NEON",
+      "descripcion": "Goggle Neon - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 190,
+      "costo": 80,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-017",
+      "nombre": "GOGGLE TRIATLÓN",
+      "descripcion": "Goggle Triatlón - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 155,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-018",
+      "nombre": "GOGGLE TULIP",
+      "descripcion": "Goggle Tulip - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 200,
+      "costo": 85,
+      "imagen": null
+    },
+    {
+      "sku": "GOGGLE-019",
+      "nombre": "GOGGLE ASTER",
+      "descripcion": "Goggle Aster - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 165,
+      "imagen": null
+    },
+    {
+      "sku": "PULL-001",
+      "nombre": "PULL BUOY",
+      "descripcion": "Pull Buoy - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 250,
+      "costo": 170,
+      "imagen": null
+    },
+    {
+      "sku": "PALETA-001",
+      "nombre": "PALETA CHICA",
+      "descripcion": "Paleta Chica - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 220,
+      "costo": 72,
+      "imagen": null
+    },
+    {
+      "sku": "PALETA-002",
+      "nombre": "PALETA MEDIANA",
+      "descripcion": "Paleta Mediana - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 240,
+      "costo": 75,
+      "imagen": null
+    },
+    {
+      "sku": "PALETA-003",
+      "nombre": "PALETA GRANDE",
+      "descripcion": "Paleta Grande - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 260,
+      "costo": 80,
+      "imagen": null
+    },
+    {
+      "sku": "SNORKEL-001",
+      "nombre": "SNORKEL",
+      "descripcion": "Snorkel - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 390,
+      "costo": 242,
+      "imagen": null
+    },
+    {
+      "sku": "RED-001",
+      "nombre": "RED CHICA",
+      "descripcion": "Red Chica - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 85,
+      "costo": 58,
+      "imagen": null
+    },
+    {
+      "sku": "RED-002",
+      "nombre": "RED GRANDE",
+      "descripcion": "Red Grande - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 130,
+      "costo": 66,
+      "imagen": null
+    },
+    {
+      "sku": "ALETA-001",
+      "nombre": "ALETA LARGA ESCUALO",
+      "descripcion": "Aleta Larga Escualo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 650,
+      "costo": 405,
+      "imagen": null
+    },
+    {
+      "sku": "ALETA-002",
+      "nombre": "ALETA WET CORTA CH (17-21)",
+      "descripcion": "Aleta Wet Corta CH (17-21) - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 690,
+      "costo": 520,
+      "imagen": null
+    },
+    {
+      "sku": "ALETA-003",
+      "nombre": "ALETA WET CORTA MED (21-22)",
+      "descripcion": "Aleta Wet Corta MED (21-22) - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 690,
+      "costo": 580,
+      "imagen": null
+    },
+    {
+      "sku": "ALETA-004",
+      "nombre": "ALETA WET LARGA (22-28)",
+      "descripcion": "Aleta Wet Larga (22-28) - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 720,
+      "costo": 650,
+      "imagen": null
+    },
+    {
+      "sku": "TABLA-001",
+      "nombre": "TABLA ESCUALO",
+      "descripcion": "Tabla Escualo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 280,
+      "costo": 134,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-001",
+      "nombre": "GORRA DE TELA",
+      "descripcion": "Gorra de Tela - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 80,
+      "costo": 18.11,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-002",
+      "nombre": "GORRA SILICON BLANCA",
+      "descripcion": "Gorra Silicon Blanca - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 165,
+      "costo": 76,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-003",
+      "nombre": "GORRA SILICON AMARILLA",
+      "descripcion": "Gorra Silicon Amarilla - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 165,
+      "costo": 67,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-004",
+      "nombre": "GORRA SILICON AZUL",
+      "descripcion": "Gorra Silicon Azul - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 165,
+      "costo": 67,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-005",
+      "nombre": "GORRA SILICON ROSA Y DORADA",
+      "descripcion": "Gorra Silicon Rosa y Dorada - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 165,
+      "costo": 67,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-006",
+      "nombre": "GORRA COMFORT AMARILLA",
+      "descripcion": "Gorra Comfort Amarilla - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 130,
+      "costo": 47.41,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-007",
+      "nombre": "GORRA COMFORT BLANCA",
+      "descripcion": "Gorra Comfort Blanca - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 130,
+      "costo": 47.41,
+      "imagen": null
+    },
+    {
+      "sku": "GORRA-008",
+      "nombre": "GORRA COMFORT AZUL",
+      "descripcion": "Gorra Comfort Azul - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 130,
+      "costo": 47.41,
+      "imagen": null
+    },
+    {
+      "sku": "TAPON-001",
+      "nombre": "TAPON ESPIRAL",
+      "descripcion": "Tapón Espiral - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 65,
+      "costo": 31,
+      "imagen": null
+    },
+    {
+      "sku": "TAPON-002",
+      "nombre": "TAPON SILICON",
+      "descripcion": "Tapón Silicon - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 65,
+      "costo": 31,
+      "imagen": null
+    },
+    {
+      "sku": "TAPON-003",
+      "nombre": "TAPON PROF",
+      "descripcion": "Tapón Prof - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 65,
+      "costo": 31,
+      "imagen": null
+    },
+    {
+      "sku": "TAPON-004",
+      "nombre": "TAPON HILO",
+      "descripcion": "Tapón Hilo - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 65,
+      "costo": 36,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-001",
+      "nombre": "OLIMPICO NIÑA BEBÉ",
+      "descripcion": "Olimpico Niña Bebé - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-002",
+      "nombre": "OLIMPICO NIÑA XCH",
+      "descripcion": "Olimpico Niña XCH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-003",
+      "nombre": "OLIMPICO NIÑA CH",
+      "descripcion": "Olimpico Niña CH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-004",
+      "nombre": "OLIMPICO NIÑA MED",
+      "descripcion": "Olimpico Niña MED - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-005",
+      "nombre": "OLIMPICO NIÑA GDE",
+      "descripcion": "Olimpico Niña GDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-006",
+      "nombre": "OLIMPICO NIÑA XGDE",
+      "descripcion": "Olimpico Niña XGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-007",
+      "nombre": "OLIMPICO DAMA CH",
+      "descripcion": "Olimpico Dama CH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 142.24,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-008",
+      "nombre": "OLIMPICO DAMA MED",
+      "descripcion": "Olimpico Dama MED - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 142.24,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-009",
+      "nombre": "OLIMPICO DAMA JUVENIL",
+      "descripcion": "Olimpico Dama Juvenil - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 142.24,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-010",
+      "nombre": "OLIMPICO DAMA GDE",
+      "descripcion": "Olimpico Dama GDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 142.24,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-011",
+      "nombre": "OLIMPICO DAMA XGDE",
+      "descripcion": "Olimpico Dama XGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 142.24,
+      "imagen": null
+    },
+    {
+      "sku": "OLIMPICO-012",
+      "nombre": "OLIMPICO DAMA XXGDE",
+      "descripcion": "Olimpico Dama XXGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 159.48,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-001",
+      "nombre": "BODY DAMA CH",
+      "descripcion": "Body Dama CH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 206.04,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-002",
+      "nombre": "BODY DAMA MED",
+      "descripcion": "Body Dama MED - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 206.04,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-003",
+      "nombre": "BODY DAMA JUVENIL",
+      "descripcion": "Body Dama Juvenil - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 206.04,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-004",
+      "nombre": "BODY DAMA GDE",
+      "descripcion": "Body Dama GDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 206.04,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-005",
+      "nombre": "BODY DAMA XGDE",
+      "descripcion": "Body Dama XGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 206.04,
+      "imagen": null
+    },
+    {
+      "sku": "BODY-006",
+      "nombre": "BODY DAMA XXGDE",
+      "descripcion": "Body Dama XXGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 420,
+      "costo": 223.28,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-001",
+      "nombre": "HAMMER NIÑO BEBÉ",
+      "descripcion": "Hammer Niño Bebé - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-002",
+      "nombre": "HAMMER NIÑO XCH",
+      "descripcion": "Hammer Niño XCH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-003",
+      "nombre": "HAMMER NIÑO CH",
+      "descripcion": "Hammer Niño CH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-004",
+      "nombre": "HAMMER NIÑO MED",
+      "descripcion": "Hammer Niño MED - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-005",
+      "nombre": "HAMMER NIÑO GDE",
+      "descripcion": "Hammer Niño GDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-006",
+      "nombre": "HAMMER NIÑO XGDE",
+      "descripcion": "Hammer Niño XGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 300,
+      "costo": 132.76,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-007",
+      "nombre": "HAMMER CABALLERO CH",
+      "descripcion": "Hammer Caballero CH - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 143.1,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-008",
+      "nombre": "HAMMER CABALLERO MED",
+      "descripcion": "Hammer Caballero MED - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 143.1,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-009",
+      "nombre": "HAMMER CABALLERO JUVENIL",
+      "descripcion": "Hammer Caballero Juvenil - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 374,
+      "costo": 143.1,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-010",
+      "nombre": "HAMMER CABALLERO GDE",
+      "descripcion": "Hammer Caballero GDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 143.1,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-011",
+      "nombre": "HAMMER CABALLERO XGDE",
+      "descripcion": "Hammer Caballero XGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 143.1,
+      "imagen": null
+    },
+    {
+      "sku": "HAMMER-012",
+      "nombre": "HAMMER CABALLERO XXGDE",
+      "descripcion": "Hammer Caballero XXGDE - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 375,
+      "costo": 151.72,
+      "imagen": null
+    },
+    {
+      "sku": "TOALLA-001",
+      "nombre": "TOALLA SAMY CHICA",
+      "descripcion": "Toalla Samy Chica - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 220,
+      "costo": 98,
+      "imagen": null
+    },
+    {
+      "sku": "TOALLA-002",
+      "nombre": "TOALLA SAMY GRANDE",
+      "descripcion": "Toalla Samy Grande - Artículo deportivo",
+      "categoria": "articulo_deportivo",
+      "precio_venta": 260,
+      "costo": 108,
+      "imagen": null
+    },
+    {
+      "sku": "CAFE-001",
+      "nombre": "SHAMPOO",
+      "descripcion": "Shampoo - Cafetería",
+      "categoria": "otros",
+      "precio_venta": 4,
+      "costo": 1.87,
+      "imagen": null
+    },
+    {
+      "sku": "CAFE-002",
+      "nombre": "PAÑAL",
+      "descripcion": "Pañal - Cafetería",
+      "categoria": "otros",
+      "precio_venta": 8,
+      "costo": 3,
+      "imagen": null
+    }
+  ]
+}

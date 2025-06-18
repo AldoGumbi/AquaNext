@@ -39,6 +39,24 @@ export const descriptionSchema = Yup.object().shape({
     .max(160, "Excediste los caracteres máximos del producto!")
 });
 
+export const inventorySchema = Yup.object().shape({
+  stock: Yup.number("El valor del stock debe ser un número")
+    .transform((val) => (isNaN(val) ? null : val))
+    .positive("El stock debe de ser positivo")
+    .min(0, "El stock no puede ser negativo")
+    .required("El stock del producto es requerido"),
+  minimum_stock: Yup.number("El valor del stock mínimo debe ser un número")
+    .transform((val) => (isNaN(val) ? null : val))
+    .positive("El stock mínimo debe de ser positivo")
+    .min(0, "El stock no puede ser negativo")
+    .required("El stock mínimo del producto es requerido"),
+  maximum_stock: Yup.number("El valor del stock máximo debe ser un número")
+    .transform((val) => (isNaN(val) ? null : val))
+    .positive("El stock máximo debe de ser positivo")
+    .min(0, "El stock no puede ser negativo")
+    .required("El stock máximo del producto es requerido"),
+})
+
 export const imageSchema = Yup.object().shape({
   cover: Yup.mixed()
     .nullable()

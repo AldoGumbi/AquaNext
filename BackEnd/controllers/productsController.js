@@ -1,5 +1,7 @@
 import productsModel from '../models/products.js';
 
+import inventarioModel from '../models/inventoryModel.js';
+
 export const insertProduct = async (req, res) => {
 	try {
 
@@ -21,8 +23,6 @@ export const insertProduct = async (req, res) => {
 			});
 		}
 
-		console.log(req.body.images);
-
 		const newProduct = {
 			sku : sku,
 			nombre : name,
@@ -36,9 +36,33 @@ export const insertProduct = async (req, res) => {
 
 		const productId = await productsModel.create(newProduct);
 
+		if(!productId){
+			return res.status(400).send({
+				data: false,
+				message: 'No se pudo crear el producto, por favor verifica los datos enviados.'
+			})
+		}
+		// Si el producto se crea correctamente, se crea el inventario
+		const { stock, minimum_stock, maximum_stock } = req.body.inventory;
+
+
+		// obj para insertar en la tabla inventario
+		const inventoryData = {
+			producto_id: productId,
+			existencia: stock,
+			stock_minimo: minimum_stock,
+			stock_maximo: maximum_stock
+		};
+
+		const inventoryId = await inventarioModel.createInventory(inventoryData);
+
+
 		res.status(201).json({
 			message: 'Producto creado con exito!',
-			data: productId
+			data: {
+				producto_id : productId,
+				invetario_id : inventoryId,
+			}
 		});
 
 	} catch (error) {
@@ -92,7 +116,8 @@ export const updateProduct = async (req, res) => {
 			});
 		}
 
-		const { sku, name, price, is_avaliable, category, cost, img, description } = req.body;
+		const { name, cost } = req.body;
+
 
 		if(name.length < 1 || name === undefined || name === null) {
 			return res.status(400).json({
@@ -101,15 +126,9 @@ export const updateProduct = async (req, res) => {
 			});
 		}
 		const updatedProduct = {
-			sku,
-			name,
-			description,
-			price,
-			is_avaliable,
-			category,
 			costo : cost,
-			img,
-			id
+			...req.body
+
 		};
 		const isUpdated = await productsModel.update(id, updatedProduct);
 

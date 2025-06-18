@@ -108,7 +108,7 @@ function BasketSelectorMenu({baskets} ) {
             ))
           ) : (
             <MenuItem>
-              <div className="px-3 py-2 text-gray-500">No baskets found</div>
+              <div className="px-3 py-2 text-gray-500">No existen carritos.</div>
             </MenuItem>
           )}
         </MenuItems>

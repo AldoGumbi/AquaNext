@@ -62,7 +62,7 @@ export function ProductCard({ imagen, nombre, categoria, precio_venta, id }) {
           nombre,
           categoria,
           precio_venta,
-          id
+          product_id : id
       }}
         isEdit={false}
       />

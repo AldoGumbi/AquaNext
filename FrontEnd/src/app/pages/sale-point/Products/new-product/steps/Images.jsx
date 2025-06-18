@@ -111,7 +111,7 @@ export function Images({ setCurrentStep, setFinished }) {
       </div>
 
       <div className="mt-4 flex justify-end space-x-3 ">
-        <Button className="min-w-[7rem]" onClick={() => setCurrentStep(1)}>
+        <Button className="min-w-[7rem]" onClick={() => setCurrentStep(2)}>
           Anterior
         </Button>
         <Button

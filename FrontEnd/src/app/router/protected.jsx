@@ -81,6 +81,27 @@ const protectedRoutes = {
                 },
 
               ],
+            },
+            // CASH REGISTER
+            {
+              path: "cash-register",
+              children: [
+                //HOME cash-register
+                {
+                  path: "home",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/home")).default,
+                  }),
+                },
+                // CASH REGISTER - ADD NEW
+                {
+                  path: "operations",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
+                  }),
+                },
+
+              ],
             }
           ],
         },

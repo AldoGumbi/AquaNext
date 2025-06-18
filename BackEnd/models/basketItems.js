@@ -30,10 +30,10 @@ class basketItemsModel {
   // edit items in basket
   static async editItemsBasket(id, items) {
     try {
-      const {product_id, quantity, comment} = items;
+      const { quantity, comment} = items;
       const [result] = await db.query(`
-        UPDATE carrito_items SET producto_id = ?, cantidad = ?, comentario = ? WHERE id = ?
-      `, [product_id, quantity, comment, id]);
+        UPDATE carrito_items SET  cantidad = ?, comentario = ? WHERE id = ?
+      `,  [quantity, comment, id]);
 
       return result.affectedRows;
     } catch (error) {

@@ -6,9 +6,8 @@ import { Button } from "components/ui";
 
 
 import {useDispatch,  useSelector } from "react-redux";
-import { getBasketThunk } from "../../../../../slices/basket/thunk.js"
+import { getBasketThunk } from "slices/thunk"
 import {useEffect, useState} from "react";
-// import {setActiveBasket} from "../../../../../slices/basket/reducer.js";
 
 import { ProductModal} from "../Products/ProductModal.jsx";
 
@@ -18,7 +17,6 @@ import { ProductModal} from "../Products/ProductModal.jsx";
 export function Items() {
   const dispatch = useDispatch();
   const { basket_items, activeBasket } = useSelector((state) => state.basket);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState([]);
 
@@ -32,7 +30,6 @@ export function Items() {
     setSelectedItem(item);
     setIsModalOpen(true);
   };
-
   return (
     <>
       <div className="flex flex-col space-y-3.5">
@@ -45,11 +42,11 @@ export function Items() {
               <div className="flex min-w-0 items-center gap-4">
                 <div className="relative flex shrink-0">
                   <img
-                    src={item.imagen || '/placeholder-product.png'}
-                    className="mask is-star size-11 origin-center object-cover"
+                    src={item.imagen || '/public/images/no-image.png'}
+                    className="mask rounded-lg size-11 origin-center object-cover"
                     alt={item.nombre}
                     onError={(e) => {
-                      e.currentTarget.src = '/placeholder-product.png';
+                      e.currentTarget.src = '/public/images/no-image.png';
                     }}
                   />
                   <div className="absolute right-0 top-0 -m-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border border-white bg-gray-200 px-1 text-tiny-plus font-medium leading-none text-gray-800 dark:border-dark-700 dark:bg-dark-450 dark:text-white">
@@ -79,7 +76,7 @@ export function Items() {
                 </div>
               </div>
               <p className="font-semibold">
-                {item.precio_venta ? item.precio_venta : '$0.00'}
+                {item.precio_venta ? (item.precio_venta * item.cantidad) : '$0.00'}
               </p>
             </div>
           ))

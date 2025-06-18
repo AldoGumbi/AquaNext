@@ -22,7 +22,12 @@ import {
 
 
 import {  useDispatch, useSelector } from "react-redux";
-import { insertBasketItemsThunk, createBasketThunk, updateBasketItemThunk } from "slices/thunk.js"
+import {
+  insertBasketItemsThunk,
+  createBasketThunk,
+  updateBasketItemThunk,
+  deleteBasketItemThunk
+} from "slices/thunk.js"
 
 // ----------------------------------------------------------------------
 
@@ -71,13 +76,6 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 	};
 
 	const handlesave = async () => {
-		if(!formData.id) {
-			toast.error('No se ha seleccionado ningún producto, por favor selecciona uno.');
-			return;
-		}
-
-		const isValid = await validateForm();
-		if (!isValid) return;
 
     // - This will create a new basket if there is no active basket
     // - No sale will be made if there is no active basket
@@ -87,29 +85,26 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 				' se agregaran los producto ahi para evitar problemas. Ya puedes agregar el producto',{autoClose: 4000});
 			return;
 		}
-		const quantityInput = Number(document.querySelector('input[name="quantity"]').value) || 0 ;
-		const commentInput = document.querySelector('textarea')?.value || '';
-		const data = {
-      //BASKET ITEM ID
-      basketItemId: Number(formData.id),
-      // BASKET ID
-			basketId: activeBasket,
-      // PRODUCT ID
-      product_id: Number(formData.producto_id),
-      // QUANTITY
-			quantity: quantityInput,
-      // COMMENT
-			comment: commentInput, // This should be dynamic based on user input
-      // IMAGE
-			img : formData.imagen,
-      // NAME
-			name: formData.nombre,
-      // PRICE
-			price: formData.precio_venta,
-		}
 
-    console.log("formdata: ", formData);
+    const isValid = await validateForm();
+    if (!isValid) return;
+
+    // get the form data
+    const quantityInput = Number(document.querySelector('input[name="quantity"]').value) || 0 ;
+    const commentInput = document.querySelector('textarea')?.value || '';
+
+    // variable to hold the data to be sent
+    let data = {}
+
     if(isEdit) {
+      data = {
+        // ID of the item to be updated carrito_items.id
+        id : formData.id,
+        // QUANTITY
+        quantity: quantityInput,
+        // COMMENT
+        comment: commentInput,
+      }
       dispatch(updateBasketItemThunk(data))
         .unwrap() // <- Esto es clave para manejar el estado de la promesa
         .then(() => {
@@ -121,6 +116,27 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
           toast.error('Error al actualizar el producto en la canasta, por favor intente de nuevo.');
         });
     }else{
+      if(!formData.product_id) {
+        toast.error('No se ha seleccionado ningún producto, por favor selecciona uno.');
+        return;
+      }
+      // Prepare the data to be sent
+      data = {
+        // BASKET ID
+        basketId: activeBasket,
+        // PRODUCT ID
+        product_id: Number(formData.product_id),
+        // QUANTITY
+        quantity: quantityInput,
+        // COMMENT
+        comment: commentInput,
+        // IMAGE
+        img : formData.imagen,
+        // NAME
+        name: formData.nombre,
+        // PRICE
+        price: formData.precio_venta,
+      }
       dispatch(insertBasketItemsThunk(data))
         .unwrap() // <- Esto es clave para manejar el estado de la promesa
         .then(() => {
@@ -128,12 +144,29 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
           onClose();
         })
         .catch((error) => {
-          console.log("Erro during the dispatch insert!",error);
+          console.log("ERROR ADDING ITEM TO BASKET: ",error);
           toast.error('Error al agregar el producto a la canasta, por favor intente de nuevo.');
         });
     }
   }
 
+  const handleDeleteItem = () => {
+    const id = formData.id || null;
+    if(!id) {
+      toast.error('No se ha seleccionado ningún producto para eliminar.');
+      return;
+    }
+    dispatch(deleteBasketItemThunk(id))
+      .unwrap() // <- Esto es clave para manejar el estado de la promesa
+      .then(() => {
+        toast.success('Producto eliminado de la canasta correctamente.');
+        onClose();
+      })
+      .catch((error) => {
+        console.log("Error during the dispatch delete!",error);
+        toast.error('Error al eliminar el producto de la canasta, por favor intente de nuevo.');
+      });
+  }
 
 	return (
 		<>
@@ -211,31 +244,40 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 
 									</Input>
 									<Textarea
-										placeholder="Ejemplo: Venta de googles para el agua amarillo"
-										label="Commentarios"
+										placeholder="Ejemplo: Venta de goggles para el agua, color amarillo"
+										label="Comentarios"
 										rows="4"
 										defaultValue={formData.comentario || ''}
 										error={errors.comment}
 
 									/>
 								</div>
-								<div className="mt-4 space-x-3 text-end ">
-									<Button
-										onClick={onClose}
-										variant="outlined"
-										className="min-w-[7rem] rounded-full"
-									>
-										Cancelar
-									</Button>
-									<Button
-										onClick={handlesave}
-										color="primary"
-										ref={saveRef}
-										className="min-w-[7rem] rounded-full"
-									>
+                <div className="flex items-center justify-end mt-4 space-x-3">
+
+                  <Button
+                    onClick={onClose}
+                    variant="outlined"
+                    className="min-w-[7rem] rounded-full"
+                  >
+                    Cancelar
+                  </Button>
+                  {isEdit && (
+                    <Button
+                      onClick={handleDeleteItem}
+                      color="error"
+                      className="min-w-[7rem] rounded-full"
+                    >
+                      Borrar Producto
+                    </Button>
+                  )}
+                  <Button
+                    onClick={handlesave}
+                    color="primary"
+                    className="min-w-[7rem] rounded-full"
+                  >
                     {isEdit ? "Guardar Cambios" : "Agregar Producto"}
-									</Button>
-								</div>
+                  </Button>
+                </div>
 							</div>
 						</DialogPanel>
 					</TransitionChild>

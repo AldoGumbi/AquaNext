@@ -20,6 +20,11 @@ const initialState = {
     description: {
       description: "",
     },
+    inventory: {
+      stock: 0,
+      minimum_stock: 0,
+      maximum_stock: 0,
+    },
     images: {
       cover: null,
     },
@@ -29,6 +34,9 @@ const initialState = {
       isDone: false,
     },
     description: {
+      isDone: false,
+    },
+    Inventory: {
       isDone: false,
     },
     images: {

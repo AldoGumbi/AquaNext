@@ -4,7 +4,14 @@ class productsModel {
 	// Obtener todos los productos
 	static async getAll() {
 		const [products] = await db.query(`
-		SELECT * FROM productos where borrado = 0
+		SELECT p.*,
+		       p.activo as is_available,
+		       i.existencia as stock,
+		       i.stock_minimo,
+		       i.stock_maximo
+		FROM productos p
+		INNER JOIN inventario i ON p.id = i.producto_id
+		WHERE borrado = 0
 		`);
 		return products;
 	}
@@ -34,7 +41,7 @@ class productsModel {
 		WHERE id = ? AND borrado = 0
 		`, [
 			product.sku, product.name, product.description,
-			product.price, product.is_avaliable, product.category,
+			product.price, product.is_available, product.category,
 			product.costo, product.img,
 			id
 		]);

@@ -26,9 +26,10 @@ import { columns } from "./columns";
 
 import { getUserAgentBrowser } from "utils/dom/getUserAgentBrowser";
 
+
 // import of redux
 import { useSelector, useDispatch } from "react-redux";
-import { getProductsThunk, editAllProductsThunk, deleteProductThunk } from "slices/thunk.js";
+import { getProductsThunk, editProductsThunk, deleteProductThunk } from "slices/thunk.js";
 
 // ----------------------------------------------------------------------
 
@@ -38,54 +39,59 @@ export function ProductsTable() {
   const dispatch = useDispatch();
   const productsList = useSelector((state) => state.products.products);
 
-
+  // Estados correctamente inicializados
+  const [products, setProducts] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState([]);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-
   const theadRef = useRef();
   const { height: theadHeight } = useBoxSize({ ref: theadRef });
 
-  // const [products, setProducts] = useState([...productsList]);
-  const [products, setProducts] = useState([]);
-
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([]);
-
-
+  // Efecto para cargar los productos
   useEffect(() => {
     dispatch(getProductsThunk());
   }, [dispatch]);
 
+  // Efecto para sincronizar el estado local con el estado de Redux
   useEffect(() => {
-    setProducts(productsList);
+    if (productsList) {
+      setProducts(productsList);
+    }
   }, [productsList]);
 
-  console.log(productsList)
-
-
-  // Agrega estos estados al componente ProductsTable
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-// Función para manejar la edición
+  // Resto de tu lógica de renderizado...
   const handleEdit = (row) => {
-    setEditingProduct(row.original);
+    const data = {
+      id: row.original.id,
+      sku: row.original.sku || "", // Valor por defecto si sku es null/undefined
+      name: row.original.nombre,
+      description: row.original.descripcion || "", // Valor por defecto
+      category: row.original.categoria,
+      price: Number(row.original.precio_venta) || 0, // Convertido a número
+      cost: Number(row.original.costo) || 0, // Convertido a número
+      is_available: row.original.is_available || 0 ,
+      stock: Number(row.original.stock) || 0, // Convertido a número
+      min_stock: Number(row.original.stock_minimo) || 0, // Convertido a número
+      max_stock: Number(row.original.stock_maximo) || 0, // Convertido a número
+      image: row.original.imagen || null, // Mantiene null si no hay imagen
+      created_at: row.original.created_at, // Fecha original
+      updated_at: row.original.updated_at  // Fecha original
+    };
+    setEditingProduct(data);
     setIsEditModalOpen(true);
   };
 
+
+
 // Función para guardar los cambios
   const handleSave = (editedProduct) => {
-    setProducts(prev =>
-      prev.map(item =>
-        item.id === editedProduct.id ? editedProduct : item
-      )
-    );
     // Aquí podrías hacer una llamada a la API para guardar los cambios
-    console.log("Product edited:", editedProduct);
-    dispatch(editAllProductsThunk({id: editedProduct.id, data: editedProduct}));
+    dispatch(editProductsThunk({id: editedProduct.id, data: editedProduct}));
     setIsEditModalOpen(false);
   };
-
 
   const table = useReactTable({
     data: products,
@@ -139,7 +145,7 @@ export function ProductsTable() {
     <div>
       <div className="table-toolbar flex items-center justify-between">
         <h2 className="truncate text-base font-medium tracking-wide text-gray-800 dark:text-dark-100">
-          Products Table
+          Tabla de Productos
         </h2>
         <div className="flex">
           <CollapsibleSearch

@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { FaImages, FaLayerGroup, FaListUl } from "react-icons/fa";
-
+import { PackageOpen } from "lucide-react";
 // Local Imports
 import { Page } from "components/shared/Page";
 import { Card } from "components/ui";
@@ -12,6 +12,7 @@ import { UnderReview } from "./UnderReview";
 import { Description } from "./steps/Description";
 import { General } from "./steps/General";
 import { Images } from "./steps/Images";
+import { Inventory } from "./steps/inventory";
 
 
 // ----------------------------------------------------------------------
@@ -28,6 +29,12 @@ const steps = [
     component: Description,
     label: "Descripción",
     icon: FaListUl,
+  },
+  {
+    key: "Inventory",
+    component: Inventory,
+    label: "Inventario",
+    icon: PackageOpen,
   },
   {
     key: "images",

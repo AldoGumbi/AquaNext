@@ -93,6 +93,8 @@ const basketSlice = createSlice({
 			state.activeBasket = newBaskets.length > 0 ? newBaskets[0].id : null;
 			state.baskets = newBaskets;
 
+      state.basket_items = null; // Clear basket items when basket is deleted
+
 			state.loading = false;
 			state.error = false;
 		});
@@ -144,9 +146,18 @@ const basketSlice = createSlice({
 		});
 
 		// DELETE BASKET ITEM
-		builder.addCase(deleteBasketItemThunk.fulfilled, (state) => {
+		builder.addCase(deleteBasketItemThunk.fulfilled, (state,action) => {
+      // basket items from the global state
 			state.loading = false;
 			state.error = false;
+      // action.payload.data contains the ID of the item to delete
+      const basketItems = state.basket_items || [];
+      const itemIdToDelete = action.payload.data;
+
+      // Filter out the item with the ID to delete
+      const updatedBasketItems = basketItems.filter(item => item.id !== itemIdToDelete);
+      // Update the state with the new basket items
+      state.basket_items = updatedBasketItems;
 		});
 		builder.addCase(deleteBasketItemThunk.rejected, (state, action) => {
 			state.loading = false;
@@ -160,9 +171,23 @@ const basketSlice = createSlice({
 
     // UPDATE BASKET ITEM //updateBasketItemThunk
     builder.addCase(updateBasketItemThunk.fulfilled, (state, action) => {
+      // basket items from the global state
+      const basketItems = state.basket_items || [];
+      // this is the ID of the item to be updated
+      const itemUpdated = action.payload.data;
 
-      const id = action.payload.data.id;
-      console.log("AHORA TENGO QUE ACTUALIZAR EL ESTADO DEL ITEMS QUE CONATENIA EL ID: ", id);
+      const updatedBasketItems = basketItems.map(item => {
+        if (item.id === itemUpdated.basket_items_id) {
+          return {
+            ...item,
+            cantidad: itemUpdated.quantity,
+            comentario: itemUpdated.comment
+          };
+        }
+        return item;
+      });
+
+      state.basket_items = updatedBasketItems;
       state.loading = false;
       state.error = false;
     });

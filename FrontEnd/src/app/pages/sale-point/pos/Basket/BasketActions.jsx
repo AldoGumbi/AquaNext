@@ -17,6 +17,8 @@ import { Button } from "components/ui";
 import { useDispatch,useSelector } from "react-redux";
 import { createBasketThunk, deleteBasketThunk } from "slices/basket/thunk.js"
 
+
+import { toast } from "react-toastify";
 // ----------------------------------------------------------------------
 
 export function BasketActions() {
@@ -34,6 +36,11 @@ export function BasketActions() {
   }
 
   const handleDeleteBasket = (id) => {
+    if (!id) {
+      toast.error("No tienes una cesta activa para eliminar.", {autoClose: 2000});
+      return;
+    }
+
     dispatch(deleteBasketThunk(id));
   }
   return (

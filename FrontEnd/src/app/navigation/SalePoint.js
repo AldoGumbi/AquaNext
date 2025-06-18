@@ -65,33 +65,31 @@ export const salePoint = {
       ]
     },
     // // CASH REGISTER
-    // {
-    //   id: 'salePoint.cashRegister',
-    //   path: path(ROOT_POINT_SALE, '/onboarding'),
-    //   type: NAV_TYPE_COLLAPSE,
-    //   title: 'Caja',
-    //   Icon: Store,
-    //   childs: [
-    //     // OPEN CASH REGISTER
-    //     {
-    //       id: 'salePoint.cashRegisterActions',
-    //       type: NAV_TYPE_ITEM,
-    //       path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
-    //       title: 'Inicio',
-    //       Icon: 'prototypes'
-    //     },
-    //     // CASH REGISTER HISTORY
-    //     {
-    //       id: 'salePoint.cashRegisterHistory',
-    //       type: NAV_TYPE_ITEM,
-    //       path: path(ROOT_POINT_SALE, '/onboarding/onboarding-1'),
-    //       title: 'Historial de cajas',
-    //       Icon: 'prototypes'
-    //     },
-    //
-    //
-    //   ]
-    // },
+    {
+      id: 'salePoint.cashRegister',
+      path: path(ROOT_POINT_SALE, '/cash-register'),
+      type: NAV_TYPE_COLLAPSE,
+      title: 'Caja',
+      Icon: Store,
+      childs: [
+        // OPEN CASH REGISTER
+        {
+          id: 'salePoint.cashRegisterActions',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/cash-register/home'),
+          title: 'Resumen de Cajas',
+          Icon: 'prototypes'
+        },
+        // CASH REGISTER HISTORY
+        {
+          id: 'salePoint.cashRegisterHistory',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/cash-register/operations'),
+          title: 'Operaciones de Caja',
+          Icon: 'prototypes'
+        },
+      ]
+    },
 
   ]
 }

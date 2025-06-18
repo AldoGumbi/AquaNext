@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import {
   addProductThunk,
   getProductsThunk,
-  editAllProductsThunk,
-  deleteProductThunk, skuCheckAvailabilityThunk
+  editProductsThunk,
+  deleteProductThunk,
+  skuCheckAvailabilityThunk,
 } from "./thunk.js";
 
 const initialState = {
@@ -51,22 +53,37 @@ const productsSlice = createSlice({
     });
 
     // UPDATE PRODUCTS
-    builder.addCase(editAllProductsThunk.fulfilled, (state, action) => {
+    builder.addCase(editProductsThunk.fulfilled, (state, action) => {
       state.loading = false;
       state.error = false;
       // Update the products state with the new data
       const editedProduct = action.payload.data;
 
-      state.products = state.products.map((item) =>
-        String(item.id) === String(editedProduct.id) ? editedProduct : item,
-      );
+      const oldProducts = state.products;
+
+      state.products  = oldProducts.map(item => {
+        if (item.id === editedProduct.id) {
+          return {
+            nombre: editedProduct.name,
+            descripcion: editedProduct.description,
+            precio_venta : editedProduct.price,
+            costo: editedProduct.cost,
+            categoria : editedProduct.category,
+            ...editedProduct,
+          };
+        }
+        return item;
+      });
+      toast.success("Producto editado correctamente");
     });
-    builder.addCase(editAllProductsThunk.rejected, (state, action) => {
+    builder.addCase(editProductsThunk.rejected, (state, action) => {
       state.loading = false;
       state.error_message = action.payload;
       state.error = true;
+      toast.error("Error al editar el producto" );
+      console.log("Error editando el producto: ", action.payload.error);
     });
-    builder.addCase(editAllProductsThunk.pending, (state) => {
+    builder.addCase(editProductsThunk.pending, (state) => {
       state.error = false;
       state.loading = true;
     });

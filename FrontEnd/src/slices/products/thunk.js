@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
 	addProduct,
 	getProducts,
-	editAllProducts,
+  editProducts,
 	deleteProduct,
   skuCheckAvailability
 } from "../../backend/connection.js";
@@ -31,11 +31,10 @@ export const getProductsThunk =
 	}
 );
 
-export const editAllProductsThunk =
+export const editProductsThunk =
 	createAsyncThunk("/products/update-product", async ({id,data}, { rejectWithValue }) => {
 	try {
-		const response = await editAllProducts(id, data);
-		return response;
+		return await editProducts(id, data);
 	}catch (error) {
 		console.log("Error 500 al editar el producto, thunk.js: ", error);
 		return rejectWithValue({ error });

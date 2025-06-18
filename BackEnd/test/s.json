@@ -1,0 +1,22 @@
+{
+  "data" : [
+    {
+      "sku": "CAFE-001",
+      "nombre": "SHAMPOO",
+      "descripcion": "Shampoo - Cafetería",
+      "categoria": "accesorios",
+      "precio_venta": 4,
+      "costo": 1.87,
+      "imagen": null
+    },
+    {
+      "sku": "CAFE-002",
+      "nombre": "PAÑAL",
+      "descripcion": "Pañal - Cafetería",
+      "categoria": "accesorios",
+      "precio_venta": 8,
+      "costo": 3,
+      "imagen": null
+    }
+  ]
+}

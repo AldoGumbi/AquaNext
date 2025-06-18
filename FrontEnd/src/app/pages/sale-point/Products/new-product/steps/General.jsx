@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 
 // Local Imports
 import { Listbox } from "components/shared/form/Listbox";
-import { Button, Input,  Switch } from "components/ui";
+import { Button, Input, Switch } from "components/ui";
 import { useAddProductFormContext } from "../AddProductFormContext";
 import { generalSchema } from "../schema";
-import {  skuCheckAvailabilityThunk } from "../../../../../../slices/products/thunk.js";
+import { skuCheckAvailabilityThunk } from "../../../../../../slices/products/thunk.js";
 import { useDispatch } from "react-redux";
 
 // ----------------------------------------------------------------------
@@ -30,7 +30,6 @@ const categories = [
     id: "otros",
     label: "Otros",
   },
-
 ];
 
 export function General({ setCurrentStep }) {
@@ -44,7 +43,7 @@ export function General({ setCurrentStep }) {
     control,
     setError,
     clearErrors,
-    setValue
+    setValue,
   } = useForm({
     resolver: yupResolver(generalSchema),
     defaultValues: addProductFormCtx.state.formData.general,
@@ -87,8 +86,7 @@ export function General({ setCurrentStep }) {
       // Esto conserva los errores de Yup automáticamente
       else if (error.name === "ValidationError") {
         return;
-      }
-      else {
+      } else {
         setError("sku", {
           type: "manual",
           message: "Error al validar el SKU",
@@ -118,7 +116,6 @@ export function General({ setCurrentStep }) {
             placeholder="Ingresa el skue del producto"
             onBlur={(e) => handleSkuCheckAvailability(e.target.value)}
           />
-
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -139,7 +136,6 @@ export function General({ setCurrentStep }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-
           <Controller
             render={({ field: { value, onChange, ...rest } }) => (
               <Listbox
@@ -158,10 +154,9 @@ export function General({ setCurrentStep }) {
           />
         </div>
 
-
         <Switch label="Disponible" {...register("is_available")} />
       </div>
-      <div className="mt-4 flex justify-end space-x-3 ">
+      <div className="mt-4 flex justify-end space-x-3">
         <Button className="min-w-[7rem]">Cancelar</Button>
         <Button type="submit" className="min-w-[7rem]" color="primary">
           Siguiente
