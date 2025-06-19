@@ -32,3 +32,6 @@ export const updateBasketItem = (id, data) => api.put(`${url.UPDATE_BASKET_ITEM}
 
 //ALUMNO CRUD
 export const addAlumno = (data) => api.create(url.ADD_ALUMNO, data);
+
+// DISCOUNTS COUPONS CRUD
+export const createDiscountCoupon = (data) => api.create(url.CREATE_DISCOUNT_COUPON, data);

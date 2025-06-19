@@ -19,12 +19,16 @@ import { createBasketThunk, deleteBasketThunk } from "slices/basket/thunk.js"
 
 
 import { toast } from "react-toastify";
+
+import { DiscountModal } from "./DiscountModal";
 // ----------------------------------------------------------------------
 
 export function BasketActions() {
   const dispatch = useDispatch();
   const { activeBasket  } = useSelector((state) => state.basket);
   const [basketId, setBasketId] = useState(null);
+
+
 
   useEffect(() => {
     setBasketId(activeBasket);
@@ -64,7 +68,9 @@ export function BasketActions() {
 }
 
 export function MenuAction() {
+  const [discountModalOpen, setDiscountModalOpen] = useState(false);
   return (
+  <>
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton
         as={Button}
@@ -92,39 +98,19 @@ export function MenuAction() {
                   focus &&
                     "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                 )}
+                onClick={() => setDiscountModalOpen(true)} // Open the discount modal
               >
-                <span>Action</span>
-              </button>
-            )}
-          </MenuItem>
-          <MenuItem>
-            {({ focus }) => (
-              <button
-                className={clsx(
-                  "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                  focus &&
-                    "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                )}
-              >
-                <span>Another Action</span>
-              </button>
-            )}
-          </MenuItem>
-          <MenuItem>
-            {({ focus }) => (
-              <button
-                className={clsx(
-                  "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                  focus &&
-                    "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                )}
-              >
-                <span>Other Action</span>
+                <span>Aplicar Cupon</span>
               </button>
             )}
           </MenuItem>
         </MenuItems>
       </Transition>
     </Menu>
+    <DiscountModal
+      isOpen={discountModalOpen} // This should be controlled by a state variable
+      onClose={() => {setDiscountModalOpen(false)}} // This should be a function to close the modal
+    />
+  </>
   );
 }

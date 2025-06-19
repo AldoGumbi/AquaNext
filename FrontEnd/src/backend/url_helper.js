@@ -35,3 +35,7 @@ export const UPDATE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/update-items';
 const BASE_ALUMNO_URL = '/alumnos';
 export const ADD_ALUMNO = BASE_ALUMNO_URL + '/register';
 
+// DISCOUNTS COUPONS
+const BASE_DISCOUNT_URL = '/coupons';
+export const CREATE_DISCOUNT_COUPON = BASE_DISCOUNT_URL + '/create-coupon';
+

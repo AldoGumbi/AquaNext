@@ -102,6 +102,26 @@ const protectedRoutes = {
                 },
 
               ],
+            },
+            // DISCOUNT COUPONS
+            {
+              path: "discount-coupons",
+              children: [
+                {
+                  path: "all-coupons",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/discount-coupons/all-coupons")).default,
+                  }),
+                },
+                // CASH REGISTER - ADD NEW
+                {
+                  path: "add-coupon",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/discount-coupons/add-coupons")).default,
+                  }),
+                },
+
+              ],
             }
           ],
         },

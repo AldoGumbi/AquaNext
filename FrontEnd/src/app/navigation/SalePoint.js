@@ -90,6 +90,32 @@ export const salePoint = {
         },
       ]
     },
+    // Discount Coupons
+    {
+      id: 'salePoint.DiscountCoupons',
+      path: path(ROOT_POINT_SALE, '/discount-coupons'),
+      type: NAV_TYPE_COLLAPSE,
+      title: 'Cupones de Descuento',
+      Icon: Store,
+      childs: [
+        // ALL DISCOUNT COUPONS
+        {
+          id: 'salePoint.AllDiscountCoupons',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/discount-coupons/all-coupons'),
+          title: 'Cupones',
+          Icon: 'prototypes'
+        },
+        // ADD NEW DISCOUNT COUPON
+        {
+          id: 'salePoint.AddDiscountCoupons',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/discount-coupons/add-coupon'),
+          title: 'Registrar Cupón',
+          Icon: 'prototypes'
+        },
+      ]
+    },
 
   ]
 }

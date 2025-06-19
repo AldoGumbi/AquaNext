@@ -16,6 +16,7 @@ import products from "./routes/products.js";
 import alumnos from "./routes/alumnoRouter.js";
 import baskets from "./routes/basket.js";
 import basketItems from "./routes/basketItems.js";
+import coupons from "./routes/couponsRouter.js";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/products', products);
 app.use('/baskets', baskets);
 app.use('/basket-items', basketItems);
 app.use('/alumnos', alumnos);
+app.use('/coupons', coupons);
 
 // Manejo de errores
 app.use((req, res, next) => {
