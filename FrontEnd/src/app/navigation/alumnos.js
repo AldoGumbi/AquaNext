@@ -21,6 +21,13 @@ export const alumnos = {
       type: NAV_TYPE_ITEM,
       title: 'Nuevo Alumno',
       Icon: SquareUserRound,
+    },
+    {
+      id: 'students.allStudents',
+      path: path(ROOT_ALUMNOS, '/all-students'),
+      type: NAV_TYPE_ITEM,
+      title: 'Alumnos',
+      Icon: SquareUserRound,
     }
   ]
 }

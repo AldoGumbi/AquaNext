@@ -53,7 +53,7 @@ export function PersonalInfo({ setCurrentStep }) {
             </>
           }
           error={errors?.firstName?.message}
-          placeholder="Ingregsa los nombres "
+          placeholder="Ingresa los nombres "
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <Input

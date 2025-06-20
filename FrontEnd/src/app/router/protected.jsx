@@ -144,6 +144,12 @@ const protectedRoutes = {
                 Component: (await import("app/pages/students/register")).default,
               }),
             },
+            {
+              path: "all-students",
+              lazy: async () => ({
+                Component: (await import("app/pages/students/all-students")).default,
+              }),
+            },
           ],
         },
       ],
