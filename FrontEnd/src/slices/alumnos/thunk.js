@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { DateTime } from "luxon";
 import {
 	addAlumno,
 	getAlumnos,
@@ -33,7 +33,12 @@ export const getAlumnosThunk = createAsyncThunk("alumnos/getAll", async (_, { re
 export const updateAlumnoThunk = createAsyncThunk("alumnos/edit", async (data, { rejectWithValue }) => {
 		try {
 			await updateAlumno(data);
-			return data.data; // Return the data to be added to the state
+			const updatedData = {
+				...data.data,
+				fecha_modificacion: DateTime.now().setZone('America/Mexico_City').toISO() // Add fecha_modificacion timestamp
+			};
+			// console.log("data: ", updatedData)
+			return updatedData; // Return the data to be added to the state
 		} catch (error) {
 			console.log("Error 500 al editar el alumno, thunk.js: ", error);
 			return rejectWithValue({error});

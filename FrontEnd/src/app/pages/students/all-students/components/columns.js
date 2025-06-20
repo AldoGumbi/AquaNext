@@ -64,7 +64,7 @@ export const columns = [
   columnHelper.accessor((row) => row.fecha_modificacion, {
     id: "update_date",
     header: "Última actualización",
-    cell: DateCell
+		cell: (props) => DateCell({ ...props, type: "datetime" })
   }),
   columnHelper.display({
     id: "actions",

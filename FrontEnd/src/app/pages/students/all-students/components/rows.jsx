@@ -142,7 +142,7 @@ export function SignatureCell({ getValue }) {
   );
 }
 
-export function DateCell({ getValue }) {
+export function DateCell({ getValue, type = 'default' }) {
   const dateValue = getValue();
   
   if (!dateValue) {
@@ -164,8 +164,14 @@ export function DateCell({ getValue }) {
     );
   }
 
+  let formattedDate;
+
   // Formatear la fecha en español usando Luxon
-  const formattedDate = date.setLocale('es').toFormat('dd LLLL yyyy');
+  if (type === 'default') {
+    formattedDate = date.setLocale('es').toFormat('dd LLLL yyyy'); 
+  } else {
+    formattedDate = date.setLocale('es').toFormat('dd LLLL yyyy HH:mm');
+  }
 
   return (
     <div className="flex justify-center items-center h-full w-full">
@@ -195,4 +201,5 @@ SignatureCell.propTypes = {
 
 DateCell.propTypes = {
   getValue: PropTypes.func,
-};
+  type: PropTypes.oneOf(['default', 'datetime'])
+}
