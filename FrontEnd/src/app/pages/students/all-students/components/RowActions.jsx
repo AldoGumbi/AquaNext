@@ -54,6 +54,7 @@ export function RowActions({ row, table }) {
 			setDeleteSuccess(true);
 			setConfirmDeleteLoading(false);
 		}, 1000);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [row]);
 
 	const state = deleteError ? "error" : deleteSuccess ? "success" : "pending";
