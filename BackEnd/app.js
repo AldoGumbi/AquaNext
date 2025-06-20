@@ -26,7 +26,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors({
     origin: ALLOWED_ORIGINS,
     credentials: true,
-	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(cookieParser());
