@@ -63,6 +63,7 @@ class alumnosModel {
           fecha_creacion,
           fecha_modificacion
         FROM alumnos
+				WHERE deleted = 0
         ORDER BY fecha_creacion DESC;
       `);
       return rows;
@@ -160,7 +161,7 @@ class alumnosModel {
       // soft delete
       const [result] = await db.query(`
         UPDATE alumnos 
-        SET estatus = 'inactivo'
+        SET deleted = 1
         WHERE id = ?;
       `, [id]);
       return result.affectedRows > 0;
