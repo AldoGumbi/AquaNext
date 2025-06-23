@@ -30,6 +30,10 @@ export function Declaration({ setCurrentStep, setFinished }) {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const personalInfo = kycFormCtx.state.formData.personalInfo;
+  const addressInfo = kycFormCtx.state.formData.addressInfo;
+  const identifyDocument = kycFormCtx.state.formData.identifyDocument.selfie;
+
   const {
     // register,
     handleSubmit,
@@ -59,21 +63,17 @@ export function Declaration({ setCurrentStep, setFinished }) {
 
   const addSubmit = () => {
     const nuevoAlumno = {
-      general : kycFormCtx.state.formData.personalInfo,
-      domicilio: kycFormCtx.state.formData.addressInfo,
-      foto: ''
-    }
-    console.log('Informacion del alumno: \n');
-    console.log(nuevoAlumno);
+      general : personalInfo,
+      domicilio: addressInfo,
+      foto: identifyDocument || '',
+    };
+    console.log('Informacion del alumno: \n', nuevoAlumno);
     dispatch(addAlumnoThunk(nuevoAlumno));
     setFinished(true);
 
   }
 
-  const personalInfo = kycFormCtx.state.formData.personalInfo;
-  const addressInfo = kycFormCtx.state.formData.addressInfo;
-  // const identifyDocument = kycFormCtx.state.formData.identifyDocument;
-
+ 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -81,65 +81,81 @@ export function Declaration({ setCurrentStep, setFinished }) {
       className="max-w-3xl"
     >
       <h6 className="mt-8 border-b border-gray-200 pb-2 text-base font-semibold text-gray-700 dark:border-dark-500 dark:text-dark-200">
-        Personal Information:
+        Información básica:
       </h6>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Nombre(s):
-          </p>
-          <p>{personalInfo.firstName || "---"}</p>
+
+      <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        {/* Columna izquierda: datos */}
+        <div className="sm:col-span-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Nombre(s):
+            </p>
+            <p>{personalInfo.firstName || "---"}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Apellido Paterno:
+            </p>
+            <p>{personalInfo.lastNamePaternal || "---"}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Apellido Materno:
+            </p>
+            <p>{personalInfo.lastNameMaternal || "---"}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Correo Electrónico:
+            </p>
+            <p>{personalInfo.email || "---"}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Teléfono:
+            </p>
+            <p>{personalInfo.dialCode} {personalInfo.phone}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Teléfono de Emergencia:
+            </p>
+            <p>{personalInfo.dialCode} {personalInfo.emergencyPhone}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
+              Fecha de Nacimiento:
+            </p>
+            <p>{dayjs(personalInfo.dateOfBirth).format("DD/MM/YYYY")}</p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Apellido Paterno:
-          </p>
-          <p>{personalInfo.lastNamePaternal || "---"}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Apellido Materno:
-          </p>
-          <p>{personalInfo.lastNameMaternal || "---"}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Correo Electrónico:
-          </p>
-          <p>{personalInfo.email || "---"}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Teléfono:
-          </p>
-          <p>
-            {personalInfo.dialCode} {personalInfo.phone}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Telefono de Emergencia:
-          </p>
-          <p>{personalInfo.dialCode} {personalInfo.emergencyPhone}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-800 dark:text-dark-100">
-            Fecha de Nacimiento:
-          </p>
-          <p>{dayjs(personalInfo.dateOfBirth).format("DD/MM/YYYY")}</p>
+
+        {/* Columna derecha: foto */}
+        <div className="flex justify-center items-start">
+          {identifyDocument ? (
+            <img
+              src={identifyDocument}
+              alt="Foto del alumno"
+              className="w-40 h-40 rounded-md border border-gray-300 dark:border-dark-500 shadow-md object-cover"
+            />
+          ) : (
+            <div className="w-40 h-40 flex items-center justify-center border border-dashed border-gray-400 rounded-md text-gray-400 text-sm">
+              Sin foto
+            </div>
+          )}
         </div>
       </div>
 
+
       <h6 className="mt-8 border-b border-gray-200 pb-2 text-base font-semibold text-gray-700 dark:border-dark-500 dark:text-dark-200">
-        Permanent Address:
+        Domicilio:
       </h6>
 
       {getAddressNode(addressInfo)}
 
 
-      <h6 className="mt-8 border-b border-gray-200 pb-2 text-base font-semibold text-gray-700 dark:border-dark-500 dark:text-dark-200">
-        Foto del alumno:
-      </h6>
+
 
       <div className="mt-4">
         {/*<div>*/}
@@ -229,7 +245,7 @@ export function Declaration({ setCurrentStep, setFinished }) {
       </div>
       <div className="mt-8 flex justify-end space-x-3 ">
         <Button className="min-w-[7rem]" onClick={() => setCurrentStep(2)}>
-          Back
+          Regresar
         </Button>
         <Button
           type="submit"
@@ -240,7 +256,7 @@ export function Declaration({ setCurrentStep, setFinished }) {
         >
           {loading && <GhostSpinner className="size-4 border-2" />}
 
-          <span>Finish</span>
+          <span>Finalizar</span>
         </Button>
       </div>
     </form>

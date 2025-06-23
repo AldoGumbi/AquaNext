@@ -5,7 +5,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from "prop-types";
 
 // Local Imports
-import { ContextualHelp } from "components/shared/ContextualHelp";
 import { Button, Input } from "components/ui";
 import { useKYCFormContext } from "../KYCFormContext";
 import { addressInfoSchema } from "../schema";
@@ -40,80 +39,9 @@ export function AddressInfo({ setCurrentStep }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
       <h6 className="mt-6 flex space-x-1.5 text-base font-medium text-gray-800 dark:text-dark-100 ">
-        <span>Permanent Address</span>
-        <ContextualHelp
-          title="Permanent Address"
-          content={
-            <p>
-              A permanent address is a physical address where you permanently
-              reside or have a legal residence. It is different from a mailing
-              address, which is where you receive your mail and can be in a
-              different location from your permanent address.
-            </p>
-          }
-        />
+
       </h6>
       <div className="mt-3 space-y-4">
-        <div className="grid gap-4 lg:grid-cols-2">
-
-          {/* CIUDAD */}
-          <Input
-            {...register("city")}
-            label={
-              <>
-                Ciudad {" "}
-                <span className="text-xs text-gray-400 dark:text-dark-300">
-                  (opcional)
-              </span>
-              </>
-            }
-            error={errors?.city?.message}
-            placeholder="Ingresa la ciudad"
-          />
-          {/* ESTADO */}
-          <Input
-            {...register("state")}
-            label={
-              <>
-                Estado {" "}
-                <span className="text-xs text-gray-400 dark:text-dark-300">
-                  (opcional)
-              </span>
-              </>
-            }
-            error={errors?.state?.message}
-            placeholder="Ingresa el estado"
-          />
-          {/* CODIGO POSTAL */}
-          <Input
-            {...register("zipCode")}
-            label={
-              <>
-                Código Postal {" "}
-                <span className="text-xs text-gray-400 dark:text-dark-300">
-                  (opcional)
-              </span>
-              </>
-            }
-            error={errors?.zipCode?.message}
-            placeholder="Ingresa el código postal"
-          />
-          {/* COLONIA */}
-          <Input
-            {...register("colony")}
-            label={
-              <>
-                Colonia {" "}
-                <span className="text-xs text-gray-400 dark:text-dark-300">
-                  (opcional)
-              </span>
-              </>
-            }
-            error={errors?.colony?.message}
-            placeholder="Ingresa la colonia"
-          />
-        </div>
-
         {/* CALLE Y NUMERO */}
         <Input
           {...register("address")}
@@ -130,16 +58,77 @@ export function AddressInfo({ setCurrentStep }) {
           placeholder="av. juan perez, Calle 56"
         />
 
+        <div className="grid gap-4 lg:grid-cols-2">
+
+          {/* CIUDAD */}
+          {/* COLONIA */}
+          <Input
+            {...register("colony")}
+            label={
+              <>
+                Colonia {" "}
+                <span className="text-xs text-gray-400 dark:text-dark-300">
+                  (opcional)
+              </span>
+              </>
+            }
+            error={errors?.colony?.message}
+            placeholder="Ingresa la colonia"
+          />
+          <Input
+            {...register("city")}
+            label={
+              <>
+                Ciudad {" "}
+                <span className="text-xs text-gray-400 dark:text-dark-300">
+                  (opcional)
+              </span>
+              </>
+            }
+            error={errors?.city?.message}
+            placeholder="Ingresa la ciudad"
+          />
+          
+          {/* CODIGO POSTAL */}
+          <Input
+            {...register("zipCode")}
+            label={
+              <>
+                Código Postal {" "}
+                <span className="text-xs text-gray-400 dark:text-dark-300">
+                  (opcional)
+              </span>
+              </>
+            }
+            error={errors?.zipCode?.message}
+            placeholder="Ingresa el código postal"
+          />
+          {/* ESTADO */}
+          <Input
+            {...register("state")}
+            label={
+              <>
+                Estado {" "}
+                <span className="text-xs text-gray-400 dark:text-dark-300">
+                  (opcional)
+              </span>
+              </>
+            }
+            error={errors?.state?.message}
+            placeholder="Ingresa el estado"
+          />
+          
+        </div>
 
       </div>
 
 
       <div className="mt-8 flex justify-end space-x-3 ">
         <Button className="min-w-[7rem]" onClick={() => setCurrentStep(0)}>
-          Back
+          Regresar
         </Button>
         <Button type="submit" className="min-w-[7rem]" color="primary">
-          Next
+          Siguiente
         </Button>
       </div>
     </form>

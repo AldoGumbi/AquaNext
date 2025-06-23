@@ -19,29 +19,29 @@ const steps = [
   {
     key: "personalInfo",
     component: PersonalInfo,
-    label: "Personal Information",
+    label: "Información básica",
     description:
-      "Please provide your personal information in order to complete your KYC",
+      "Por favor, ingrese la información básica del alumno",
   },
   {
     key: "addressInfo",
     component: AddressInfo,
-    label: "Address Information",
-    description: "Enter name, DOB, gender, email, phone and occupation",
+    label: "Domicilio",
+    description: "Ingrese el domicilio del alumno.",
   },
   {
     key: "identifyDocument",
     component: Idenfication,
-    label: "Idenfication",
+    label: "Fotografía",
     description:
-      "Upload a scanned copy of ID proof (passport, driver’s license or ID Card).",
+      "(Opcional)",
   },
   {
     key: "declaration",
     component: Declaration,
-    label: "Declaration",
+    label: "Confirmación",
     description:
-      "Read and agree to the terms and conditions of the form. Check the box to confirm information and consent.",
+      "Verifique la información ingresada y click en Finalizar para guardar.",
   },
 ];
 
@@ -82,10 +82,10 @@ const KYCForm = () => {
   );
 
   return (
-    <Page title="eKYC Form">
+    <Page title="Nuevo Alumno">
       <div className="transition-content grid w-full grid-rows-[auto_1fr] px-(--margin-x) pb-8">
         <h2 className="py-5 text-xl font-medium tracking-wide text-gray-800 dark:text-dark-50 lg:py-6 lg:text-2xl">
-          eKYC Form
+          Nuevo Alumno
         </h2>
 
         <KYCFormProvider>

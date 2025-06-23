@@ -5,7 +5,7 @@ import { alumnos } from "./alumnos";
 export const navigation = [
   dashboards,
   salePoint,
-  alumnos
+  alumnos,
 ];
 
 export { baseNavigation } from "./baseNavigation";

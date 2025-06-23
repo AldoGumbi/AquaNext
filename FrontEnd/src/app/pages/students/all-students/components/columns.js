@@ -36,11 +36,20 @@ export const columns = [
     header: "Fecha de Nacimiento",
     cell: DateCell,
   }),
-  columnHelper.accessor((row) => row.domicilio, {
-    id: "direccion",
-    header: "Dirección",
-    cell: ({ getValue }) => getValue() || "No registrada",
-  }),
+columnHelper.accessor((row) => row.domicilio, {
+  id: "direccion",
+  header: "Dirección",
+  cell: ({ getValue }) => {
+    const raw = getValue();
+    // Si es string y tiene al menos una parte válida distinta de coma
+    if (typeof raw === "string") {
+      const parts = raw.split(",").map(p => p.trim()).filter(Boolean);
+      return parts.length > 0 ? parts.join(", ") : "No registrada";
+    }
+    return "No registrada";
+  },
+}),
+
   columnHelper.accessor((row) => `${row.email} ${row.telefono}`, {
     id: "contacto",
     header: "Contacto",

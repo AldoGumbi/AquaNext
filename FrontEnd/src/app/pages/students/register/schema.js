@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 // ----------------------------------------------------------------------
 
 dayjs.extend(isBetween)
-
+const today = dayjs().endOf('day');
 export const personalInfoSchema = Yup.object().shape({
     // Personal Information
     firstName: Yup.string()
@@ -30,10 +30,9 @@ export const personalInfoSchema = Yup.object().shape({
       .matches(/^[0-9\-s]+$/, 'Ingrese un número de teléfono válido')
       .required('Ingresa un número de teléfono de emergencia'),
     dateOfBirth: Yup.date()
-        .test("valid-age", "You must be at least 18 years old", (value) => {
-            return dayjs().diff(dayjs(value), "year") >= 18;
-        })
-        .required('Choose Your Birth Date'),
+    .typeError("Ingresa una fecha válida")
+    .max(today.toDate(), "La fecha debe ser hoy o en el pasado")
+    .required("La fecha de nacimiento es obligatoria"),
 })
 
 export const addressInfoSchema = Yup.object().shape({

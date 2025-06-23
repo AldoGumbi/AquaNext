@@ -12,8 +12,7 @@ export const settings = {
     id: 'settings',
     type: NAV_TYPE_ITEM,
     path: '/settings',
-    title: 'Settings',
-    transKey: 'nav.settings.settings',
+    title: 'Configuración',
     Icon: SettingIcon,
     childs: [
         {
@@ -21,15 +20,13 @@ export const settings = {
             type: NAV_TYPE_ITEM,
             path: '/settings/general',
             title: 'General',
-            transKey: 'nav.settings.general',
             Icon: UserIcon,
         },
         {
             id: 'appearance',
             type: NAV_TYPE_ITEM,
             path: '/settings/appearance',
-            title: 'Appearance',
-            transKey: 'nav.settings.appearance',
+            title: 'Apariencia',
             Icon: TbPalette,
         },
     ]

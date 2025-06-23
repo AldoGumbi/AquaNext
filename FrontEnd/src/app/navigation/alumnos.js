@@ -1,9 +1,7 @@
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM } from 'constants/app.constant'
 
 
-import {
-  SquareUserRound
-} from 'lucide-react';
+import { SquareUserRound } from 'lucide-react';
 const ROOT_ALUMNOS = '/students'
 
 const path = (root, item) => `${root}${item}`;

@@ -164,9 +164,9 @@ export function PersonalInfo({ setCurrentStep }) {
         </div>
       </div>
       <div className="mt-8 flex justify-end space-x-3 ">
-        <Button className="min-w-[7rem]">Cancel</Button>
+        <Button className="min-w-[7rem]">Cancelar</Button>
         <Button type="submit" className="min-w-[7rem]" color="primary">
-          Next
+          Siguiente
         </Button>
       </div>
     </form>

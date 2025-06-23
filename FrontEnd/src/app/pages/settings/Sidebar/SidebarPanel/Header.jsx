@@ -13,7 +13,7 @@ export function Header() {
   const { close: closeSidebar } = useSidebarContext();
   const Icon = settings.Icon;
   const { t } = useTranslation();
-  const title = t(settings.transKey) || settings.title;
+  const title = settings.title ||t(settings.transKey);
 
   return (
     <div className="relative flex h-18 w-full shrink-0 items-center justify-between pl-4 pr-1 rtl:pl-1 rtl:pr-4">

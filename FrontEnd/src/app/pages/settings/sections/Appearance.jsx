@@ -19,11 +19,11 @@ const darkColors = ["mint", "navy", "mirage", "cinder", "black"];
 const cardSkins = [
   {
     value: "shadow-sm",
-    label: "Shadow",
+    label: "Sombras Suaves",
   },
   {
     value: "bordered",
-    label: "Bordered",
+    label: "Con Bordes",
   },
 ];
 
@@ -54,7 +54,6 @@ const notificationPos = [
   },
 ];
 
-const MAX_NOTIFICATION_COUNT = 5;
 
 export default function Appearance() {
   const theme = useThemeContext();
@@ -77,11 +76,10 @@ export default function Appearance() {
   return (
     <div className="w-full max-w-3xl 2xl:max-w-5xl">
       <h5 className="text-lg font-medium text-gray-800 dark:text-dark-50">
-        Appearance
+        Apariencia
       </h5>
       <p className="mt-0.5 text-balance text-sm text-gray-500 dark:text-dark-200">
-        Customize the appearance of the app. Select Theme colors and mode, to
-        change the look of the app.
+        Personaliza la apariencia de la aplicación. Selecciona los colores y el modo del tema para cambiar la apariencia de la aplicación.
       </p>
       <div className="my-5 h-px bg-gray-200 dark:bg-dark-500" />
 
@@ -89,10 +87,10 @@ export default function Appearance() {
         <div>
           <div>
             <p className="text-base font-medium text-gray-800 dark:text-dark-100">
-              Theme
+              Tema
             </p>
             <p className="mt-0.5">
-              You can select a theme color from the list below.
+              Puedes seleccionar un color de tema de la lista a continuación.
             </p>
           </div>
           <RadioGroup
@@ -100,7 +98,7 @@ export default function Appearance() {
             onChange={theme.setThemeMode}
             className="mt-4"
           >
-            <Label className="sr-only">Theme Mode (dark or light)</Label>
+            <Label className="sr-only">Modo de Tema (oscuro o claro)</Label>
             <div className="mt-2 flex flex-wrap gap-6">
               <Radio
                 value="system"
@@ -156,7 +154,7 @@ export default function Appearance() {
                       </div>
                     </div>
 
-                    <p className="mt-1.5 text-center">System</p>
+                    <p className="mt-1.5 text-center">Sistema</p>
                   </>
                 )}
               </Radio>
@@ -185,7 +183,7 @@ export default function Appearance() {
                         </div>
                       </div>
                     </div>
-                    <p className="mt-1.5 text-center">Light</p>
+                    <p className="mt-1.5 text-center">Claro</p>
                   </>
                 )}
               </Radio>
@@ -214,7 +212,7 @@ export default function Appearance() {
                         </div>
                       </div>
                     </div>
-                    <p className="mt-1.5 text-center">Dark</p>
+                    <p className="mt-1.5 text-center">Oscuro</p>
                   </>
                 )}
               </Radio>
@@ -224,11 +222,11 @@ export default function Appearance() {
         <div>
           <div>
             <p className="text-base font-medium text-gray-800 dark:text-dark-100">
-              Primary Color
+              Color Primario del Tema
             </p>
             <p className="mt-0.5">
-              Choose a color that will be used as the primary color for your
-              theme.
+              Elige un color que se utilizará como color primario para tu
+              tema.
             </p>
           </div>
           <RadioGroup
@@ -236,7 +234,7 @@ export default function Appearance() {
             onChange={theme.setPrimaryColorScheme}
             className="mt-2"
           >
-            <Label className="sr-only">Choose Primary Theme Color</Label>
+            <Label className="sr-only">Elige el Color Primario del Tema</Label>
             <div className="mt-2 flex w-fit flex-wrap gap-4 sm:gap-5">
               {primaryColors.map((color) => (
                 <Radio
@@ -270,10 +268,10 @@ export default function Appearance() {
         <div>
           <div>
             <p className="text-base font-medium text-gray-800 dark:text-dark-100">
-              Light Color Scheme
+              Color de Tema Claro
             </p>
             <p className="mt-0.5">
-              Select light color scheme that will be used for your theme.
+              Selecciona el esquema de color claro que se utilizará para tu tema.
             </p>
           </div>
           <RadioGroup
@@ -281,7 +279,7 @@ export default function Appearance() {
             onChange={theme.setLightColorScheme}
             className="mt-4"
           >
-            <Label className="sr-only">Theme Light Mode Color Scheme</Label>
+            <Label className="sr-only">Color de Tema Claros</Label>
             <div className="mt-2 flex flex-wrap gap-4">
               {lightColors.map((color) => (
                 <Radio
@@ -335,10 +333,10 @@ export default function Appearance() {
         <div>
           <div>
             <p className="text-base font-medium text-gray-800 dark:text-dark-100">
-              Dark Color Scheme
+              Color de tema Oscuro
             </p>
             <p className="mt-0.5">
-              Select dark color scheme that will be used for your theme.
+              Selecciona el esquema de color oscuro que se utilizará para tu tema.
             </p>
           </div>
           <RadioGroup
@@ -346,7 +344,7 @@ export default function Appearance() {
             onChange={theme.setDarkColorScheme}
             className="mt-4"
           >
-            <Label className="sr-only">Dark Mode Color Schemes</Label>
+            <Label className="sr-only">Color de tema Oscuro</Label>
             <div className="mt-2 flex flex-wrap gap-4">
               {darkColors.map((color) => (
                 <Radio
@@ -404,137 +402,11 @@ export default function Appearance() {
           </RadioGroup>
         </div>
       </div>
-      <div className="my-6 h-px bg-gray-200 dark:bg-dark-500"></div>
-      <div>
-        <div>
-          <p className="text-base font-medium text-gray-800 dark:text-dark-100">
-            Notification
-          </p>
-          <p className="mt-0.5">
-            Choose Notification position and group style for your application
-          </p>
-        </div>
-        <div className="mt-3">
-          <p>Notification Group Style</p>
-          <RadioGroup
-            value={theme.notification?.isExpanded ? "expand" : "stack"}
-            onChange={(val) => theme.setNotificationExpand(val === "expand")}
-            className="mt-3 text-center"
-          >
-            <Label className="sr-only">Notification Group Style</Label>
-            <div className="grid max-w-xl gap-4 sm:grid-cols-2">
-              <Radio value="stack" className="cursor-pointer outline-hidden">
-                {({ checked }) => (
-                  <>
-                    <div
-                      className={clsx(
-                        "relative flex h-52 w-full items-center rounded-lg border border-gray-200 px-3 py-4 dark:border-dark-500",
-                        checked &&
-                          "ring-2 ring-primary-600 ring-offset-2 ring-offset-white transition-all dark:ring-primary-500 dark:ring-offset-dark-700",
-                      )}
-                    >
-                      <div className="w-full -space-y-6">
-                        <div
-                          className="relative flex h-12 w-full flex-col justify-center space-y-2 rounded-sm border bg-white p-2 shadow-[0_4px_12px_#0000001a] dark:border-dark-500 dark:bg-dark-600 dark:shadow-none"
-                          style={{ transform: "scale(.9)" }}
-                        >
-                          <div className="h-2 w-11/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                          <div className="h-2 w-9/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                        </div>
-                        <div
-                          className="relative flex h-12 w-full flex-col justify-center space-y-2 rounded-sm border bg-white p-2 shadow-[0_4px_12px_#0000001a] dark:border-dark-500 dark:bg-dark-600 dark:shadow-none"
-                          style={{ transform: "scale(.95)" }}
-                        >
-                          <div className="h-2 w-11/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                          <div className="h-2 w-9/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                        </div>
-                        <div className="relative flex h-12 w-full flex-col justify-center space-y-2 rounded-sm border bg-white p-2 shadow-[0_4px_12px_#0000001a] dark:border-dark-500 dark:bg-dark-600 dark:shadow-none">
-                          <div className="h-2 w-11/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                          <div className="h-2 w-9/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="mt-2">Stacked</p>
-                  </>
-                )}
-              </Radio>
-              <Radio value="expand" className="cursor-pointer outline-hidden">
-                {({ checked }) => (
-                  <>
-                    <div
-                      className={clsx(
-                        "relative flex h-52 w-full flex-col justify-between space-y-2 rounded-lg border border-gray-200 px-4 py-5 dark:border-dark-500",
-                        checked &&
-                          "ring-2 ring-primary-600 ring-offset-2 ring-offset-white transition-all dark:ring-primary-500 dark:ring-offset-dark-700",
-                      )}
-                    >
-                      {Array(3)
-                        .fill()
-                        .map((_, i) => (
-                          <div
-                            key={i}
-                            className="relative flex h-12 w-full flex-col justify-center space-y-2 rounded-sm border bg-white p-2 shadow-[0_4px_12px_#0000001a] dark:border-dark-500 dark:bg-dark-600 dark:shadow-none"
-                          >
-                            <div className="h-2 w-9/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                            <div className="h-2 w-11/12 rounded-lg bg-gray-150 dark:bg-dark-400"></div>
-                          </div>
-                        ))}
-                    </div>
-                    <p className="mt-2">Expanded</p>
-                  </>
-                )}
-              </Radio>
-            </div>
-          </RadioGroup>
-        </div>
-        <div className="mt-4">
-          <p>Notification Max Count</p>
-          <RadioGroup
-            value={theme.notification?.visibleToasts}
-            onChange={(val) => theme.setNotificationMaxCount(val)}
-            className="mt-3 text-center"
-          >
-            <Label className="sr-only">Notification Max Count</Label>
-            <div className="flex w-full max-w-sm space-x-0.5 ">
-              {Array(MAX_NOTIFICATION_COUNT)
-                .fill()
-                .map((_, i) => (
-                  <Radio
-                    value={i + 1}
-                    key={i}
-                    className={({ checked }) =>
-                      clsx(
-                        "flex-1 cursor-pointer border-2 border-transparent border-b-current pb-1 text-base font-medium outline-hidden",
-                        checked
-                          ? "text-primary-600 dark:text-primary-400"
-                          : "text-gray-500 dark:text-dark-300",
-                      )
-                    }
-                  >
-                    {i + 1}
-                  </Radio>
-                ))}
-            </div>
-          </RadioGroup>
-        </div>
-        <div className="mt-5 grid grid-cols-1 md:grid-cols-3">
-          <p className="my-auto">Notification Position:</p>
-          <Listbox
-            classNames={{
-              root: "mt-1.5 flex-1 md:col-span-2 md:mt-0",
-            }}
-            data={notificationPos}
-            value={notificationPos.find(
-              (pos) => pos.value === theme.notification?.position,
-            )}
-            onChange={({ value }) => theme.setNotificationPosition(value)}
-          />
-        </div>
-      </div>
+
       <div className="my-6 h-px bg-gray-200 dark:bg-dark-500"></div>
       <div className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-3">
-          <p className="my-auto">Card Skin:</p>
+          <p className="my-auto">Color de Cards:</p>
           <Listbox
             classNames={{
               root: "mt-1.5 flex-1 md:col-span-2 md:mt-0",
@@ -545,9 +417,9 @@ export default function Appearance() {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3">
-          <p className="my-auto">Theme Chrome Mode:</p>
+          <p className="my-auto">Tono:</p>
           <div className="mt-1.5 flex flex-1 items-center justify-between space-x-2 rounded-lg border border-gray-300 px-3 py-2 dark:border-dark-450 md:col-span-2 md:mt-0 ">
-            <p className="text-gray-800 dark:text-dark-100">Monochrome Mode</p>
+            <p className="text-gray-800 dark:text-dark-100">Modo Monocromatico</p>
             <Switch
               checked={theme.isMonochrome}
               onChange={(e) => theme.setMonochromeMode(e.target.checked)}
@@ -557,7 +429,7 @@ export default function Appearance() {
       </div>
       <div className="mt-10">
         <Button color="primary" onClick={theme.resetTheme}>
-          Reset Theme
+          Guardar Tema
         </Button>
       </div>
     </div>

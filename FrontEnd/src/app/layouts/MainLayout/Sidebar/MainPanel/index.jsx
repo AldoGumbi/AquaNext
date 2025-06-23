@@ -42,7 +42,7 @@ export function MainPanel({ nav, setActiveSegment, activeSegment }) {
             id={settings.id}
             component={Link}
             to="/settings/appearance"
-            title={"Settings"}
+            title={"Configuración"}
             isActive={activeSegment === settings.path}
             Icon={settings.Icon}
           />
