@@ -18,8 +18,12 @@ export const insertAlumno = async (req, res) => {
             })
         }
         
-        const domicilioFormat = Object.values(data.domicilio).join(',');
+        const domicilioFormat = Object.values(data.domicilio)
+        .map(val => val?.trim())          // limpia espacios
+        .filter(val => val)               // elimina nulos, undefined, ""
+        .join(', ');
         const fechaFormatted = new Date(data.general.dateOfBirth).toISOString().split('T')[0];
+        const foto = data?.foto || "";
 
         const alumno = {
             nombre: data.general.firstName,
@@ -32,6 +36,7 @@ export const insertAlumno = async (req, res) => {
             domicilio: domicilioFormat,
             tipo:'regular',
             estatus: 'inactivo',
+            foto: foto, 
         }
         const id = await alumnosModel.crearAlumno(alumno);
         res.status(201).json({

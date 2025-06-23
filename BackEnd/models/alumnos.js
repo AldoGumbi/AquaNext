@@ -5,8 +5,12 @@ class alumnosModel {
 
   // Método para crear un nuevo alumno
   static async crearAlumno(alumno) {
-    try{
-      const [result] = await db.query(`
+    const connection = await db.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      // Insertar alumno (sin foto)
+      const [result] = await connection.query(`
         INSERT INTO alumnos (
           nombre, 
           apellido_paterno, 
@@ -16,30 +20,45 @@ class alumnosModel {
           email, 
           telefono, 
           telefono_emergencia, 
-          foto, 
           estatus, 
-          tipo_alumno)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?);
-        `
-        ,[
-          alumno.nombre, 
-          alumno.apellido_paterno, 
-          alumno.apellido_materno, 
-          alumno.fecha_nacimiento, 
-          alumno.domicilio, 
-          alumno.email, 
-          alumno.telefono, 
-          alumno.telefono_emergencia, 
-          alumno.foto,
-          alumno.estatus, 
-          alumno.tipo
-        ]
-      )
-      return result.insertId;
-    } catch(error) {
+          tipo_alumno
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      `, [
+        alumno.nombre, 
+        alumno.apellido_paterno, 
+        alumno.apellido_materno, 
+        alumno.fecha_nacimiento, 
+        alumno.domicilio, 
+        alumno.email, 
+        alumno.telefono, 
+        alumno.telefono_emergencia, 
+        alumno.estatus, 
+        alumno.tipo
+      ]);
+
+      const alumnoId = result.insertId;
+
+      // Insertar imagen en base64 en tabla fotos_alumnos
+      if (alumno.foto) {
+        await connection.query(`
+          INSERT INTO fotos_alumnos (
+            id_alumno, 
+            base_64
+          ) VALUES (?, ?);
+        `, [alumnoId, alumno.foto]);
+      }
+
+      await connection.commit();
+      return alumnoId;
+
+    } catch (error) {
+      await connection.rollback();
       throw error;
+    } finally {
+      connection.release();
     }
   }
+
 
   // Método para obtener todos los alumnos
   static async getAll() {
