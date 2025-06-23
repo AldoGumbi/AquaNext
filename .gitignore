@@ -11,5 +11,5 @@ npm-debug.log*
 jspm_packages/
 # Optional npm cache directory
 .npm
-# Optional REPL history
-
+# Data persistence
+Database/persistent/

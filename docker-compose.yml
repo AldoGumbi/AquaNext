@@ -1,0 +1,46 @@
+
+services:
+  sharkids-db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    env_file:
+      - ./DataBase/.env
+    volumes:
+      - ./DataBase/data:/docker-entrypoint-initdb.d
+      - ./DataBase/my.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./DataBase/persistent:/var/lib/mysql
+    networks:
+      - sharkids-net
+    restart: unless-stopped
+  sharkids-api:
+    image: node:alpine
+    container_name: sharkids-api
+    ports:
+      - 3000:3000
+    volumes:
+      - ./Backend:/app
+    networks:
+      - sharkids-net
+    command: sh -c "cd /app && npm install && npm run dev"
+    restart: unless-stopped
+    depends_on:
+      - sharkids-db
+  sharkids-web:
+    image: nginx:alpine
+    container_name: sharkids-web
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Frontend/dist:/usr/share/nginx/html
+      - ./Frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    #  - /etc/letsencrypt:/etc/letsencrypt
+    networks:
+      - sharkids-net
+    restart: unless-stopped
+    depends_on:
+      - sharkids-api
+networks:
+  sharkids-net:
+    external: true
