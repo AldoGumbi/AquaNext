@@ -155,6 +155,34 @@ const protectedRoutes = {
       ],
     },
 
+    // professors routes
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          path: "teachers",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/teachers/register" />,
+            },
+            {
+              path: "register",
+              lazy: async () => ({
+                Component: (await import("app/pages/teachers/register")).default,
+              }),
+            },
+            // {
+            //   path: "all-teachers",
+            //   lazy: async () => ({
+            //     Component: (await import("app/pages/teachers/all-teachers")).default,
+            //   }),
+            // },
+          ],
+        },
+      ],
+    },
+
     // The app layout supports only the main layout. Avoid using it for other layouts.
     {
       Component: AppLayout,

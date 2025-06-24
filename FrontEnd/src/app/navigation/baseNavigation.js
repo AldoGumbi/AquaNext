@@ -2,6 +2,7 @@ import { NAV_TYPE_ITEM, } from "constants/app.constant";
 import { House } from 'lucide-react';
 import { SquareUserRound } from 'lucide-react';
 import { Store } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 
 export const baseNavigation = [
   {
@@ -24,5 +25,12 @@ export const baseNavigation = [
     path: '/students',
     title: 'Alumnos',
     Icon: SquareUserRound,
+  },
+  {
+    id: 'teachers',
+    type: NAV_TYPE_ITEM,
+    path: '/teachers',
+    title: 'Profesores',
+    Icon: GraduationCap,
   },
 ]

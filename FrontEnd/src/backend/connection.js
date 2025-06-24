@@ -36,5 +36,11 @@ export const getAlumnos = () => api.get(url.GET_ALUMNOS, null);
 export const updateAlumno = (data) => api.update(`${url.EDIT_ALUMNO}/${data.id}`, data.data);
 export const deleteAlumno = (data) => api.delete(`${url.DELETE_ALUMNO}/${data.id}`);
 
+// PROFESORES CRUD
+export const addProfesor = (data) => api.create(url.ADD_PROFESOR, data);
+export const getProfesores = () => api.get(url.GET_PROFESORS, null);
+export const updateProfesor = (data) => api.update(`${url.EDIT_PROFESOR}/${data.id}`, data.data);
+export const deleteProfesor = (data) => api.delete(`${url.DELETE_PROFESOR}/${data.id}`);
+
 // DISCOUNTS COUPONS CRUD
 export const createDiscountCoupon = (data) => api.create(url.CREATE_DISCOUNT_COUPON, data);

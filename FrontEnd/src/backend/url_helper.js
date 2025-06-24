@@ -38,6 +38,13 @@ export const GET_ALUMNOS = BASE_ALUMNO_URL + '/all-students';
 export const EDIT_ALUMNO = BASE_ALUMNO_URL + '/update-student';
 export const DELETE_ALUMNO = BASE_ALUMNO_URL + '/delete-student';
 
+// PROFESORES CRUD
+const BASE_PROFESOR_URL = '/profesores';
+export const ADD_PROFESOR = BASE_PROFESOR_URL + '/add-profesor';
+export const GET_PROFESORS = BASE_PROFESOR_URL + '/all-profesores';
+export const EDIT_PROFESOR = BASE_PROFESOR_URL + '/update-profesor';
+export const DELETE_PROFESOR = BASE_PROFESOR_URL + '/delete-profesor';
+
 // DISCOUNTS COUPONS
 const BASE_DISCOUNT_URL = '/coupons';
 export const CREATE_DISCOUNT_COUPON = BASE_DISCOUNT_URL + '/create-coupon';

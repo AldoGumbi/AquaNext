@@ -1,97 +1,244 @@
 // Import Dependencies
-import { PhoneIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { EnvelopeIcon, UserIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { HiPencil } from "react-icons/hi";
+import { EnvelopeIcon, UserIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 // Local Imports
 import { PreviewImg } from "components/shared/PreviewImg";
-import { Avatar, Button, Input, Upload } from "components/ui";
+import { Avatar } from "components/ui";
+import { useAuthContext } from "app/contexts/auth/context";
 
 // ----------------------------------------------------------------------
 
 export default function General() {
-  const [avatar, setAvatar] = useState(null);
+  const { user } = useAuthContext();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Simular carga de datos
+    const timer = setTimeout(() => setIsLoaded(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const userInfo = [
+    {
+      id: 'username',
+      label: 'Nombre de Usuario',
+      value: user?.username || 'No disponible',
+      icon: UserIcon,
+      color: 'from-blue-500 to-cyan-500'
+    },
+    {
+      id: 'email',
+      label: 'Correo Electrónico',
+      value: user?.email || 'No disponible',
+      icon: EnvelopeIcon,
+      color: 'from-purple-500 to-pink-500'
+    },
+    {
+      id: 'rol',
+      label: 'Rol del Usuario',
+      value: user?.rol || 'No disponible',
+      icon: ShieldCheckIcon,
+      color: 'from-green-500 to-emerald-500'
+    }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.4 }
+    }
+  };
 
   return (
-    <div className="w-full max-w-3xl 2xl:max-w-5xl">
-      <h5 className="text-lg font-medium text-gray-800 dark:text-dark-50">
-        General
-      </h5>
-      <p className="mt-0.5 text-balance text-sm text-gray-500 dark:text-dark-200">
-        Información de la cuenta.
-      </p>
-      <div className="my-5 h-px bg-gray-200 dark:bg-dark-500" />
-      <div className="mt-4 flex flex-col space-y-1.5">
-        <span className="text-base font-medium text-gray-800 dark:text-dark-100">
-          Avatar
-        </span>
-        <Avatar
-          size={20}
-          imgComponent={PreviewImg}
-          imgProps={{ file: avatar }}
-          src="/images/100x100.png"
-          classNames={{
-            root: "rounded-xl ring-primary-600 ring-offset-[3px] ring-offset-white transition-all hover:ring-3 dark:ring-primary-500 dark:ring-offset-dark-700",
-            display: "rounded-xl",
-          }}
-          indicator={
-            <div className="absolute bottom-0 right-0 -m-1 flex items-center justify-center rounded-full bg-white dark:bg-dark-700">
-              {avatar ? (
-                <Button
-                  onClick={() => setAvatar(null)}
-                  isIcon
-                  className="size-6 rounded-full"
-                >
-                  <XMarkIcon className="size-4" />
-                </Button>
-              ) : (
-                <Upload name="avatar" onChange={setAvatar} accept="image/*">
-                  {({ ...props }) => (
-                    <Button isIcon className="size-6 rounded-full" {...props}>
-                      <HiPencil className="size-3.5" />
-                    </Button>
-                  )}
-                </Upload>
-              )}
+    <motion.div 
+      className="w-full max-w-4xl mx-auto"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header Section */}
+      <motion.div 
+        className="mb-8"
+        variants={itemVariants}
+      >
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 p-8">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent dark:from-primary-400/10" />
+          <div className="relative">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Información General
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300">
+              Visualiza la información de tu cuenta de usuario
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Avatar Section */}
+      <motion.div 
+        className="mb-8"
+        variants={cardVariants}
+      >
+        <div className="bg-white dark:bg-dark-800 rounded-2xl p-8 shadow-lg dark:shadow-xl border border-gray-100 dark:border-dark-600 transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl">
+          <div className="flex flex-col items-center space-y-4">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <Avatar
+                size={32}
+                imgComponent={PreviewImg}
+                src="/images/100x100.png"
+                classNames={{
+                  root: "rounded-2xl ring-4 ring-primary-100 dark:ring-primary-800/50 shadow-2xl transition-all duration-300 hover:ring-primary-200 dark:hover:ring-primary-700/70",
+                  display: "rounded-2xl",
+                }}
+              />
+            </motion.div>
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {user?.username || 'Usuario'}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Foto de perfil
+              </p>
             </div>
-          }
-        />
-      </div>
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 [&_.prefix]:pointer-events-none">
-        <Input
-          placeholder="Nombre del usuario"
-          label="Nombre"
-          className="rounded-xl"
-          prefix={<UserIcon className="size-4.5" />}
-        />
-        <Input
-          placeholder="Username del usuario"
-          label="Username"
-          className="rounded-xl"
-          prefix={<UserIcon className="size-4.5" />}
-        />
-        <Input
-          placeholder="Enter Email"
-          label="Email"
-          className="rounded-xl"
-          prefix={<EnvelopeIcon className="size-4.5" />}
-        />
-        <Input
-          placeholder="Numero telefonico"
-          label="Numero telefonico"
-          className="rounded-xl"
-          prefix={<PhoneIcon className="size-4.5" />}
-        />
-      </div>
-      <div className="my-7 h-px bg-gray-200 dark:bg-dark-500" />
-      
-      <div className="mt-8 flex justify-end space-x-3 ">
-        <Button className="min-w-[7rem]">Cancelar</Button>
-        <Button className="min-w-[7rem]" color="primary">
-          Guardar
-        </Button>
-      </div>
-    </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* User Information Cards */}
+      <motion.div 
+        className="grid gap-6 md:grid-cols-1 lg:grid-cols-3"
+        variants={containerVariants}
+      >
+        {userInfo.map((info, index) => {
+          const IconComponent = info.icon;
+          return (
+            <motion.div
+              key={info.id}
+              variants={cardVariants}
+              whileHover={{ 
+                y: -4,
+                transition: { type: "spring", stiffness: 300, damping: 20 }
+              }}
+              className="group h-full"
+            >
+              <div className="bg-white dark:bg-dark-800 rounded-2xl p-6 shadow-lg dark:shadow-xl border border-gray-100 dark:border-dark-600 transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden relative h-full min-h-[200px] flex flex-col">
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${info.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                
+                {/* Content */}
+                <div className="relative flex flex-col h-full">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className={`p-3 rounded-xl bg-gradient-to-br ${info.color} shadow-lg transform transition-transform duration-300 group-hover:scale-110 flex-shrink-0`}>
+                      <IconComponent className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                        {info.label}
+                      </h4>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 flex flex-col justify-between space-y-3">
+                    <div className="flex-1">
+                      <motion.div 
+                        className="group/tooltip relative"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: isLoaded ? 1 : 0 }}
+                        transition={{ delay: 0.2 + index * 0.1 }}
+                      >
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white truncate cursor-pointer transition-colors duration-200 hover:text-primary-600 dark:hover:text-primary-400">
+                          {info.value}
+                        </p>
+                        {/* Tooltip para mostrar texto completo */}
+                        {info.value.length > 20 && (
+                          <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                            <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm px-3 py-2 rounded-lg shadow-lg whitespace-nowrap max-w-xs break-all">
+                              {info.value}
+                              <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-100"></div>
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    </div>
+                    
+                    {/* Status indicator - siempre en la parte inferior */}
+                    <div className="flex items-center space-x-2 mt-auto">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        Información verificada
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Additional Info Section */}
+      <motion.div 
+        className="mt-8"
+        variants={itemVariants}
+      >
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-800 dark:to-dark-700 rounded-2xl p-6 border border-gray-200 dark:border-dark-600">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                Estado de la Cuenta
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Tu cuenta está activa y verificada
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-ping" />
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
+              <span className="text-sm font-medium text-green-600 dark:text-green-400 ml-2">
+                Activo
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Footer Note */}
+      <motion.div 
+        className="mt-8 text-center"
+        variants={itemVariants}
+      >
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          La información mostrada es de solo lectura. Para modificar tus datos, contacta al administrador.
+        </p>
+      </motion.div>
+    </motion.div>
   );
 }
