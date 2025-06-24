@@ -13,10 +13,13 @@ import { conditionalAuth } from './middlewares/authMiddleware.js';
 import auth from './routes/authRouter.js';
 // SALE POINT
 import products from "./routes/products.js";
-import alumnos from "./routes/alumnoRouter.js";
 import baskets from "./routes/basket.js";
 import basketItems from "./routes/basketItems.js";
 import coupons from "./routes/couponsRouter.js";
+// ALUMNOS
+import alumnos from "./routes/alumnoRouter.js";
+// PROFESORES
+import profesores from "./routes/teacherRouter.js";
 
 const app = express();
 
@@ -50,6 +53,7 @@ app.use('/baskets', baskets);
 app.use('/basket-items', basketItems);
 app.use('/alumnos', alumnos);
 app.use('/coupons', coupons);
+app.use('/profesores', profesores);
 
 // Manejo de errores
 app.use((req, res, next) => {
