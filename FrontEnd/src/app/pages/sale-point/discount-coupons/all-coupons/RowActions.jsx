@@ -150,6 +150,7 @@ export function RowActions({ row, table }) {
         state={state}
       />
 
+      
       <OrdersDrawer row={row} close={closeDrawer} isOpen={isDrawerOpen} />
     </>
   );

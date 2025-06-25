@@ -22,10 +22,34 @@ import { orderStatusOptions } from "./data";
 // ----------------------------------------------------------------------
 
 export function OrderIdCell({ getValue }) {
+  const { nombre, codigo } = getValue();
+
   return (
-    <span className="font-medium text-primary-600 dark:text-primary-400">
-      {getValue()}
-    </span>
+    <div>
+      <p className="font-medium text-primary-600 dark:text-primary-400">{nombre}</p>
+      <p className="text-xs text-gray-500 dark:text-dark-300 mt-0.5">{codigo}</p>
+    </div>
+  );
+}
+
+export function ExpirationDateCell({ getValue }) {
+  const { locale } = useLocaleContext();
+  const { fecha_inicio, fecha_fin } = getValue();
+
+  const inicio = dayjs(fecha_inicio).locale(locale).format("DD MMM YYYY");
+  const fin = dayjs(fecha_fin).locale(locale).format("DD MMM YYYY");
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <div>
+        <span className="text-xs text-gray-500 dark:text-dark-300">Inicio:</span>
+        <p className="font-medium">{inicio}</p>
+      </div>
+      <div>
+        <span className="text-xs text-gray-500 dark:text-dark-300">Vence:</span>
+        <p className="font-medium">{fin}</p>
+      </div>
+    </div>
   );
 }
 
@@ -33,14 +57,51 @@ export function DateCell({ getValue }) {
   const { locale } = useLocaleContext();
   const timestapms = getValue();
   const date = dayjs(timestapms).locale(locale).format("DD MMM YYYY");
-  const time = dayjs(timestapms).locale(locale).format("hh:mm A");
+
   return (
     <>
       <p className="font-medium">{date}</p>
-      <p className="mt-0.5 text-xs text-gray-400 dark:text-dark-300">{time}</p>
     </>
   );
 }
+
+export function DiscountCell({ getValue }) {
+  const { tipo, valor } = getValue();
+
+  const formatted =
+    tipo === "porcentaje"
+      ? `${parseFloat(valor)}%`
+      : `$${parseFloat(valor).toFixed(2)} MXN`;
+
+  return (
+    <p className="font-medium text-primary-600 dark:text-primary-400">
+      {formatted}
+    </p>
+  );
+}
+
+export function UsageCell({ getValue }) {
+  const { usos_actuales, usos_maximos } = getValue();
+  const isFull = usos_actuales >= usos_maximos;
+
+  return (
+    <div className="flex flex-col">
+      <p
+        className={`font-medium ${
+          isFull
+            ? 'text-red-500 dark:text-red-400'
+            : 'text-primary-600 dark:text-primary-400'
+        }`}
+      >
+        {usos_actuales} / {usos_maximos} usos
+      </p>
+      <p className="text-xs text-gray-500 dark:text-dark-300 mt-0.5">
+        {isFull ? "Límite alcanzado" : "Aún disponible"}
+      </p>
+    </div>
+  );
+}
+
 
 export function CustomerCell({ row, getValue, column, table }) {
   const globalQuery = ensureString(table.getState().globalFilter);
@@ -161,9 +222,22 @@ OrderIdCell.propTypes = {
   getValue: PropTypes.func,
 };
 
+ExpirationDateCell.prototypes = {
+  getValue: PropTypes.func,
+};
+
+DiscountCell.propTypes = {
+  getValue: PropTypes.func,
+};
+
 DateCell.propTypes = {
   getValue: PropTypes.func,
 };
+
+UsageCell.propTypes = {
+  getValue: PropTypes.func,
+};
+
 
 TotalCell.propTypes = {
   getValue: PropTypes.func,

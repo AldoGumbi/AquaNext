@@ -48,4 +48,5 @@ export const DELETE_PROFESOR = BASE_PROFESOR_URL + '/delete-profesor';
 // DISCOUNTS COUPONS
 const BASE_DISCOUNT_URL = '/coupons';
 export const CREATE_DISCOUNT_COUPON = BASE_DISCOUNT_URL + '/create-coupon';
+export const GET_DISCOUNT_COUPONS = BASE_DISCOUNT_URL + '/get-coupons';
 

@@ -1,5 +1,4 @@
 import db from '../config/db.js';
-import InventoryModel from "./inventoryModel.js";
 
 class couponsModel {
   static async createCoupon(coupon) {
@@ -19,6 +18,11 @@ class couponsModel {
       ]
     );
     return rows.insertId;
+  }
+  static async getCoupons() {
+    const query = `SELECT * FROM cupones`;
+    const [rows] = await db.query(query);
+    return rows;
   }
 }
 

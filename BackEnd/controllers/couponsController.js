@@ -105,3 +105,24 @@ export const insertCoupons = async (req, res) => {
     });
   }
 }
+
+export const getAllCoupons = async (req, res) => {
+  try {
+    const coupons = await couponsModel.getCoupons();
+    if (!coupons || coupons.length === 0) {
+      return res.status(404).json({
+        data: false,
+        message: 'No se encontraron cupones de descuento.'
+      });
+    }
+    res.status(200).json({
+      data: coupons,
+      message: 'Cupones de descuento obtenidos exitosamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener los cupones de descuento',
+      error : error.message
+    });
+  }
+}

@@ -1,5 +1,6 @@
 import {
-  createDiscountCoupon
+  createDiscountCoupon,
+  getDiscountCoupons
 } from "../../backend/connection.js";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -7,6 +8,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 export const CreateCouponThunk = createAsyncThunk("coupon/create", async (data, { rejectWithValue }) => {
   try {
     return await createDiscountCoupon(data);
+  } catch (error) {
+    return rejectWithValue({ error });
+  }
+});
+// Thunk to get all discount coupons
+export const GetCouponsThunk = createAsyncThunk("coupon/get", async (_, { rejectWithValue }) => {
+  try {
+    return await getDiscountCoupons();
   } catch (error) {
     return rejectWithValue({ error });
   }

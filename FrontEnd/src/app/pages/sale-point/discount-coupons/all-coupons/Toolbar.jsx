@@ -18,6 +18,8 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { TbCurrencyDollar } from "react-icons/tb";
 import PropTypes from "prop-types";
 
+import { Link } from "react-router";
+
 // Local Imports
 import { DateFilter } from "components/shared/table/DateFilter";
 import { FacedtedFilter } from "components/shared/table/FacedtedFilter";
@@ -67,15 +69,17 @@ export function Toolbar({ table }) {
             >
               <MenuItem>
                 {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>New Order</span>
-                  </button>
+                  <Link to="/sale-point/discount-coupons/add-coupon">
+                    <button
+                      className={clsx(
+                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                        focus &&
+                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+                      )}
+                    >
+                      <span>Crear código</span>
+                    </button>
+                  </Link>
                 )}
               </MenuItem>
               <MenuItem>
@@ -128,7 +132,7 @@ export function Toolbar({ table }) {
                         "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                     )}
                   >
-                    <span>Export as PDF</span>
+                    <span>Exportar PDF</span>
                   </button>
                 )}
               </MenuItem>
@@ -141,7 +145,7 @@ export function Toolbar({ table }) {
                         "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                     )}
                   >
-                    <span>Export as CSV</span>
+                    <span>Exportar CSV</span>
                   </button>
                 )}
               </MenuItem>
@@ -167,7 +171,7 @@ export function Toolbar({ table }) {
               className="h-8 space-x-2 rounded-md px-3 text-xs "
             >
               <PrinterIcon className="size-4" />
-              <span>Print</span>
+              <span>Imprimir</span>
             </Button>
 
             <Menu
@@ -245,15 +249,17 @@ export function Toolbar({ table }) {
               >
                 <MenuItem>
                   {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>New Order</span>
-                    </button>
+                    <Link to="/sale-point/discount-coupons/add-coupon">
+                      <button
+                        className={clsx(
+                          "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                          focus &&
+                            "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+                        )}
+                      >
+                        <span>Crear código</span>
+                      </button>
+                    </Link>
                   )}
                 </MenuItem>
                 <MenuItem>

@@ -44,3 +44,4 @@ export const deleteProfesor = (data) => api.delete(`${url.DELETE_PROFESOR}/${dat
 
 // DISCOUNTS COUPONS CRUD
 export const createDiscountCoupon = (data) => api.create(url.CREATE_DISCOUNT_COUPON, data);
+export const getDiscountCoupons = () => api.get(url.GET_DISCOUNT_COUPONS, null);
