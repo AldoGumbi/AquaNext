@@ -19,16 +19,28 @@ import PropTypes from "prop-types";
 import { ConfirmModal } from "components/shared/ConfirmModal";
 import { Button } from "components/ui";
 
+// Toast import
+import { toast } from "sonner";
+
 // ----------------------------------------------------------------------
 
 const confirmMessages = {
 	pending: {
+		title: "¿Eliminar alumno?",
 		description:
 			"¿Estás seguro de que quieres eliminar este alumno? Esta acción no se puede deshacer.",
+		actionText: "Eliminar alumno",
 	},
 	success: {
 		title: "Alumno eliminado",
+		description: "El alumno se eliminó correctamente de la base de datos.",
+		actionText: "Entendido",
 	},
+	error: {
+		title: "Error al eliminar alumno",
+		description: "No se pudo eliminar el alumno. Verifica tu conexión a internet e intenta nuevamente.",
+		actionText: "Reintentar",
+	}
 };
 
 export function RowActions({ row, table }) {
@@ -36,32 +48,93 @@ export function RowActions({ row, table }) {
 	const [confirmDeleteLoading, setConfirmDeleteLoading] = useState(false);
 	const [deleteSuccess, setDeleteSuccess] = useState(false);
 	const [deleteError, setDeleteError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const closeModal = () => {
 		setDeleteModalOpen(false);
+		// Resetear estados después de un breve delay para evitar flickering
+		setTimeout(() => {
+			setDeleteSuccess(false);
+			setDeleteError(false);
+			setConfirmDeleteLoading(false);
+			setErrorMessage("");
+		}, 300);
 	};
 
 	const openModal = () => {
 		setDeleteModalOpen(true);
 		setDeleteError(false);
 		setDeleteSuccess(false);
+		setConfirmDeleteLoading(false);
+		setErrorMessage("");
 	};
 
-	const handleDeleteRows = useCallback(() => {
+	const handleDeleteRows = useCallback(async () => {
+		// Si está en estado de error resetear para reintentar
+		if (deleteError) {
+			setDeleteError(false);
+			setConfirmDeleteLoading(false);
+		}
+
 		setConfirmDeleteLoading(true);
-		setTimeout(() => {
-			table.options.meta?.deleteRow(row);
+
+		try {
+			// Llamar a la función meta que maneja la eliminación
+			await table.options.meta?.deleteRow(row);
+
+			// Si llegamos hasta aquí, fue exitoso
 			setDeleteSuccess(true);
 			setConfirmDeleteLoading(false);
-		}, 1000);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [row]);
 
-	const state = deleteError ? "error" : deleteSuccess ? "success" : "pending";
+			// Cerrar el modal automaticamente depués de mostrar éxito
+			setTimeout(() => {
+				closeModal();
+			}, 2000);
+
+		} catch (error) {
+			console.error("Error al eliminar alumno: ", error);
+
+			// Extraer el mensaje de error de la API
+			const apiMessage = error?.error?.API_message ||
+							error?.message ||
+							'Error desconocido al eliminar el alumno.';
+			
+			setErrorMessage(apiMessage);
+			setDeleteError(true);
+			setConfirmDeleteLoading(false);
+
+			// Mostrar toast con el error
+			toast.error(apiMessage);
+		}
+	}, [row, table, deleteError]);
+
+	// Determinar el estado del modal
+	const getModalState = () => {
+		if (deleteError) return "error";
+		if (deleteSuccess) return "success";
+		return "pending";
+	};
+
+	// Crear mensajes dinámicos con el error de la API
+	const getDynamicMessages = () => {
+		if (deleteError && errorMessage) {
+			return {
+				...confirmMessages,
+				error: {
+					...confirmMessages.error,
+					description: errorMessage
+				}
+			};
+		}
+		return confirmMessages;
+	};
 
 	const handleEdit = () => {
 		table.options.meta?.editRow(row);
 	};
+
+	// Obtener información del alumno para mostrar en el modal
+	// const studentInfo = row.original;
 
 	return (
 		<>
@@ -122,10 +195,10 @@ export function RowActions({ row, table }) {
 			<ConfirmModal
 				show={deleteModalOpen}
 				onClose={closeModal}
-				messages={confirmMessages}
+				messages={getDynamicMessages()}
 				onOk={handleDeleteRows}
 				confirmLoading={confirmDeleteLoading}
-				state={state}
+				state={getModalState()}
 			/>
 		</>
 	);

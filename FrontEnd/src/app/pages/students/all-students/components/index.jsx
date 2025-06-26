@@ -33,6 +33,9 @@ import {
 	deleteAlumnoThunk 
 } from "slices/thunk";
 
+// Import toast
+import { toast } from "sonner";
+
 // ----------------------------------------------------------------------
 
 const isSafari = getUserAgentBrowser() === "Safari";
@@ -88,10 +91,81 @@ export function StudentsTable() {
 	};
 
 	// Función para guardar los cambios
-	const handleSave = (editedStudent) => {
+	const handleSave = async (editedStudent) => {
 		// console.log("handleSave called with:", editedStudent);
-		dispatch(updateAlumnoThunk({id: editedStudent.id, data: editedStudent}));
-		setIsEditModalOpen(false);
+
+		try {
+			await dispatch(updateAlumnoThunk({ id: editedStudent.id, data: editedStudent })).unwrap();
+			setIsEditModalOpen(false);
+			toast.success("Alumno actualizado correctamente");
+		} catch (error) {
+			console.error("Error al actualizar el alumno: ", error);
+			toast.error(error.error?.API_message || "Error al actualizar el alumno");
+		}
+	};
+
+	// Función para eliminar un solo alumno
+	const handleDeleteRow = async (row) => {
+		try {
+			skipAutoResetPageIndex();
+			await dispatch(deleteAlumnoThunk(row.original.id)).unwrap();
+
+			// Solo actualizar el estado local si la eliminación fue exitosa
+			setStudents((old) => 
+				old.filter((oldRow) => oldRow.id !== row.original.id)
+			);
+
+			return { success: true }; // Retornar éxito para poder manejarlo en RowActions.jsx
+
+		} catch (error) {
+			console.error("Error al eliminar el alumno: ", error);
+			throw error; // Propagar error para manejarlo en RowActions.jsx
+		}
+	};
+
+	// Función para eliminar multiples alumnos
+	const handleDeleteRows = async (rows) => {
+		try {
+			skipAutoResetPageIndex();
+			const rowIds = rows.map((row) => row.original.id);
+
+			// Eliminar uno por uno y capturar errores individuales
+			const deletePromises = rowIds.map(async (id) => {
+				try {
+					await dispatch(deleteAlumnoThunk(id)).unwrap();
+					return { id, success: true };
+				} catch (error) {
+					return { id, success: false, error };
+				}
+			})
+
+			const results = await Promise.all(deletePromises);
+			
+			// Separar éxitos y errores
+			const successful = results.filter((result) => result.success).map((result) => result.id);
+			const failed = results.filter((result) => !result.success);
+
+			// Actualizar el estado local solo con los eliminados exitosamente
+			if (successful.length > 0) {
+				setStudents((old) => 
+					old.filter((row) => !successful.includes(row.id))
+				);
+			}
+
+			// Mostrar mensajes apropiados
+			if (successful.length === rowIds.length) {
+				toast.success(`${successful.length} alumnos eliminados correctamente`);
+			} else if (successful.length > 0) {
+				toast.success(`${successful.length} alumnos eliminados`);
+				toast.error(`${failed.length} alumnos no pudieron ser eliminados`);
+			} else {
+				toast.error("No se pudo eliminar ningún alumno");
+			}
+
+		} catch (error) {
+			console.error("Error al eliminar los alumnos: ", error);
+			toast.error("Error al eliminar los alumnos seleccionados");
+		}
 	};
 
 	const table = useReactTable({
@@ -105,23 +179,8 @@ export function StudentsTable() {
 			fuzzy: fuzzyFilter,
 		},
 		meta: {
-			deleteRow: (row) => {
-				skipAutoResetPageIndex();
-				dispatch(deleteAlumnoThunk(row.original.id));
-				setStudents((old) =>
-					old.filter((oldRow) => oldRow.id !== row.original.id),
-				);
-			},
-			deleteRows: (rows) => {
-				skipAutoResetPageIndex();
-				const rowIds = rows.map((row) => row.original.id);
-				rowIds.forEach((id) => {
-					dispatch(deleteAlumnoThunk(id));
-				});
-				setStudents((old) =>
-					old.filter((row) => !rowIds.includes(row.id)),
-				);
-			},
+			deleteRow: handleDeleteRow,
+			deleteRows: handleDeleteRows,
 			editRow: (row) => handleEdit(row)
 		},
 		getCoreRowModel: getCoreRowModel(),

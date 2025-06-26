@@ -1,5 +1,6 @@
 // Import Dependencies
 import * as yup from 'yup';
+import dayjs from 'dayjs';
 import { DateTime } from 'luxon';
 import {
   Dialog,
@@ -8,8 +9,10 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useRef, useEffect, useState } from "react";
+import { Fragment, useRef, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
 
 // Local Imports
 import {
@@ -19,97 +22,144 @@ import {
   Select,
   Switch
 } from "components/ui";
+import { DatePicker } from "components/shared/form/Datepicker";
 
 // ----------------------------------------------------------------------
 
-// Esquema de validación Yup
+const today = dayjs().endOf('day');
+
+// Esquema de validación Yup para estudiantes
 const studentSchema = yup.object().shape({
   nombre: yup.string()
-    .required('El nombre es requerido')
-    .max(100, 'El nombre no puede exceder 100 caracteres'),
+    .trim()
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(100, 'El nombre no puede exceder 100 caracteres')
+    .required('El nombre es requerido'),
   apellido_paterno: yup.string()
-    .required('El apellido paterno es requerido')
-    .max(100, 'El apellido paterno no puede exceder 100 caracteres'),
+    .trim()
+    .min(2, 'El apellido paterno debe tener al menos 2 caracteres')
+    .max(100, 'El apellido paterno no puede exceder 100 caracteres')
+    .required('El apellido paterno es requerido'),
   apellido_materno: yup.string()
+    .trim()
     .max(50, 'El apellido materno no puede exceder 50 caracteres'),
   fecha_nacimiento: yup.date()
-    .nullable()
-    .max(new Date(), 'La fecha de nacimiento no puede ser futura'),
+    .typeError("Ingresa una fecha válida")
+    .max(today.toDate(), "La fecha debe ser hoy o en el pasado")
+    .nullable(),
   email: yup.string()
+    .trim()
     .email('Formato de email inválido')
     .max(100, 'El email no puede exceder 100 caracteres'),
   telefono: yup.string()
-    .max(20, 'El teléfono no puede exceder 20 caracteres'),
+    .trim()
+    .matches(/^[0-9]{10}$/, 'Ingrese un número de teléfono válido de 10 dígitos')
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') return null;
+      return value;
+    }),
   telefono_emergencia: yup.string()
-    .max(20, 'El teléfono de emergencia no puede exceder 20 caracteres'),
+    .trim()
+    .matches(/^[0-9]{10}$/, 'Ingrese un número de teléfono de emergencia válido de 10 dígitos')
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') return null;
+      return value;
+    }),
   domicilio: yup.string()
+    .trim()
     .max(255, 'La dirección no puede exceder 255 caracteres'),
   estatus: yup.string()
     .required('El estado es requerido')
     .oneOf(['activo', 'inactivo', 'pendiente'], 'Estado inválido'),
+  firma: yup.boolean()
+    .required('El estado de firma es requerido'),
 });
 
-
-const convertToUTC6 = (dateString) => {
-  if (!dateString) return null;
+const convertToUTC6 = (dateValue) => {
+  if (!dateValue) return null;
   
-  const dt = DateTime.fromISO(dateString, { zone: 'America/Mexico_City' });
+  let dt;
+  
+  // Si es un objeto Date de JavaScript, usar fromJSDate
+  if (dateValue instanceof Date) {
+    dt = DateTime.fromJSDate(dateValue, { zone: 'America/Mexico_City' });
+  } 
+  // Si es un string, usar fromISO
+  else if (typeof dateValue === 'string') {
+    dt = DateTime.fromISO(dateValue, { zone: 'America/Mexico_City' });
+  } 
+  // Si ya es un DateTime de Luxon
+  else if (DateTime.isDateTime(dateValue)) {
+    dt = dateValue.setZone('America/Mexico_City');
+  } 
+  else {
+    console.warn('Tipo de fecha no reconocido:', typeof dateValue, dateValue);
+    return null;
+  }
+  
+  // Verificar si la fecha es válida
+  if (!dt.isValid) {
+    console.warn('Fecha inválida:', dateValue, dt.invalidReason);
+    return null;
+  }
   
   // Convertir a UTC y formatear como fecha ISO
   return dt.toUTC().toISODate();
 };
 
 export function EditModal({ isOpen, onClose, rowData, onSave }) {
-  const [formData, setFormData] = useState(rowData);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const saveRef = useRef(null);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    control,
+    reset,
+  } = useForm({
+    resolver: yupResolver(studentSchema),
+    defaultValues: {
+      nombre: '',
+      apellido_paterno: '',
+      apellido_materno: '',
+      fecha_nacimiento: null,
+      email: '',
+      telefono: '',
+      telefono_emergencia: '',
+      domicilio: '',
+      estatus: 'activo',
+      firma: false,
+    },
+  });
+
+  // Resetear el formulario cuando cambian los datos
   useEffect(() => {
-    setFormData(rowData);
-    setErrors({});
-  }, [rowData]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === 'checkbox' ? checked : value;
-
-    setFormData(prev => ({ ...prev, [name]: val }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: null }));
+    if (rowData) {
+      reset({
+        ...rowData,
+        fecha_nacimiento: rowData.fecha_nacimiento ? rowData.fecha_nacimiento.split('T')[0] : null,
+        firma: Boolean(rowData.firma),
+      });
     }
-  };
+  }, [rowData, reset]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (data) => {
     try {
-      await studentSchema.validate(formData, { abortEarly: false });
-      setErrors({});
-      
-      // Preparar los datos para enviar, convirtiendo la fecha a UTC-6
+      // Preparar los datos para enviar, convirtiendo las fechas a UTC-6
       const dataToSend = {
-        ...formData,
-        fecha_nacimiento: convertToUTC6(formData.fecha_nacimiento)
+        ...data,
+        fecha_nacimiento: convertToUTC6(data.fecha_nacimiento),
+        firma: data.firma ? 1 : 0, // Convertir boolean a número
       };
-			// console.log('Datos a enviar:', dataToSend);
       
       await onSave(dataToSend);
       onClose();
-    } catch (validationErrors) {
-      const newErrors = {};
-      if (validationErrors.inner) {
-        validationErrors.inner.forEach(error => {
-          newErrors[error.path] = error.message;
-        });
-      }
-      setErrors(newErrors);
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      console.error('Error al guardar:', error);
     }
   };
-
-  const saveRef = useRef(null);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -158,7 +208,7 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
               </Button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
                 {/* Información Personal */}
                 <div className="space-y-4">
@@ -168,42 +218,45 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      name="nombre"
-                      type="text"
-                      value={formData?.nombre || ''}
-                      onChange={handleChange}
+                      {...register("nombre")}
                       label="Nombre*"
                       placeholder="Nombre del alumno"
-                      error={errors.nombre}
+                      error={errors.nombre?.message}
                     />
                     <Input
-                      name="apellido_paterno"
-                      type="text"
-                      value={formData?.apellido_paterno || ''}
-                      onChange={handleChange}
+                      {...register("apellido_paterno")}
                       label="Apellido Paterno*"
                       placeholder="Apellido paterno"
-                      error={errors.apellido_paterno}
+                      error={errors.apellido_paterno?.message}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      name="apellido_materno"
-                      type="text"
-                      value={formData?.apellido_materno || ''}
-                      onChange={handleChange}
+                      {...register("apellido_materno")}
                       label="Apellido Materno"
                       placeholder="Apellido materno"
-                      error={errors.apellido_materno}
+                      error={errors.apellido_materno?.message}
                     />
-                    <Input
+                    
+                    {/* DatePicker para fecha de nacimiento con Controller */}
+                    <Controller
+                      render={({ field: { onChange, value, ...rest } }) => (
+                        <DatePicker
+                          onChange={onChange}
+                          value={value || ""}
+                          label="Fecha de Nacimiento"
+                          error={errors.fecha_nacimiento?.message}
+                          options={{ 
+                            disableMobile: true,
+                            maxDate: new Date()
+                          }}
+                          placeholder="Selecciona una fecha"
+                          {...rest}
+                        />
+                      )}
+                      control={control}
                       name="fecha_nacimiento"
-                      type="date"
-                      value={formData?.fecha_nacimiento ? formData.fecha_nacimiento.split('T')[0] : ''}
-                      onChange={handleChange}
-                      label="Fecha de Nacimiento"
-                      error={errors.fecha_nacimiento}
                     />
                   </div>
                 </div>
@@ -216,45 +269,38 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      name="email"
+                      {...register("email")}
                       type="email"
-                      value={formData?.email || ''}
-                      onChange={handleChange}
                       label="Email"
                       placeholder="correo@ejemplo.com"
-                      error={errors.email}
+                      error={errors.email?.message}
                     />
                     <Input
-                      name="telefono"
+                      {...register("telefono")}
                       type="tel"
-                      value={formData?.telefono || ''}
-                      onChange={handleChange}
                       label="Teléfono"
                       placeholder="123-456-7890"
-                      error={errors.telefono}
+                      error={errors.telefono?.message}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      name="telefono_emergencia"
+                      {...register("telefono_emergencia")}
                       type="tel"
-                      value={formData?.telefono_emergencia || ''}
-                      onChange={handleChange}
                       label="Teléfono de Emergencia"
                       placeholder="123-456-7890"
-                      error={errors.telefono_emergencia}
+                      error={errors.telefono_emergencia?.message}
                     />
+                    
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-dark-200">
                         Dirección
                       </label>
                       <Textarea
-                        name="domicilio"
-                        value={formData?.domicilio || ''}
-                        onChange={handleChange}
+                        {...register("domicilio")}
                         placeholder="Dirección completa"
-                        error={errors.domicilio}
+                        error={errors.domicilio?.message}
                         rows={2}
                       />
                     </div>
@@ -268,32 +314,38 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                   </h4>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-                    <Select
+                    <Controller
+                      render={({ field: { onChange, value, ...rest } }) => (
+                        <Select
+                          value={value || ""}
+                          onChange={(e) => onChange(e.target.value)}
+                          label="Estado*"
+                          error={errors.estatus?.message}
+                          className="w-full p-2 border border-gray-300 rounded dark:bg-dark-800 dark:border-dark-500"
+                          {...rest}
+                        >
+                          <option disabled value="">Selecciona un estado</option>
+                          <option value="activo">Activo</option>
+                          <option value="inactivo">Inactivo</option>
+                          <option value="pendiente">Pendiente</option>
+                        </Select>
+                      )}
+                      control={control}
                       name="estatus"
-                      value={formData?.estatus || ''}
-                      onChange={handleChange}
-                      label="Estado*"
-                      error={errors.estatus}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded dark:bg-dark-800 dark:border-dark-500"
-                    >
-                      <option disabled value="">Selecciona un estado</option>
-                      <option value="activo">Activo</option>
-                      <option value="inactivo">Inactivo</option>
-                      <option value="pendiente">Pendiente</option>
-                    </Select>
+                    />
                     
                     <div className="flex items-center justify-center">
-                      <Switch
+                      <Controller
+                        render={({ field: { onChange, value, ...rest } }) => (
+                          <Switch
+                            checked={Boolean(value)}
+                            label="Tiene Firma"
+                            onChange={(e) => onChange(e.target.checked)}
+                            {...rest}
+                          />
+                        )}
+                        control={control}
                         name="firma"
-                        checked={Boolean(formData?.firma)}
-                        label="Tiene Firma"
-                        onChange={(e) => handleChange({
-                          target: {
-                            name: 'firma',
-                            value: e.target.checked ? 1 : 0,
-                          }
-                        })}
                       />
                     </div>
                   </div>
