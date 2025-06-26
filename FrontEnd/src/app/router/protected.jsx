@@ -172,12 +172,12 @@ const protectedRoutes = {
                 Component: (await import("app/pages/teachers/register")).default,
               }),
             },
-            // {
-            //   path: "all-teachers",
-            //   lazy: async () => ({
-            //     Component: (await import("app/pages/teachers/all-teachers")).default,
-            //   }),
-            // },
+            {
+              path: "all-teachers",
+              lazy: async () => ({
+                Component: (await import("app/pages/teachers/all-teachers")).default,
+              }),
+            },
           ],
         },
       ],

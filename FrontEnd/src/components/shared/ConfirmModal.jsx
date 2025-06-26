@@ -24,24 +24,24 @@ const defaultMessages = {
   pending: {
     Icon: ExclamationTriangleIcon,
     iconClassName: "text-warning",
-    title: "Are you sure?",
+    title: "¿Estás seguro?",
     description:
-      "Are you sure you want to delete this record? Once deleted, it cannot be restored.",
-    actionText: "Delete",
+      "¿Estás seguro de que deseas eliminar este registro? Una vez eliminado, no se podrá recuperar.",
+    actionText: "Eliminar",
   },
   success: {
     Icon: AnimatedTick,
     iconClassName: "text-success",
-    title: "Record Deleted",
-    description: "You have successfully deleted the record from the database.",
-    actionText: "Done",
+    title: "Registro eliminado",
+    description: "El registro se eliminó correctamente de la base de datos.",
+    actionText: "Listo",
   },
   error: {
     Icon: XCircleIcon,
-    title: "Opps... Something failed.",
+    title: "Ups... Algo falló.",
     description:
-      "Ensure internet is on and retry. Contact support if issue remains.",
-    actionText: "Retry",
+      "Asegúrate de tener conexión a internet e intenta nuevamente. Si el problema persiste, contacta al soporte.",
+    actionText: "Reintentar",
     iconClassName: "text-error",
   },
 };
