@@ -17,7 +17,7 @@ class profesoresModel {
         fecha_creacion,
         fecha_modificacion
       FROM profesores 
-      WHERE activo = 1
+      WHERE deleted = 0
       ORDER BY fecha_creacion DESC
     `);
     return profesores;
@@ -39,7 +39,7 @@ class profesoresModel {
         fecha_creacion,
         fecha_modificacion
       FROM profesores 
-      WHERE id = ? AND activo = 1
+      WHERE id = ? AND deleted = 0
     `, [id]);
     return profesor[0];
   }
@@ -84,7 +84,7 @@ class profesoresModel {
         especialidad = ?,
         fecha_contratacion = ?,
         activo = ?
-      WHERE id = ? AND activo = 1
+      WHERE id = ? AND deleted = 0
     `, [
       profesor.nombre, 
       profesor.apellido, 
@@ -102,7 +102,7 @@ class profesoresModel {
   // Eliminar un profesor (soft delete)
   static async delete(id) {
     const [result] = await db.query(`
-      UPDATE profesores SET activo = 0 WHERE id = ? AND activo = 1
+      UPDATE profesores SET deleted = 1 WHERE id = ?
     `, [id]);
     return result.affectedRows > 0;
   }
@@ -110,7 +110,7 @@ class profesoresModel {
   // Verificar si el teléfono ya existe
   static async telefonoAvailability(telefono) {
     const [result] = await db.query(`
-      SELECT COUNT(*) as count FROM profesores WHERE telefono = ? AND activo = 1
+      SELECT COUNT(*) as count FROM profesores WHERE telefono = ? AND deleted = 0
     `, [telefono]);
     return result[0].count > 0;
   }
@@ -126,7 +126,7 @@ class profesoresModel {
         especialidad,
         fecha_contratacion
       FROM profesores
-      WHERE especialidad LIKE ? AND activo = 1
+      WHERE especialidad LIKE ? AND deleted = 0
       ORDER BY fecha_contratacion DESC
     `, [`%${especialidad}%`]);
     return profesores;
@@ -141,6 +141,7 @@ class profesoresModel {
         COUNT(CASE WHEN activo = 0 THEN 1 END) as inactivos,
         COUNT(DISTINCT especialidad) as especialidades_diferentes
       FROM profesores
+      WHERE deleted = 0
     `);
     return stats[0];
   }

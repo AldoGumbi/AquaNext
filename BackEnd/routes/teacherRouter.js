@@ -23,10 +23,10 @@ router.get("/all-profesores", getAllProfesores);
 router.get("/get-by-id/:id", getProfesorById);
 
 // Actualizar un profesor
-router.put("/update-profesor/:id", updateProfesor);
+router.patch("/update-profesor/:id", updateProfesor);
 
 // Desactivar un profesor (soft delete)
-router.patch("/delete-profesor/:id", deleteProfesor);
+router.delete("/delete-profesor/:id", deleteProfesor);
 
 // Verificar disponibilidad de teléfono
 router.get('/check-telefono-available/:telefono', checkTelefonoAvailability);
