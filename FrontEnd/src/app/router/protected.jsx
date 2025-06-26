@@ -100,6 +100,13 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
+                // CASH REGISTER - ADD NEW
+                {
+                  path: "add-new",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/add-new")).default,
+                  }),
+                },
 
               ],
             },

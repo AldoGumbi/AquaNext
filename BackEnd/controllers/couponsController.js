@@ -126,3 +126,31 @@ export const getAllCoupons = async (req, res) => {
     });
   }
 }
+
+export const getUsagesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({
+        data: false,
+        message: 'El ID del cupón es obligatorio y debe ser un número válido.'
+      });
+    }
+    const usages = await couponsModel.UsagesById(Number(id));
+    if (!usages || usages.length === 0) {
+      return res.status(404).json({
+        data: false,
+        message: 'No se encontraron usos para el cupón de descuento.'
+      });
+    }
+    res.status(200).json({
+      data: usages,
+      message: 'Usos del cupón de descuento obtenidos exitosamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener los usos del cupón de descuento',
+      error : error.message
+    });
+  }
+}

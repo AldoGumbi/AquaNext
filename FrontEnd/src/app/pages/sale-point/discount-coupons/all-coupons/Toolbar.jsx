@@ -15,7 +15,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
-import { TbCurrencyDollar } from "react-icons/tb";
+// import { TbCurrencyDollar } from "react-icons/tb";
 import PropTypes from "prop-types";
 
 import { Link } from "react-router";
@@ -23,7 +23,7 @@ import { Link } from "react-router";
 // Local Imports
 import { DateFilter } from "components/shared/table/DateFilter";
 import { FacedtedFilter } from "components/shared/table/FacedtedFilter";
-import { RangeFilter } from "components/shared/table/RangeFilter";
+// import { RangeFilter } from "components/shared/table/RangeFilter";
 import { Button, Input } from "components/ui";
 import { TableConfig } from "./TableConfig";
 import { useBreakpointsContext } from "app/contexts/breakpoint/context";
@@ -372,27 +372,35 @@ function Filters({ table }) {
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
     <>
-      {table.getColumn("order_status") && (
+      {table.getColumn("descuento") && (
         <FacedtedFilter
-          options={orderStatusOptions}
-          column={table.getColumn("order_status")}
-          title="Status"
+        options={orderStatusOptions}
+          column={table.getColumn("descuento")}
+          title="Descuento"
           Icon={MapPinIcon}
         />
       )}
 
+     {table.getColumn("codeName") && (
+        <FacedtedFilter
+          options={orderStatusOptions}
+          column={table.getColumn("codeName")}
+          title="Nombre / Código"
+          Icon={MapPinIcon}
+        />
+      )}
       {table.getColumn("created_at") && (
         <DateFilter
           column={table.getColumn("created_at")}
-          title="Order Date Range"
+          title="Validez"
           config={{
-            maxDate: new Date().fp_incr(1),
+            // maxDate: new Date().fp_incr(1),  
             mode: "range",
           }}
         />
       )}
 
-      {table.getColumn("total") && (
+      {/* {table.getColumn("total") && (
         <RangeFilter
           column={table.getColumn("total")}
           title="Total Amount"
@@ -407,7 +415,7 @@ function Filters({ table }) {
             </>
           )}
         />
-      )}
+      )} */}
 
       {isFiltered && (
         <Button

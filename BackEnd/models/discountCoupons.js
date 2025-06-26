@@ -24,6 +24,17 @@ class couponsModel {
     const [rows] = await db.query(query);
     return rows;
   }
+
+  static async UsagesById(cpId){
+    const [rows] = await db.query(
+      `SELECT cp.* , t.*
+      FROM cupones_uso cp 
+      INNER JOIN transacciones t ON cp.transaccion_id = t.id 
+      WHERE transaccion_id = ?`,
+      [cpId]
+    );
+    return rows;
+  }
 }
 
 export default couponsModel;
