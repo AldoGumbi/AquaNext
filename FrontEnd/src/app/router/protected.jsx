@@ -42,7 +42,7 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to="/sale-point/home" />,
+          element: <Navigate to="app/pages/sale-point/pos" />,
         },
         {
           path: "sale-point",

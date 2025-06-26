@@ -36,11 +36,12 @@ import {
 export function DiscountModal({isOpen, onClose }) {
 	// const dispatch = useDispatch();
 	// const [errors, setErrors] = useState({});
-	const { activeBasket  } = useSelector((state) => state.basket);
+	const { activeBasket , loading  } = useSelector((state) => state.basket);
 
 
-  console.log("active :", activeBasket)
-
+	if( !loading ) {
+		console.log("active :", activeBasket);
+	}
 	const saveRef = useRef(null);
 
 

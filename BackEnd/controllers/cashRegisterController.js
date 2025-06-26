@@ -62,7 +62,8 @@ export const getAnyOpenCashRegister = async (req, res) => {
     if (openCashRegisters.length === 0) {
       return res.status(404).json({
         data: false,
-        message: 'No hay cajas registradoras abiertas o reabiertas.'
+        message: 'No hay cajas registradoras abiertas o reabiertas.',
+        error: 10001 // Custom error code for no open cash registers
       });
     }
 
