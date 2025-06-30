@@ -7,6 +7,7 @@ import basketSlicer from './basket/reducer.js';
 import alumnosSlicer from './alumnos/reducer.js';
 import couponsSlicer from './coupons/reducer.js';
 import profesoresSlicer from './profesores/reducer.js';
+import groupsSlicer from './groups/reducer.js';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -22,6 +23,8 @@ const rootReducer = combineReducers({
   coupons: couponsSlicer,
   // profesores
   profesores: profesoresSlicer,
+  // groups
+  groups: groupsSlicer,
 });
 
 // Export the combined reducer

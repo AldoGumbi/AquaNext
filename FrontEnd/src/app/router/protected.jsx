@@ -183,6 +183,34 @@ const protectedRoutes = {
       ],
     },
 
+    // Groups routes
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          path: "groups",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/groups/register" />,
+            },
+            {
+              path: "register",
+              lazy: async () => ({
+                Component: (await import("app/pages/groups/register")).default,
+              }),
+            },
+            // {
+            //   path: "all-groups",
+            //   lazy: async () => ({
+            //     Component: (await import("app/pages/teachers/all-teachers")).default,
+            //   }),
+            // },
+          ],
+        },
+      ],
+    },
+
     // The app layout supports only the main layout. Avoid using it for other layouts.
     {
       Component: AppLayout,
