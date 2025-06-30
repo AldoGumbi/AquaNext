@@ -20,6 +20,8 @@ import coupons from "./routes/couponsRouter.js";
 import alumnos from "./routes/alumnoRouter.js";
 // PROFESORES
 import profesores from "./routes/teacherRouter.js";
+// GRUPOS
+import grupos from "./routes/groupsRouter.js";
 
 const app = express();
 
@@ -54,6 +56,7 @@ app.use('/basket-items', basketItems);
 app.use('/alumnos', alumnos);
 app.use('/coupons', coupons);
 app.use('/profesores', profesores);
+app.use('/groups', grupos);
 
 // Manejo de errores
 app.use((req, res, next) => {
