@@ -30,20 +30,20 @@ router.get('/all-grupos-including-deleted', getAllGruposIncludingDeleted);
 // Obtener grupos eliminados (papelera)
 router.get('/grupos-eliminados', getGruposDeleted);
 
-// Obtener grupo por ID
-router.get('/:id', getGrupoById);
-
-// Obtener grupos por tipo
-router.get('/grupos-por-tipo/:tipo', getGruposByTipo);
-
 // Obtener grupos con sus horarios
-router.get('/grupos-con-horarios/', getGruposConHorarios);
+router.get('/grupos-con-horarios', getGruposConHorarios);
 
 // Verificar conflictos de horarios
 router.get('/verificar-conflictos/horarios', verificarConflictosHorarios);
 
 // Obtener estadísticas de grupos
 router.get('/estadisticas/resumen', getEstadisticasGrupos);
+
+// Obtener grupos por tipo
+router.get('/grupos-por-tipo/:tipo', getGruposByTipo);
+
+// Obtener grupo por ID
+router.get('/:id', getGrupoById);
 
 // Actualizar grupo
 router.patch('/update-grupo/:id', updateGrupo);
