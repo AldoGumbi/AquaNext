@@ -89,7 +89,7 @@ export const authMiddleware = async (req, res, next) => {
 // Middleware para aplicar solo en rutas específicas
 export const conditionalAuth = (req, res, next) => {
   // Rutas que no requieren autenticación
-  const publicRoutes = ['/auth/sign-in'];
+  const publicRoutes = ['/auth/sign-in', '/auth/logout'];
   
   // Verificar si la ruta actual está en las rutas públicas
   const isPublicRoute = publicRoutes.some(route => 
