@@ -1,8 +1,11 @@
 import { NAV_TYPE_ITEM, } from "constants/app.constant";
-import { House } from 'lucide-react';
-import { SquareUserRound } from 'lucide-react';
-import { Store } from 'lucide-react';
-import { GraduationCap } from 'lucide-react';
+import { 
+  GraduationCap,
+  UsersRound,
+  Store,
+  SquareUserRound,
+  House
+} from 'lucide-react';
 
 export const baseNavigation = [
   {
@@ -32,5 +35,12 @@ export const baseNavigation = [
     path: '/teachers',
     title: 'Profesores',
     Icon: GraduationCap,
+  },
+  {
+    id: 'groups',
+    type: NAV_TYPE_ITEM,
+    path: '/groups',
+    title: 'Grupos',
+    Icon: UsersRound,
   },
 ]

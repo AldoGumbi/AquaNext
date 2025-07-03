@@ -200,12 +200,12 @@ const protectedRoutes = {
                 Component: (await import("app/pages/groups/register")).default,
               }),
             },
-            // {
-            //   path: "all-groups",
-            //   lazy: async () => ({
-            //     Component: (await import("app/pages/teachers/all-teachers")).default,
-            //   }),
-            // },
+            {
+              path: "all-groups",
+              lazy: async () => ({
+                Component: (await import("app/pages/groups/all-groups/index_1")).default,
+              }),
+            },
           ],
         },
       ],

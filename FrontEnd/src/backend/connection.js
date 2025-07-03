@@ -22,7 +22,7 @@ export const skuCheckAvailability = (sku) => api.get(`${url.SKU_CHECK_AVAILABILI
 export const addGrupo = (data) => api.create(url.ADD_GRUPO, data);
 export const getGrupos = () => api.get(url.GET_GRUPOS, null);
 export const updateGrupo = (data) => api.update(`${url.EDIT_GRUPO}/${data.id}`, data.data);
-export const deleteGrupo = (id) => api.delete(`${url.DELETE_GRUPO}/${id}`);
+export const deleteGrupo = (data) => api.delete(`${url.DELETE_GRUPO}/${data.id}`);
 export const getGruposConHorarios = () => api.get(url.GET_GRUPOS_CON_HORARIOS, null);
 export const getGruposPorTipo = (tipo) => api.get(`${url.GET_GRUPOS_POR_TIPO}/${tipo}`, null);
 
