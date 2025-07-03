@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import {
   OpenCashRegisterThunk,
-  GetOpenCashRegisterThunk
+  GetOpenCashRegisterThunk,
+  CloseCashRegisterThunk
 
 } from "./thunk.js";
 
@@ -30,13 +31,21 @@ const cashRegisterSlice = createSlice({
       state.loading = false;
       state.error_message = action.payload;
       state.error = true;
-      toast.error(`Error al crear el cupón de descuento`);
-      console.error("Error al crear el cupón de descuento:", action.payload);
+      const ans = action.payload;
+
+      console.error("Error opening cash register:", action.payload);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al abrir la caja");
+      }
+
     });
     builder.addCase(OpenCashRegisterThunk.pending, (state) => {
       state.error = false;
       state.loading = true;
     });
+    // GET OPEN CASH REGISTER
     builder.addCase(GetOpenCashRegisterThunk.fulfilled, (state, action) => {
       state.loading = false;
       state.error = false;
@@ -58,27 +67,54 @@ const cashRegisterSlice = createSlice({
     builder.addCase(GetOpenCashRegisterThunk.rejected, (state, action) => {
       state.loading = false;
       state.error = true;
-
       const ans = action.payload;
+
+      if (ans?.error?.API_error) {
+        // this error means that there are no open cash registers
+        if (ans?.error?.API_error === 10001) {
+          console.error("No hay cajas abiertas o reabiertas.");
+          state.openCashRegister = -1; // No open cash register
+          return;
+        }
+      }
+
       if (ans?.error?.API_message) {
         toast.error(`${ans?.error?.API_message}`);
       } else {
         toast.error("Error al abrir la caja");
       }
-      
+
       state.error_message = ans?.error?.API_message || "Error al abrir la caja";
 
-      if(ans?.error?.API_error) {
-        // this error means that there are no open cash registers
-        if(ans?.error?.API_error === 10001) {
-          console.error("No hay cajas abiertas o reabiertas.");
-          state.openCashRegister = -1; // No open cash register
-        }
-      }
+
 
       console.error("Error al verificar las cajas disponibles:", action.payload.error);
     });
     builder.addCase(GetOpenCashRegisterThunk.pending, (state) => {
+      state.error = false;
+      state.loading = true;
+    });
+    // CLOSE CASH REGISTER
+    builder.addCase(CloseCashRegisterThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = false;
+      const ans = action.payload;
+      console.log("Caja cerrada correctamente:", ans);
+      state.openCashRegister = null;
+    });
+    builder.addCase(CloseCashRegisterThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error = true;
+      const ans = action.payload;
+
+      console.error("Error al cerrar la caja: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al cerrar la caja");
+      }
+    });
+    builder.addCase(CloseCashRegisterThunk.pending, (state) => {
       state.error = false;
       state.loading = true;
     });

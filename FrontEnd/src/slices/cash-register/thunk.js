@@ -1,7 +1,7 @@
-import { toast } from "react-toastify";
 import {
-getOpenCashRegister,
-  openCashRegister
+  getOpenCashRegister,
+  openCashRegister,
+  closeCashRegister
 } from "../../backend/connection.js";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -10,12 +10,6 @@ export const OpenCashRegisterThunk = createAsyncThunk("cash-register/open", asyn
   try {
     return await openCashRegister(data);
   } catch (error) {
-    console.error("Error opening cash register:", error);
-    if(error?.API_message) {
-      toast.error(`${error.API_message}`);
-    }else {
-      toast.error("Error al abrir la caja");
-    }
     return rejectWithValue({ error });
   }
 });
@@ -24,6 +18,17 @@ export const OpenCashRegisterThunk = createAsyncThunk("cash-register/open", asyn
 export const GetOpenCashRegisterThunk = createAsyncThunk("cash-register/get-open", async (_, { rejectWithValue }) => {
   try {
     return await getOpenCashRegister();
+  } catch (error) {
+    return rejectWithValue({ error });
+  }
+});
+
+// Thunk to close a cash register
+export const CloseCashRegisterThunk = createAsyncThunk("cash-register/close", async (data
+  , { rejectWithValue }) => {
+  try {
+    const { cash_register_id, amount_closing, comment } = data;
+    return await closeCashRegister(cash_register_id, { amount_closing, comment });
   } catch (error) {
     return rejectWithValue({ error });
   }

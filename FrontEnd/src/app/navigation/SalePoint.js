@@ -92,8 +92,15 @@ export const salePoint = {
         {
           id: 'salePoint.cashRegisterAddNew',
           type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/cash-register/add-new'),
+          path: path(ROOT_POINT_SALE, '/cash-register/open'),
           title: 'Abrir Caja',
+          Icon: 'prototypes'
+        },
+        {
+          id: 'salePoint.cashRegisterClose',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/cash-register/close'),
+          title: 'Cierre de Caja',
           Icon: 'prototypes'
         },
       ]

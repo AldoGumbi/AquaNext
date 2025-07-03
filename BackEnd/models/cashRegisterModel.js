@@ -28,6 +28,22 @@ class CashRegisterModel {
     return rows;
   }
 
+  // close a cash register
+  static async close(caja) {
+    const [result] = await db.query(`
+      UPDATE caja_registradora
+      SET status = 'close',
+          amount_closing = ?,
+          comment = ?
+      WHERE id = ?
+    `, [
+      caja.amount_closing,
+      caja.comment,
+      caja.cash_register_id
+    ]);
+    return result.affectedRows;
+  }
+
 
 }
 

@@ -93,18 +93,25 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/home")).default,
                   }),
                 },
-                // CASH REGISTER - ADD NEW
+                // CASH REGISTER - operation same user
                 {
                   path: "operations",
                   lazy: async () => ({
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
-                // CASH REGISTER - ADD NEW
+                // CASH REGISTER - OPEN
                 {
-                  path: "add-new",
+                  path: "open",
                   lazy: async () => ({
-                    Component: (await import("app/pages/sale-point/cash-register/add-new")).default,
+                    Component: (await import("app/pages/sale-point/cash-register/open")).default,
+                  }),
+                },
+                // CASH REGISTER - CLOSE
+                {
+                  path: "close",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/close")).default,
                   }),
                 },
 

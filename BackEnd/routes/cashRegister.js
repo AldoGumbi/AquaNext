@@ -2,7 +2,8 @@ import express from 'express';
 
 import {
     createCashRegister,
-    getAnyOpenCashRegister
+    getAnyOpenCashRegister,
+    closeCashRegister
 } from '../controllers/cashRegisterController.js';
 
 const router = express.Router();
@@ -11,5 +12,8 @@ const router = express.Router();
 router.post('/open', createCashRegister);
 //get any open cash register
 router.get('/AnyOpen', getAnyOpenCashRegister);
+//close a cash register
+router.put('/close/:cash_register_id', closeCashRegister);
+
 
 export default router;

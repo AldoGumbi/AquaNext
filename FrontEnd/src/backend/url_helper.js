@@ -54,3 +54,4 @@ export const GET_DISCOUNT_COUPONS = BASE_DISCOUNT_URL + '/get-coupons';
 const BASE_CASH_REGISTER_URL = '/cash-register';
 export const OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/open';
 export const GET_OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/AnyOpen';
+export const CLOSE_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/close';

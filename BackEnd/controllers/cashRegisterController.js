@@ -79,3 +79,54 @@ export const getAnyOpenCashRegister = async (req, res) => {
     });
   }
 }
+
+export const closeCashRegister = async (req, res) => {
+  try {
+    const { cash_register_id } = req.params;
+    const {
+      amount_closing,
+      comment,
+    } = req.body;
+
+    // Validar que el amount_closing sea un número válido
+    if (!amount_closing || isNaN(Number(amount_closing) || Number(amount_closing) < 0)) {
+      return res.status(400).json({
+        data: false,
+        message: 'El monto de cierre es requerido y debe ser un número válido.'
+      });
+    }
+    // Validar que el comment sea un string válido
+    if (!cash_register_id || isNaN(Number(cash_register_id))) {
+      return res.status(400).json({
+        data: false,
+        message: 'No se ha proporcionado un ID de caja registradora a cerrar.',
+        id: cash_register_id
+      });
+    }
+
+    const isClosed = await CashRegisterModel.close({
+      amount_closing,
+      comment,
+      cash_register_id,
+    });
+    // cant close the cash register
+    if (!isClosed) {
+      return res.status(400).json({
+        data: false,
+        message: 'No se cerro la caja, revisa que la caja este disponible para cerrar.'
+      });
+    }
+    // answer successfully
+    res.status(200).json({
+      data: true,
+      message: 'Caja registradora cerrada exitosamente.'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      data: false,
+      message: 'Error al cerrar la caja registradora',
+      error: error.message
+    });
+  }
+}

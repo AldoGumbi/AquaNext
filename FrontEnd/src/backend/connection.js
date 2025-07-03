@@ -49,3 +49,4 @@ export const getDiscountCoupons = () => api.get(url.GET_DISCOUNT_COUPONS, null);
 // CASH REGISTER CRUD
 export const openCashRegister = (data) => api.create(url.OPEN_CASH_REGISTER, data);
 export const getOpenCashRegister = () => api.get(url.GET_OPEN_CASH_REGISTER, null);
+export const closeCashRegister = (cash_register_id,data) => api.put(`${url.CLOSE_CASH_REGISTER}/${cash_register_id}`, data);
