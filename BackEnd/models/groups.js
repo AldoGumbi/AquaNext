@@ -277,12 +277,14 @@ class gruposModel {
             ]);
 
             if (horarios && Array.isArray(horarios)) {
+                // Primero marcar como eliminados los horarios existentes
                 await connection.query(`
                     UPDATE horarios 
                     SET deleted = 1 
                     WHERE grupo_id = ? AND deleted = 0
                 `, [id]);
 
+                // Luego insertar los nuevos horarios
                 for (const horario of horarios) {
                     await connection.query(`
                         INSERT INTO horarios (
@@ -291,15 +293,17 @@ class gruposModel {
                             dia,
                             hora_inicio,
                             hora_fin,
+                            cupo_maximo,
                             activo,
                             deleted
-                        ) VALUES (?, ?, ?, ?, ?, ?, 0)
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, 0)
                     `, [
                         id,
-                        horario.profesor_id || null,
+                        horario.profesor_id || null, // Asegurar que null se maneje correctamente
                         horario.dia,
                         horario.hora_inicio,
                         horario.hora_fin,
+                        horario.cupo_maximo || 8, // Valor por defecto
                         true
                     ]);
                 }
@@ -353,13 +357,13 @@ class gruposModel {
 
             const [grupoResult] = await connection.query(`
                 UPDATE grupos 
-                SET deleted = 0, deleted_at = NULL 
+                SET deleted = 0
                 WHERE id = ? AND deleted = 1
             `, [id]);
 
             await connection.query(`
                 UPDATE horarios 
-                SET deleted = 0, deleted_at = NULL 
+                SET deleted = 0 
                 WHERE grupo_id = ? AND deleted = 1
             `, [id]);
 

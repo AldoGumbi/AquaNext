@@ -266,6 +266,11 @@ class horariosModel {
     // Verificar conflictos de horarios para un profesor
     static async verificarConflictoProfesor(profesorId, dia, horaInicio, horaFin, horarioId = null) {
         try {
+            // Si no hay profesor asignado, no hay conflictos
+            if (!profesorId || profesorId === null || profesorId === "null") {
+                return [];
+            }
+
             let query = `
                 SELECT 
                     h.id,

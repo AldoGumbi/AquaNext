@@ -33,7 +33,6 @@ export const insertGrupo = async (req, res) => {
                 });
             }
 
-            // Validar que la hora de inicio sea menor que la hora de fin
             if (horario.hora_inicio >= horario.hora_fin) {
                 return res.status(400).json({
                     data: false,
@@ -42,8 +41,8 @@ export const insertGrupo = async (req, res) => {
                 });
             }
 
-            // Validar conflictos de horarios si hay un profesor asignado
-            if (horario.profesor_id) {
+            // Solo validar conflictos si hay un profesor asignado Y no es null
+            if (horario.profesor_id && horario.profesor_id !== null && horario.profesor_id !== "null") {
                 const conflictos = await horariosModel.verificarConflictoProfesor(
                     horario.profesor_id,
                     horario.dia,
@@ -265,6 +264,7 @@ export const getGruposDeleted = async (req, res) => {
 };
 
 export const updateGrupo = async (req, res) => {
+
     try {
         const { id } = req.params;
         const { codigo, nombre, tipo, nivel, descripcion, activo, horarios } = req.body;
@@ -298,7 +298,7 @@ export const updateGrupo = async (req, res) => {
 
         // Verificar código duplicado (excepto el mismo grupo)
         const grupoCodigo = await gruposModel.getByCodigo(codigo);
-        if (grupoCodigo && grupoCodigo.id !== parseInt(id)) {
+        if (grupoCodigo && parseInt(grupoCodigo.id) !== parseInt(id)) {
             return res.status(400).json({
                 data: false,
                 message: 'Ya existe otro grupo con este código',
@@ -326,8 +326,8 @@ export const updateGrupo = async (req, res) => {
                     });
                 }
 
-                // Validar conflictos de horarios si hay un profesor asignado
-                if (horario.profesor_id) {
+                // Solo validar conflictos si hay un profesor asignado Y no es null
+                if (horario.profesor_id && horario.profesor_id !== null && horario.profesor_id !== "null") {
                     const conflictos = await horariosModel.verificarConflictoProfesor(
                         horario.profesor_id,
                         horario.dia,
@@ -376,6 +376,7 @@ export const updateGrupo = async (req, res) => {
     } catch (error) {
         console.error('Error al actualizar grupo:', error);
         
+        // Mejorar el manejo de errores para que sea más específico
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(400).json({
                 data: false,
