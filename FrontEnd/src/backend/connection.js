@@ -18,6 +18,14 @@ export const editProducts = (id, data) => api.put(`${url.EDITPRODUCTS}/${id}`, d
 export const deleteProduct = (id) => api.update(`${url.DELETE_PRODUCT}/${id}`);
 export const skuCheckAvailability = (sku) => api.get(`${url.SKU_CHECK_AVAILABILITY}/${sku}`);
 
+// GROUPS CRUD
+export const addGrupo = (data) => api.create(url.ADD_GRUPO, data);
+export const getGrupos = () => api.get(url.GET_GRUPOS, null);
+export const updateGrupo = (data) => api.update(`${url.EDIT_GRUPO}/${data.id}`, data.data);
+export const deleteGrupo = (data) => api.delete(`${url.DELETE_GRUPO}/${data.id}`);
+export const getGruposConHorarios = () => api.get(url.GET_GRUPOS_CON_HORARIOS, null);
+export const getGruposPorTipo = (tipo) => api.get(`${url.GET_GRUPOS_POR_TIPO}/${tipo}`, null);
+
 // BASKET CRUD
 export const createBasket = (data) => api.create(url.CREATE_BASKET, data);
 export const getBasket = (id) => api.get(`${url.GET_BASKET}/${id}`);

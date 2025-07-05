@@ -8,6 +8,8 @@ import alumnosSlicer from './alumnos/reducer.js';
 import couponsSlicer from './coupons/reducer.js';
 import profesoresSlicer from './profesores/reducer.js';
 import cashRegisterSlicer from './cash-register/reducer.js';
+import groupsSlicer from './groups/reducer.js';
+
 // Combine all reducers
 const rootReducer = combineReducers({
 	// Authentication
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
   profesores: profesoresSlicer,
   // cash-register
   cashRegister: cashRegisterSlicer,
+  // groups
+  groups: groupsSlicer,
 });
 
 // Export the combined reducer

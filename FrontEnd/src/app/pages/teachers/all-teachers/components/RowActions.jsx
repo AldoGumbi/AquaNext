@@ -26,21 +26,21 @@ import { toast } from "sonner";
 
 const confirmMessages = {
 	pending: {
-		title: "¿Eliminar alumno?",
+		title: "¿Eliminar profesor?",
 		description:
-			"¿Estás seguro de que quieres eliminar este alumno? Esta acción no se puede deshacer.",
-		actionText: "Eliminar alumno",
+			"¿Estás seguro de que quieres eliminar este profesor? Esta acción no se puede deshacer y eliminará toda la información asociada.",
+		actionText: "Eliminar profesor",
 	},
 	success: {
-		title: "Alumno eliminado",
-		description: "El alumno se eliminó correctamente de la base de datos.",
+		title: "Profesor eliminado",
+		description: "El profesor se eliminó correctamente de la base de datos y ya no aparecerá en el sistema.",
 		actionText: "Entendido",
 	},
 	error: {
-		title: "Error al eliminar alumno",
-		description: "No se pudo eliminar el alumno. Verifica tu conexión a internet e intenta nuevamente.",
+		title: "Error al eliminar profesor",
+		description: "No se pudo eliminar el profesor. Verifica tu conexión a internet e intenta nuevamente.",
 		actionText: "Reintentar",
-	}
+	},
 };
 
 export function RowActions({ row, table }) {
@@ -70,39 +70,39 @@ export function RowActions({ row, table }) {
 	};
 
 	const handleDeleteRows = useCallback(async () => {
-		// Si está en estado de error resetear para reintentar
+		// Si está en estado de error, resetear para reintentar
 		if (deleteError) {
 			setDeleteError(false);
 			setConfirmDeleteLoading(false);
 		}
 
 		setConfirmDeleteLoading(true);
-
+		
 		try {
 			// Llamar a la función meta que maneja la eliminación
-			await table.options.meta?.deleteRow(row);
+            await table.options.meta?.deleteRow(row);
 
-			// Si llegamos hasta aquí, fue exitoso
+			// Si llegamos aquí, fue exitoso
 			setDeleteSuccess(true);
 			setConfirmDeleteLoading(false);
-
-			// Cerrar el modal automaticamente depués de mostrar éxito
+			
+			// Cerrar el modal automáticamente después de mostrar éxito
 			setTimeout(() => {
 				closeModal();
 			}, 2000);
-
+			
 		} catch (error) {
-			console.error("Error al eliminar alumno: ", error);
-
-			// Extraer el mensaje de error de la API
-			const apiMessage = error?.error?.API_message ||
-							error?.message ||
-							'Error desconocido al eliminar el alumno.';
+			console.error('Error al eliminar profesor:', error);
+			
+			// Extraer mensaje de error de la API
+			const apiMessage = error?.error?.API_message || 
+							error?.message || 
+							'Error desconocido al eliminar el profesor';
 			
 			setErrorMessage(apiMessage);
 			setDeleteError(true);
 			setConfirmDeleteLoading(false);
-
+			
 			// Mostrar toast con el error
 			toast.error(apiMessage);
 		}
@@ -133,8 +133,8 @@ export function RowActions({ row, table }) {
 		table.options.meta?.editRow(row);
 	};
 
-	// Obtener información del alumno para mostrar en el modal
-	// const studentInfo = row.original;
+	// Obtener información del profesor para mostrar en el modal
+	// const teacherName = `${row.original.nombre} ${row.original.apellido}`;
 
 	return (
 		<>

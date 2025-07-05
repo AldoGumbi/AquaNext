@@ -22,6 +22,9 @@ import alumnos from "./routes/alumnoRouter.js";
 import profesores from "./routes/teacherRouter.js";
 // CASH REGISTER
 import cashRegister from "./routes/cashRegister.js";
+// GRUPOS
+import grupos from "./routes/groupsRouter.js";
+
 const app = express();
 
 // middlewares basicos
@@ -56,6 +59,7 @@ app.use('/alumnos', alumnos);
 app.use('/coupons', coupons);
 app.use('/profesores', profesores);
 app.use('/cash-register', cashRegister);
+app.use('/groups', grupos);
 
 // Manejo de errores
 app.use((req, res, next) => {

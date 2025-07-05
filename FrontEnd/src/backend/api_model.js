@@ -35,7 +35,7 @@ axios.interceptors.response.use(
 	function (error) {
 
 		if (error.response?.status === 401 && 
-			error.response?.error === 'SESSION_EXPIRED') {
+			error.response?.data?.error === 'SESSION_EXPIRED') {
 			
 			console.log('🚨 Sesión expirada, redirigiendo al login...');
 

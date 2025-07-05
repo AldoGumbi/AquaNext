@@ -19,7 +19,6 @@ import {
   Textarea,
   Button,
   Input,
-  Select,
   Switch
 } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
@@ -28,53 +27,46 @@ import { DatePicker } from "components/shared/form/Datepicker";
 
 const today = dayjs().endOf('day');
 
-// Esquema de validación Yup para estudiantes
-const studentSchema = yup.object().shape({
+// Esquema de validación Yup para profesores
+const teacherSchema = yup.object().shape({
   nombre: yup.string()
     .trim()
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(100, 'El nombre no puede exceder 100 caracteres')
     .required('El nombre es requerido'),
-  apellido_paterno: yup.string()
+  apellido: yup.string()
     .trim()
-    .min(2, 'El apellido paterno debe tener al menos 2 caracteres')
-    .max(100, 'El apellido paterno no puede exceder 100 caracteres')
-    .required('El apellido paterno es requerido'),
-  apellido_materno: yup.string()
-    .trim()
-    .max(50, 'El apellido materno no puede exceder 50 caracteres'),
+    .min(2, 'El apellido debe tener al menos 2 caracteres')
+    .max(100, 'El apellido no puede exceder 100 caracteres')
+    .required('El apellido es requerido'),
   fecha_nacimiento: yup.date()
     .typeError("Ingresa una fecha válida")
     .max(today.toDate(), "La fecha debe ser hoy o en el pasado")
-    .nullable(),
-  email: yup.string()
-    .trim()
-    .email('Formato de email inválido')
-    .max(100, 'El email no puede exceder 100 caracteres'),
+    .test('age', 'El profesor debe ser mayor de edad', function(value) {
+        if (!value) return false;
+        const age = dayjs().diff(dayjs(value), 'year');
+        return age >= 18;
+    })
+    .required("La fecha de nacimiento es obligatoria"),
   telefono: yup.string()
     .trim()
     .matches(/^[0-9]{10}$/, 'Ingrese un número de teléfono válido de 10 dígitos')
-    .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') return null;
-      return value;
-    }),
-  telefono_emergencia: yup.string()
+    .required('El número de teléfono es requerido'),
+  direccion: yup.string()
     .trim()
-    .matches(/^[0-9]{10}$/, 'Ingrese un número de teléfono de emergencia válido de 10 dígitos')
-    .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') return null;
-      return value;
-    }),
-  domicilio: yup.string()
-    .trim()
+    .min(5, 'La dirección debe tener al menos 5 caracteres')
     .max(255, 'La dirección no puede exceder 255 caracteres'),
-  estatus: yup.string()
-    .required('El estado es requerido')
-    .oneOf(['activo', 'inactivo', 'pendiente'], 'Estado inválido'),
-  firma: yup.boolean()
-    .required('El estado de firma es requerido'),
+  especialidad: yup.string()
+    .trim()
+    .min(3, 'La especialidad debe tener al menos 3 caracteres')
+    .max(100, 'La especialidad no puede exceder 100 caracteres')
+    .required('La especialidad es requerida'),
+  fecha_contratacion: yup.date()
+    .typeError("Ingresa una fecha válida")
+    .max(today.toDate(), "La fecha debe ser hoy o en el pasado")
+    .required("La fecha de contratación es obligatoria"),
+  activo: yup.boolean()
+    .required('El estado es requerido'),
 });
 
 const convertToUTC6 = (dateValue) => {
@@ -119,18 +111,16 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
     control,
     reset,
   } = useForm({
-    resolver: yupResolver(studentSchema),
+    resolver: yupResolver(teacherSchema),
     defaultValues: {
       nombre: '',
-      apellido_paterno: '',
-      apellido_materno: '',
+      apellido: '',
       fecha_nacimiento: null,
-      email: '',
       telefono: '',
-      telefono_emergencia: '',
-      domicilio: '',
-      estatus: 'activo',
-      firma: false,
+      direccion: '',
+      especialidad: '',
+      fecha_contratacion: null,
+      activo: true,
     },
   });
 
@@ -140,7 +130,8 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
       reset({
         ...rowData,
         fecha_nacimiento: rowData.fecha_nacimiento ? rowData.fecha_nacimiento.split('T')[0] : null,
-        firma: Boolean(rowData.firma),
+        fecha_contratacion: rowData.fecha_contratacion ? rowData.fecha_contratacion.split('T')[0] : null,
+        activo: Boolean(rowData.activo),
       });
     }
   }, [rowData, reset]);
@@ -151,7 +142,7 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
       const dataToSend = {
         ...data,
         fecha_nacimiento: convertToUTC6(data.fecha_nacimiento),
-        firma: data.firma ? 1 : 0, // Convertir boolean a número
+        fecha_contratacion: convertToUTC6(data.fecha_contratacion)
       };
       
       await onSave(dataToSend);
@@ -196,7 +187,7 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                 as="h3"
                 className="text-base font-medium text-gray-800 dark:text-dark-100"
               >
-                Edición de Alumno
+                Edición de Profesor
               </DialogTitle>
               <Button
                 onClick={onClose}
@@ -220,25 +211,18 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                     <Input
                       {...register("nombre")}
                       label="Nombre*"
-                      placeholder="Nombre del alumno"
+                      placeholder="Nombre del profesor"
                       error={errors.nombre?.message}
                     />
                     <Input
-                      {...register("apellido_paterno")}
-                      label="Apellido Paterno*"
-                      placeholder="Apellido paterno"
-                      error={errors.apellido_paterno?.message}
+                      {...register("apellido")}
+                      label="Apellido*"
+                      placeholder="Apellido del profesor"
+                      error={errors.apellido?.message}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      {...register("apellido_materno")}
-                      label="Apellido Materno"
-                      placeholder="Apellido materno"
-                      error={errors.apellido_materno?.message}
-                    />
-                    
                     {/* DatePicker para fecha de nacimiento con Controller */}
                     <Controller
                       render={({ field: { onChange, value, ...rest } }) => (
@@ -258,23 +242,7 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                       control={control}
                       name="fecha_nacimiento"
                     />
-                  </div>
-                </div>
-
-                {/* Información de Contacto */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-dark-200 border-b border-gray-200 dark:border-dark-600 pb-2">
-                    Información de Contacto
-                  </h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      {...register("email")}
-                      type="email"
-                      label="Email"
-                      placeholder="correo@ejemplo.com"
-                      error={errors.email?.message}
-                    />
+                    
                     <Input
                       {...register("telefono")}
                       type="tel"
@@ -284,70 +252,74 @@ export function EditModal({ isOpen, onClose, rowData, onSave }) {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      {...register("telefono_emergencia")}
-                      type="tel"
-                      label="Teléfono de Emergencia"
-                      placeholder="123-456-7890"
-                      error={errors.telefono_emergencia?.message}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-dark-200">
+                      Dirección
+                    </label>
+                    <Textarea
+                      {...register("direccion")}
+                      placeholder="Dirección completa"
+                      error={errors.direccion?.message}
+                      rows={2}
                     />
-                    
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-dark-200">
-                        Dirección
-                      </label>
-                      <Textarea
-                        {...register("domicilio")}
-                        placeholder="Dirección completa"
-                        error={errors.domicilio?.message}
-                        rows={2}
-                      />
-                    </div>
                   </div>
                 </div>
 
-                {/* Estado y Configuración */}
+                {/* Información Profesional */}
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium text-gray-700 dark:text-dark-200 border-b border-gray-200 dark:border-dark-600 pb-2">
-                    Estado y Configuración
+                    Información Profesional
                   </h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-                    <Controller
-                      render={({ field: { onChange, value, ...rest } }) => (
-                        <Select
-                          value={value || ""}
-                          onChange={(e) => onChange(e.target.value)}
-                          label="Estado*"
-                          error={errors.estatus?.message}
-                          className="w-full p-2 border border-gray-300 rounded dark:bg-dark-800 dark:border-dark-500"
-                          {...rest}
-                        >
-                          <option disabled value="">Selecciona un estado</option>
-                          <option value="activo">Activo</option>
-                          <option value="inactivo">Inactivo</option>
-                          <option value="pendiente">Pendiente</option>
-                        </Select>
-                      )}
-                      control={control}
-                      name="estatus"
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      {...register("especialidad")}
+                      label="Especialidad"
+                      placeholder="Ej: Natación infantil, Crol avanzado"
+                      error={errors.especialidad?.message}
                     />
                     
-                    <div className="flex items-center justify-center">
-                      <Controller
-                        render={({ field: { onChange, value, ...rest } }) => (
-                          <Switch
-                            checked={Boolean(value)}
-                            label="Tiene Firma"
-                            onChange={(e) => onChange(e.target.checked)}
-                            {...rest}
-                          />
-                        )}
-                        control={control}
-                        name="firma"
-                      />
-                    </div>
+                    {/* DatePicker para fecha de contratación con Controller */}
+                    <Controller
+                      render={({ field: { onChange, value, ...rest } }) => (
+                        <DatePicker
+                          onChange={onChange}
+                          value={value || ""}
+                          label="Fecha de Contratación*"
+                          error={errors.fecha_contratacion?.message}
+                          options={{ 
+                            disableMobile: true,
+                            maxDate: new Date()
+                          }}
+                          placeholder="Selecciona una fecha"
+                          {...rest}
+                        />
+                      )}
+                      control={control}
+                      name="fecha_contratacion"
+                    />
+                  </div>
+                </div>
+
+                {/* Estado */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-dark-200 border-b border-gray-200 dark:border-dark-600 pb-2">
+                    Estado
+                  </h4>
+                  
+                  <div className="flex items-center justify-center">
+                    <Controller
+                      render={({ field: { onChange, value, ...rest } }) => (
+                        <Switch
+                          checked={Boolean(value)}
+                          label="Profesor Activo"
+                          onChange={(e) => onChange(e.target.checked)}
+                          {...rest}
+                        />
+                      )}
+                      control={control}
+                      name="activo"
+                    />
                   </div>
                 </div>
               </div>

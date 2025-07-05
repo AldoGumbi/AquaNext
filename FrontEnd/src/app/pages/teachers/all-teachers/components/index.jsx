@@ -28,148 +28,146 @@ import { getUserAgentBrowser } from "utils/dom/getUserAgentBrowser";
 // import of redux
 import { useSelector, useDispatch } from "react-redux";
 import {
-	getAlumnosThunk,
-	updateAlumnoThunk, 
-	deleteAlumnoThunk 
+	getProfesoresThunk,
+	updateProfesorThunk, 
+	deleteProfesorThunk 
 } from "slices/thunk";
 
-// Import toast
+// Toast import
 import { toast } from "sonner";
 
 // ----------------------------------------------------------------------
 
 const isSafari = getUserAgentBrowser() === "Safari";
 
-export function StudentsTable() {
+export function TeachersTable() {
 	const dispatch = useDispatch();
-	const studentsList = useSelector((state) => state.alumnos.alumnos);
+	const teachersList = useSelector((state) => state.profesores.profesores);
 
 	// Estados correctamente inicializados
-	const [students, setStudents] = useState([]);
+	const [teachers, setTeachers] = useState([]);
 	const [globalFilter, setGlobalFilter] = useState("");
 	const [sorting, setSorting] = useState([]);
-	const [editingStudent, setEditingStudent] = useState(null);
+	const [editingTeacher, setEditingTeacher] = useState(null);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 	const theadRef = useRef();
 	const { height: theadHeight } = useBoxSize({ ref: theadRef });
 
-	// Efecto para cargar los alumnos
+	// Efecto para cargar los profesores
 	useEffect(() => {
-		dispatch(getAlumnosThunk());
+		dispatch(getProfesoresThunk());
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (Array.isArray(studentsList)) {
-			setStudents(studentsList);
+		if (Array.isArray(teachersList)) {
+			setTeachers(teachersList);
 		} else {
-			setStudents([]);
+			setTeachers([]);
 		}
-	}, [studentsList]);
-
+	}, [teachersList]);
 
 	// Función para manejar la edición
 	const handleEdit = (row) => {
 		const data = {
 			id: row.original.id,
 			nombre: row.original.nombre,
-			apellido_paterno: row.original.apellido_paterno,
-			apellido_materno: row.original.apellido_materno || "",
+			apellido: row.original.apellido,
 			fecha_nacimiento: row.original.fecha_nacimiento,
-			domicilio: row.original.domicilio || "",
-			email: row.original.email || "",
+			direccion: row.original.direccion || "",
 			telefono: row.original.telefono || "",
-			telefono_emergencia: row.original.telefono_emergencia || "",
-			estatus: row.original.estatus,
-			firma: row.original.firma || 0,
+			especialidad: row.original.especialidad || "",
+			fecha_contratacion: row.original.fecha_contratacion,
+			activo: Boolean(row.original.activo),
 			fecha_creacion: row.original.fecha_creacion,
 			fecha_modificacion: row.original.fecha_modificacion
 		};
-		setEditingStudent(data);
+		setEditingTeacher(data);
 		setIsEditModalOpen(true);
 	};
 
 	// Función para guardar los cambios
-	const handleSave = async (editedStudent) => {
-		// console.log("handleSave called with:", editedStudent);
+	const handleSave = async (editedTeacher) => {
 
+        console.log('Guardando cambios para el profesor:', editedTeacher);
 		try {
-			await dispatch(updateAlumnoThunk({ id: editedStudent.id, data: editedStudent })).unwrap();
+			await dispatch(updateProfesorThunk({id: editedTeacher.id, data: editedTeacher})).unwrap();
 			setIsEditModalOpen(false);
-			toast.success("Alumno actualizado correctamente");
+			toast.success('Profesor actualizado exitosamente');
 		} catch (error) {
-			console.error("Error al actualizar el alumno: ", error);
-			toast.error(error.error?.API_message || "Error al actualizar el alumno");
+			console.error('Error al actualizar profesor:', error);
+			toast.error(error.error?.API_message || 'Error al actualizar el profesor');
 		}
 	};
 
-	// Función para eliminar un solo alumno
+	// Función para eliminar un solo profesor
 	const handleDeleteRow = async (row) => {
 		try {
 			skipAutoResetPageIndex();
-			await dispatch(deleteAlumnoThunk(row.original.id)).unwrap();
-
+			await dispatch(deleteProfesorThunk(row.original.id)).unwrap();
+			
 			// Solo actualizar el estado local si la eliminación fue exitosa
-			setStudents((old) => 
-				old.filter((oldRow) => oldRow.id !== row.original.id)
+			setTeachers((old) =>
+				old.filter((oldRow) => oldRow.id !== row.original.id),
 			);
 
-			return { success: true }; // Retornar éxito para poder manejarlo en RowActions.jsx
+            return { success: true }; // Retornar éxito para manejarlo en RowActions.jsx
 
 		} catch (error) {
-			console.error("Error al eliminar el alumno: ", error);
-			throw error; // Propagar error para manejarlo en RowActions.jsx
+			console.error('Error al eliminar profesor:', error);
+			// toast.error(error.error?.API_message || 'Error al eliminar el profesor');
+            throw error; // Propagar el error para que lo maneje RowActions.jsx
 		}
 	};
 
-	// Función para eliminar multiples alumnos
+	// Función para eliminar múltiples profesores
 	const handleDeleteRows = async (rows) => {
 		try {
 			skipAutoResetPageIndex();
 			const rowIds = rows.map((row) => row.original.id);
-
+			
 			// Eliminar uno por uno y capturar errores individuales
 			const deletePromises = rowIds.map(async (id) => {
 				try {
-					await dispatch(deleteAlumnoThunk(id)).unwrap();
+					await dispatch(deleteProfesorThunk(id)).unwrap();
 					return { id, success: true };
 				} catch (error) {
 					return { id, success: false, error };
 				}
-			})
+			});
 
 			const results = await Promise.all(deletePromises);
 			
 			// Separar éxitos y errores
-			const successful = results.filter((result) => result.success).map((result) => result.id);
-			const failed = results.filter((result) => !result.success);
+			const successful = results.filter(r => r.success).map(r => r.id);
+			const failed = results.filter(r => !r.success);
 
-			// Actualizar el estado local solo con los eliminados exitosamente
+			// Actualizar estado local solo con los eliminados exitosamente
 			if (successful.length > 0) {
-				setStudents((old) => 
-					old.filter((row) => !successful.includes(row.id))
+				setTeachers((old) =>
+					old.filter((row) => !successful.includes(row.id)),
 				);
 			}
 
 			// Mostrar mensajes apropiados
 			if (successful.length === rowIds.length) {
-				toast.success(`${successful.length} alumnos eliminados correctamente`);
+				toast.success(`${successful.length} profesores eliminados exitosamente`);
 			} else if (successful.length > 0) {
-				toast.success(`${successful.length} alumnos eliminados`);
-				toast.error(`${failed.length} alumnos no pudieron ser eliminados`);
+				toast.success(`${successful.length} profesores eliminados`);
+				toast.error(`${failed.length} profesores no pudieron ser eliminados`);
 			} else {
-				toast.error("No se pudo eliminar ningún alumno");
+				toast.error('No se pudo eliminar ningún profesor');
 			}
 
 		} catch (error) {
-			console.error("Error al eliminar los alumnos: ", error);
-			toast.error("Error al eliminar los alumnos seleccionados");
+			console.error('Error general al eliminar profesores:', error);
+			toast.error('Error al eliminar los profesores seleccionados');
 		}
 	};
 
 	const table = useReactTable({
-		data: students,
+		data: teachers,
 		columns,
 		state: {
 			globalFilter,
@@ -193,29 +191,23 @@ export function StudentsTable() {
 		autoResetPageIndex,
 	});
 
-	useDidUpdate(() => table.resetRowSelection(), [students]);
+	useDidUpdate(() => table.resetRowSelection(), [teachers]);
 
 	// VARIABLES HELPER más específicas
-	const hasStudents = students.length > 0;
+	const hasTeachers = teachers.length > 0;
 	const visibleRows = table.getRowModel().rows;
 	const hasVisibleRows = visibleRows.length > 0;
 	const isFiltering = globalFilter && globalFilter.trim() !== "";
-
-	// // DEBUG: Más logs para TanStack Table
-	// console.log("table.getCoreRowModel().rows.length:", table.getCoreRowModel().rows.length);
-	// console.log("table.getRowModel().rows.length:", table.getRowModel().rows.length);
-	// console.log("hasStudents:", hasStudents);
-	// console.log("hasVisibleRows:", hasVisibleRows);
 
 	return (
 		<div>
 			<div className="table-toolbar flex items-center justify-between">
 				<h2 className="truncate text-base font-medium tracking-wide text-gray-800 dark:text-dark-100">
-					Tabla de Alumnos
+					Tabla de Profesores
 				</h2>
 				<div className="flex">
 					<CollapsibleSearch
-						placeholder="Buscar alumno..."
+						placeholder="Buscar profesor..."
 						value={globalFilter ?? ""}
 						onChange={(e) => setGlobalFilter(e.target.value)}
 					/>
@@ -260,8 +252,8 @@ export function StudentsTable() {
 							))}
 						</THead>
 						<TBody>
-							{!hasStudents ? (
-								// Cuando no hay estudiantes en absoluto
+							{!hasTeachers ? (
+								// Cuando no hay profesores en absoluto
 								<Tr>
 									<Td colSpan={columns.length} className="text-center py-8">
 										<div className="flex flex-col items-center justify-center">
@@ -275,20 +267,26 @@ export function StudentsTable() {
 													strokeLinecap="round"
 													strokeLinejoin="round"
 													strokeWidth={1}
-													d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+													d="M12 14l9-5-9-5-9 5 9 5z"
+												/>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={1}
+													d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
 												/>
 											</svg>
 											<h3 className="mt-2 text-sm font-medium text-gray-700 dark:text-dark-200">
-												No hay alumnos disponibles
+												No hay profesores disponibles
 											</h3>
 											<p className="mt-1 text-sm text-gray-500 dark:text-dark-400">
-												No se encontraron alumnos en la base de datos
+												No se encontraron profesores en la base de datos
 											</p>
 										</div>
 									</Td>
 								</Tr>
 							) : !hasVisibleRows && isFiltering ? (
-								// Cuando hay estudiantes pero el filtro no encuentra coincidencias
+								// Cuando hay profesores pero el filtro no encuentra coincidencias
 								<Tr>
 									<Td colSpan={columns.length} className="text-center py-8">
 										<div className="flex flex-col items-center justify-center">
@@ -309,13 +307,13 @@ export function StudentsTable() {
 												No se encontraron coincidencias
 											</h3>
 											<p className="mt-1 text-sm text-gray-500 dark:text-dark-400">
-												No hay alumnos que coincidan con &quot;{globalFilter}&quot;
+												No hay profesores que coincidan con &quot;{globalFilter}&quot;
 											</p>
 										</div>
 									</Td>
 								</Tr>
 							) : (
-								// Renderizar las filas de estudiantes
+								// Renderizar las filas de profesores
 								<>
 									{visibleRows.map((row) => {
 										return (
@@ -334,7 +332,7 @@ export function StudentsTable() {
 															{flexRender(
 																cell.column.columnDef.cell,
 																cell.getContext(),
-															)}
+																)}
 														</Td>
 													);
 												})}
@@ -347,13 +345,13 @@ export function StudentsTable() {
 					</Table>
 				</div>
 				
-				{hasStudents && hasVisibleRows && (
+				{hasTeachers && hasVisibleRows && (
 					<div className="p-4 sm:px-5">
 						<PaginationSection table={table} />
 					</div>
 				)}
 				
-				{hasStudents && (
+				{hasTeachers && (
 					<SelectedRowsActions table={table} height={theadHeight} />
 				)}
 			</Card>
@@ -361,7 +359,7 @@ export function StudentsTable() {
 			<EditModal
 				isOpen={isEditModalOpen}
 				onClose={() => setIsEditModalOpen(false)}
-				rowData={editingStudent}
+				rowData={editingTeacher}
 				onSave={handleSave}
 			/>
 		</div>

@@ -14,13 +14,16 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 let server;
 if(isProduction) {
-	const sslOptions = {
-		key: fs.readFileSync('/etc/letsencrypt/live/api.nimbuscloud.mx/privkey1.pem'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/api.nimbuscloud.mx/fullchain1.pem'),
-	};
-	server = https.createServer(sslOptions, app).listen(PORT, () => {
-		console.log(`HTTPS Worker ${process.pid} corriendo en puerto ${PORT}`);
-	});
+//	const sslOptions = {
+//		key: fs.readFileSync('/etc/letsencrypt/live/api.nimbuscloud.mx/privkey1.pem'),
+//		cert: fs.readFileSync('/etc/letsencrypt/live/api.nimbuscloud.mx/fullchain1.pem'),
+//	};
+//	server = https.createServer(sslOptions, app).listen(PORT, () => {
+//		console.log(`HTTPS Worker ${process.pid} corriendo en puerto ${PORT}`);
+//	});
+ server = app.listen(PORT, () => {
+                console.log(`Server ${process.pid} is running on port ${PORT} as PRODUCTION mode`);
+        });
 }
 else{
 	server = app.listen(PORT, () => {

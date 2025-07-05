@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   addProfesorThunk,
-  getProfesorsThunk,
+  getProfesoresThunk,
   updateProfesorThunk,
   deleteProfesorThunk
 } from "./thunk.js";
@@ -19,7 +19,7 @@ const profesoresSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-    // INSERT profesor
+    // INSERT PROFESOR
     builder.addCase(addProfesorThunk.fulfilled, (state, action) => {
       state.profesores.push(action.payload);
       state.loading = false;
@@ -35,23 +35,23 @@ const profesoresSlice = createSlice({
       state.loading = true;
     });
 
-    // GET ALL profesorS
-    builder.addCase(getProfesorsThunk.fulfilled, (state, action) => {
+    // GET ALL PROFESORES
+    builder.addCase(getProfesoresThunk.fulfilled, (state, action) => {
       state.loading = false;
       state.error = false;
       state.profesores = action.payload;
     });
-    builder.addCase(getProfesorsThunk.rejected, (state, action) => {
+    builder.addCase(getProfesoresThunk.rejected, (state, action) => {
       state.loading = false;
       state.error_message = action.payload.error;
       state.error = true;
     });
-    builder.addCase(getProfesorsThunk.pending, (state) => {
+    builder.addCase(getProfesoresThunk.pending, (state) => {
       state.error = false;
       state.loading = true;
     });
 
-    // EDIT profesor
+    // EDIT PROFESOR
     builder.addCase(updateProfesorThunk.fulfilled, (state, action) => {
       const index = state.profesores.findIndex(profesor => profesor.id === action.payload.id);
       if (index !== -1) {
@@ -70,7 +70,7 @@ const profesoresSlice = createSlice({
       state.loading = true;
     });
 
-    // DELETE profesor
+    // DELETE PROFESOR
     builder.addCase(deleteProfesorThunk.fulfilled, (state, action) => {
       state.profesores = state.profesores.filter(profesor => profesor.id !== action.payload);
       state.loading = false;

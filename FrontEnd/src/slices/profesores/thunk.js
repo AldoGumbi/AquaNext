@@ -19,7 +19,7 @@ export const addProfesorThunk = createAsyncThunk("profesores/add", async (data, 
 });
 
 // Get all profesores
-export const getProfesorsThunk = createAsyncThunk("profesores/getAll", async (_, { rejectWithValue }) => {
+export const getProfesoresThunk = createAsyncThunk("profesores/getAll", async (_, { rejectWithValue }) => {
 	try {
 		const response = await getProfesores();
 		return response.data; // Return the data to be added to the state

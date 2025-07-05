@@ -186,12 +186,40 @@ const protectedRoutes = {
                 Component: (await import("app/pages/teachers/register")).default,
               }),
             },
-            // {
-            //   path: "all-teachers",
-            //   lazy: async () => ({
-            //     Component: (await import("app/pages/teachers/all-teachers")).default,
-            //   }),
-            // },
+            {
+              path: "all-teachers",
+              lazy: async () => ({
+                Component: (await import("app/pages/teachers/all-teachers")).default,
+              }),
+            },
+          ],
+        },
+      ],
+    },
+
+    // Groups routes
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          path: "groups",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/groups/register" />,
+            },
+            {
+              path: "register",
+              lazy: async () => ({
+                Component: (await import("app/pages/groups/register")).default,
+              }),
+            },
+            {
+              path: "all-groups",
+              lazy: async () => ({
+                Component: (await import("app/pages/groups/all-groups/index_1")).default,
+              }),
+            },
           ],
         },
       ],

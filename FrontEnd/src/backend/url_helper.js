@@ -46,6 +46,15 @@ export const GET_PROFESORS = BASE_PROFESOR_URL + '/all-profesores';
 export const EDIT_PROFESOR = BASE_PROFESOR_URL + '/update-profesor';
 export const DELETE_PROFESOR = BASE_PROFESOR_URL + '/delete-profesor';
 
+// GROUPS CRUD
+const BASE_GROUP_URL = '/groups';
+export const ADD_GRUPO = BASE_GROUP_URL + '/add-grupo';
+export const GET_GRUPOS = BASE_GROUP_URL + '/all-grupos';
+export const EDIT_GRUPO = BASE_GROUP_URL + '/update-grupo';
+export const DELETE_GRUPO = BASE_GROUP_URL + '/delete-grupo';
+export const GET_GRUPOS_CON_HORARIOS = BASE_GROUP_URL + '/grupos-con-horarios';
+export const GET_GRUPOS_POR_TIPO = BASE_GROUP_URL + '/grupos-por-tipo';
+
 // DISCOUNTS COUPONS
 const BASE_DISCOUNT_URL = '/coupons';
 export const CREATE_DISCOUNT_COUPON = BASE_DISCOUNT_URL + '/create-coupon';

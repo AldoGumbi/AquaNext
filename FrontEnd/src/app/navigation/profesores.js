@@ -20,12 +20,12 @@ export const profesores = {
       title: 'Nuevo Profesor',
       Icon: GraduationCap,
     },
-    // {
-    //   id: 'teachers.allTeachers',
-    //   path: path(ROOT_PROFESORES, '/all-teachers'),
-    //   type: NAV_TYPE_ITEM,
-    //   title: 'Profesores',
-    //   Icon: GraduationCap,
-    // }
+    {
+      id: 'teachers.allTeachers',
+      path: path(ROOT_PROFESORES, '/all-teachers'),
+      type: NAV_TYPE_ITEM,
+      title: 'Profesores',
+      Icon: GraduationCap,
+    }
   ]
 }
