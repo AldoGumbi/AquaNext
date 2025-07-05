@@ -37,6 +37,7 @@ export const allBaskets = () => api.get(url.ALL_BASKETS);
 export const insertBasketItems = (data) => api.create(`${url.INSERT_BASKET_ITEM}`, data);
 export const deleteBasketItem = (id) => api.delete(`${url.DELETE_BASKET_ITEM}/${id}`);
 export const updateBasketItem = (id, data) => api.put(`${url.UPDATE_BASKET_ITEM}/${id}`, data);
+export const applyCouponBasket = (data) => api.put(`${url.APPLY_COUPON}`, data);
 
 //ALUMNO CRUD
 export const addAlumno = (data) => api.create(url.ADD_ALUMNO, data);
@@ -52,3 +53,11 @@ export const deleteProfesor = (data) => api.delete(`${url.DELETE_PROFESOR}/${dat
 
 // DISCOUNTS COUPONS CRUD
 export const createDiscountCoupon = (data) => api.create(url.CREATE_DISCOUNT_COUPON, data);
+export const getDiscountCoupons = () => api.get(url.GET_DISCOUNT_COUPONS, null);
+export const getAllAvaliableCoupons = () => api.get(url.GET_ALL_AVALIABLE_CUPONS, null)
+export const getCouponById = (id) => api.get(`${url.GET_COUPON_BY_ID}/${id}`,null);
+
+// CASH REGISTER CRUD
+export const openCashRegister = (data) => api.create(url.OPEN_CASH_REGISTER, data);
+export const getOpenCashRegister = () => api.get(url.GET_OPEN_CASH_REGISTER, null);
+export const closeCashRegister = (cash_register_id,data) => api.put(`${url.CLOSE_CASH_REGISTER}/${cash_register_id}`, data);

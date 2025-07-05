@@ -20,6 +20,8 @@ import coupons from "./routes/couponsRouter.js";
 import alumnos from "./routes/alumnoRouter.js";
 // PROFESORES
 import profesores from "./routes/teacherRouter.js";
+// CASH REGISTER
+import cashRegister from "./routes/cashRegister.js";
 // GRUPOS
 import grupos from "./routes/groupsRouter.js";
 
@@ -56,6 +58,7 @@ app.use('/basket-items', basketItems);
 app.use('/alumnos', alumnos);
 app.use('/coupons', coupons);
 app.use('/profesores', profesores);
+app.use('/cash-register', cashRegister);
 app.use('/groups', grupos);
 
 // Manejo de errores

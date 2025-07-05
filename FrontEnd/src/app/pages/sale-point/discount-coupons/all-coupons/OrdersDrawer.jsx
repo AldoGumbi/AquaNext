@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 
 // Local Imports
 import {
-  Avatar,
+  // Avatar,
   Badge,
   Button,
   Table,
@@ -23,7 +23,7 @@ import {
   Tr,
   Td,
 } from "components/ui";
-import { orderStatusOptions } from "./data";
+// import { orderStatusOptions } from "./data";
 import { useLocaleContext } from "app/contexts/locale/context";
 
 // ----------------------------------------------------------------------
@@ -31,9 +31,9 @@ import { useLocaleContext } from "app/contexts/locale/context";
 const cols = ["Name", "SKU", "Price", "Quantity", "Discount", "Total"];
 
 export function OrdersDrawer({ isOpen, close, row }) {
-  const statusOption = orderStatusOptions.find(
-    (item) => item.value === row.original.order_status,
-  );
+  // const statusOption = orderStatusOptions.find(
+  //   (item) => item.value === row.original.order_status,
+  // );
 
   const { locale } = useLocaleContext();
   const timestapms = +row.original.created_at;
@@ -68,9 +68,13 @@ export function OrdersDrawer({ isOpen, close, row }) {
             <div>
               <div className="font-semibold">Order ID:</div>
               <div className="text-xl font-medium text-primary-600 dark:text-primary-400">
-                {row.original.order_id} &nbsp;
-                <Badge className="align-text-bottom" color={statusOption.color}>
-                  {statusOption.label}
+                {/* {row.original.order_id}  */}
+                hola
+                &nbsp;
+                {/* <Badge className="align-text-bottom" color={statusOption.color}> */}
+                <Badge className="align-text-bottom" color="primary">
+                  {/* {statusOption.label} */}
+                  cotroller
                 </Badge>
               </div>
             </div>
@@ -89,7 +93,7 @@ export function OrdersDrawer({ isOpen, close, row }) {
             <div className="flex flex-col">
               <div className="mb-1.5 font-semibold">Customer:</div>
 
-              <Avatar
+              {/* <Avatar
                 size={16}
                 name={row.original.customer.name}
                 src={row.original.customer.avatar_img}
@@ -97,10 +101,11 @@ export function OrdersDrawer({ isOpen, close, row }) {
                 classNames={{
                   display: "mask is-squircle rounded-none text-xl",
                 }}
-              />
+              /> */}
 
               <div className="mt-1.5 text-lg font-medium text-gray-800 dark:text-dark-50">
-                {row.original.customer.name}
+                {/* {row.original.customer.name} */}
+name
               </div>
             </div>
             <div className="text-end">
@@ -117,7 +122,8 @@ export function OrdersDrawer({ isOpen, close, row }) {
           <div className="mt-1 px-4 sm:px-5">
             <div className="font-semibold">Shipping Address:</div>
             <p className="mt-1">
-              {`${row.original.shipping_address?.street}, ${row.original.shipping_address?.line}`}
+              {/* {`${row.original.shipping_address?.street}, ${row.original.shipping_address?.line}`} */}
+              f
             </p>
           </div>
 
@@ -148,7 +154,7 @@ export function OrdersDrawer({ isOpen, close, row }) {
                 </Tr>
               </THead>
               <TBody>
-                {row.original.products.map((tr) => (
+                {/* {row.original.products.map((tr) => (
                   <Tr
                     key={tr.sku}
                     className="border-y border-transparent border-b-gray-200 dark:border-b-dark-500"
@@ -173,7 +179,7 @@ export function OrdersDrawer({ isOpen, close, row }) {
                       {tr.total}
                     </Td>
                   </Tr>
-                ))}
+                ))} */}
               </TBody>
             </Table>
           </div>
@@ -186,7 +192,7 @@ export function OrdersDrawer({ isOpen, close, row }) {
                     <Td>Summary :</Td>
                     <Td>
                       <span className="font-medium text-gray-800 dark:text-dark-100">
-                        ${row.original.subtotal}
+                        total
                       </span>
                     </Td>
                   </Tr>
@@ -194,7 +200,8 @@ export function OrdersDrawer({ isOpen, close, row }) {
                     <Td>Delivery fee :</Td>
                     <Td>
                       <span className="font-medium text-gray-800 dark:text-dark-100">
-                        ${row.original.delivery_fee}
+                        {/* ${row.original.delivery_fee} */}
+                        delivery_fee
                       </span>
                     </Td>
                   </Tr>
@@ -202,14 +209,16 @@ export function OrdersDrawer({ isOpen, close, row }) {
                     <Td>Tax :</Td>
                     <Td>
                       <span className="font-medium text-gray-800 dark:text-dark-100">
-                        ${row.original.tax}
+                        {/* ${row.original.tax} */}
+                        tax
                       </span>
                     </Td>
                   </Tr>
                   <Tr className="text-lg text-primary-600 dark:text-primary-400">
                     <Td>Total :</Td>
                     <Td>
-                      <span className="font-medium">${row.original.total}</span>
+                      <span className="font-medium">total</span>
+                      {/* <span className="font-medium">${row.original.total}</span> */}
                     </Td>
                   </Tr>
                 </TBody>

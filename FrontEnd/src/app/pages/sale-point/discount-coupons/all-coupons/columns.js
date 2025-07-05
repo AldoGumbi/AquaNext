@@ -8,13 +8,12 @@ import {
     SelectHeader,
 } from "components/shared/table/SelectCheckbox";
 import {
-    AddressCell,
-    CustomerCell,
+    ExpirationDateCell,
     DateCell,
     OrderIdCell,
-    OrderStatusCell,
-    ProfitCell,
-    TotalCell,
+    DiscountCell,
+    UsageCell
+
 } from "./rows";
 
 // ----------------------------------------------------------------------
@@ -28,54 +27,49 @@ export const columns = [
         header: SelectHeader,
         cell: SelectCell,
     }),
-    columnHelper.accessor((row) => row.order_id, {
-        id: "order_id",
-        label: "Order ID",
-        header: "Order",
-        cell: OrderIdCell,
-    }),
-    columnHelper.accessor((row) => Number(row.created_at), {
+    columnHelper.accessor(
+        (row) => ({ nombre: row.nombre, codigo: row.codigo }),
+        {
+            id: "codeName",
+            header: "Nombre / Código",
+            cell: OrderIdCell,
+        }
+    ),
+    columnHelper.accessor((row) => row.created_at, {
         id: "created_at",
-        label: "Order Date",
-        header: "Date",
+        label: "Fecha de Creación",
+        header: "Fecha de Creación",
         cell: DateCell,
         filterFn: "inNumberRange",
     }),
-    columnHelper.accessor((row) => row.customer.name, {
-        id: "customer",
-        label: "Customer",
-        header: "Customer",
-        cell: CustomerCell,
-    }),
-    columnHelper.accessor((row) => row.total, {
-        id: "total",
-        label: "Total",
-        header: "Total",
-        cell: TotalCell,
-        filterFn: "inNumberRange",
-    }),
-    columnHelper.accessor((row) => row.profit, {
-        id: "profit",
-        label: "Profit",
-        header: "Profit",
-        cell: ProfitCell,
-        filterFn: "inNumberRange",
-    }),
-    columnHelper.accessor((row) => row.order_status, {
-        id: "order_status",
-        label: "Order Status",
-        header: "Order Status",
-        cell: OrderStatusCell,
-        filterFn: "arrIncludesSome",
-    }),
     columnHelper.accessor(
-        (row) =>
-            `${row.shipping_address?.street}, ${row.shipping_address?.line}`,
+        (row) => ({
+            fecha_inicio: row.fecha_inicio,
+            fecha_fin: row.fecha_fin,
+        }),
         {
-            id: "address",
-            label: "Address",
-            header: "Address",
-            cell: AddressCell,
+            id: "validity",
+            header: "Validez",
+            cell: ExpirationDateCell,
+        }
+    ),
+    columnHelper.accessor(
+        (row) => ({ tipo: row.tipo, valor: row.valor }),
+        {
+            id: "descuento",
+            header: "Descuento",
+            cell: DiscountCell,
+        }
+    ),
+    columnHelper.accessor(
+        (row) => ({
+            usos_actuales: row.usos_actuales,
+            usos_maximos: row.usos_maximos,
+        }),
+        {
+            id: "usos",
+            header: "Usos",
+            cell: UsageCell,
         }
     ),
     columnHelper.display({

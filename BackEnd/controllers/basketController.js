@@ -132,3 +132,48 @@ export const allBaskets = async (req, res) => {
 		});
 	}
 }
+
+//applyDiscount
+export const applyCuponBasket = async (req, res) => {
+	try {
+		if (!req.body.coupon_id) {
+			return res.status(400).json({
+				data: false,
+				error: true,
+				message: 'Es necesario del identificador del cupon no existe.'
+			})
+		}
+		if (!req.body.basket_id) {
+			return res.status(400).json({
+				data: false,
+				error: true,
+				message: 'Es necesario el identificador del carrito no existe.'
+			})
+		}
+		
+		const affectedRows = await basketModel.applyDiscount({
+			coupon_id : req.body.coupon_id,
+			basket_id: req.body.basket_id,
+		});
+		
+		if(affectedRows){
+			return res.status(200).json({
+				data : {
+					...req.body
+				},
+				message : "Cupon aplicado correctamente al carrito."
+			})
+		}else{
+			return res.status(400).json({
+				data: false,
+				message: 'No se encontro el carrito',
+			})
+		}
+	} catch (error) {
+		res.status(500).json({
+			data: false,
+			message: 'Error interno al obtener los carritos',
+			error : error.message
+		});
+	}
+}

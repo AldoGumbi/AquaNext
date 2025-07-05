@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-const ALLproductos = JSON.parse(readFileSync('./s.json', 'utf-8'));
+const ALLproductos = JSON.parse(readFileSync('./productos.json', 'utf-8'));
 
 
 let i = 0;

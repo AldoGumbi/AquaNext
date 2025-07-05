@@ -7,8 +7,10 @@ import {
 	allBasketsThunk,
 	insertBasketItemsThunk,
 	deleteBasketItemThunk,
-  updateBasketItemThunk
+  updateBasketItemThunk,
+  applyCouponToBasketThunk
 } from './thunk.js';
+import { toast } from "sonner";
 
 const initialState = {
 	baskets: [],
@@ -47,6 +49,14 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error = true;
 			state.error_message = action.payload;
+      const ans = action.payload;
+      
+      console.error("Error al crear un carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al crear el carrito!");
+      }
 		});
 		builder.addCase(createBasketThunk.pending, (state) => {
 			state.loading = true;
@@ -63,6 +73,14 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error_message = action.payload;
 			state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al obtener el carrito por idenficador: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al obtener el carrito unico!");
+      }
 		});
 		builder.addCase(getBasketThunk.pending, (state) => {
 			state.loading = true;
@@ -78,6 +96,14 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error_message = action.payload;
 			state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al actualizar el carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al actualizar el carrito!");
+      }
 		});
 		builder.addCase(updateBasketThunk.pending, (state) => {
 			state.loading = true;
@@ -102,6 +128,14 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error_message = action.payload;
 			state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al borrar el carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al borrar el carrito!");
+      }
 		});
 		builder.addCase(deleteBasketThunk.pending, (state) => {
 			state.loading = true;
@@ -118,6 +152,14 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error_message = action.payload;
 			state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al obtener los carritos: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al obtener los carritos!");
+      }
 		});
 		builder.addCase(allBasketsThunk.pending, (state) => {
 			state.loading = true;
@@ -195,14 +237,46 @@ const basketSlice = createSlice({
       state.loading = false;
       state.error_message = action.payload;
       state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al actualizar un producto en el carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al actualizar un producto en el carrito");
+      }
     });
     builder.addCase(updateBasketItemThunk.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
 
+    // APPLY COUPON TO BASKET
+    builder.addCase(applyCouponToBasketThunk.fulfilled, (state) => {
+      state.loading = false;
+      state.error = false;
 
-	}
+    });
+    builder.addCase(applyCouponToBasketThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error_message = action.payload;
+      state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al aplicar codigo de descuento al carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al aplicar codigo de descuento!");
+      }
+    });
+    builder.addCase(applyCouponToBasketThunk.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    
+    
+  }
 });
 
 export const { setActiveBasket } = basketSlice.actions;

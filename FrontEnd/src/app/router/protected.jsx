@@ -42,7 +42,7 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to="/sale-point/home" />,
+          element: <Navigate to="app/pages/sale-point/pos" />,
         },
         {
           path: "sale-point",
@@ -93,11 +93,25 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/home")).default,
                   }),
                 },
-                // CASH REGISTER - ADD NEW
+                // CASH REGISTER - operation same user
                 {
                   path: "operations",
                   lazy: async () => ({
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
+                  }),
+                },
+                // CASH REGISTER - OPEN
+                {
+                  path: "open",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/open")).default,
+                  }),
+                },
+                // CASH REGISTER - CLOSE
+                {
+                  path: "close",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/close")).default,
                   }),
                 },
 

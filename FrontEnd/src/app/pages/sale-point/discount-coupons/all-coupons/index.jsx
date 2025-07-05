@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Local Imports
 import { Table, Card, THead, TBody, Th, Tr, Td } from "components/ui";
@@ -21,21 +21,43 @@ import { fuzzyFilter } from "utils/react-table/fuzzyFilter";
 import { useSkipper } from "utils/react-table/useSkipper";
 import { Toolbar } from "./Toolbar";
 import { columns } from "./columns";
-import { ordersList } from "./data";
 import { PaginationSection } from "components/shared/table/PaginationSection";
 import { SelectedRowsActions } from "./SelectedRowsActions";
 import { useThemeContext } from "app/contexts/theme/context";
 import { getUserAgentBrowser } from "utils/dom/getUserAgentBrowser";
+
+//import { ordersList } from "./data";
+
+// redux
+import { useSelector,useDispatch } from "react-redux";
+import { GetCouponsThunk } from "slices/thunk"
 
 // ----------------------------------------------------------------------
 
 const isSafari = getUserAgentBrowser() === "Safari";
 
 export default function OrdersDatatableV1() {
+  // Redux hooks
+  const dispatch = useDispatch();
+  const { coupons } = useSelector((state) => state.coupons);
+
+  
   const { cardSkin } = useThemeContext();
+  
+  const [discounts, setDiscounts] = useState([]);
 
-  const [orders, setOrders] = useState([...ordersList]);
+  useEffect(() => {
+    // Dispatch an action to fetch coupons when the component mounts
+    dispatch(GetCouponsThunk());
+  }, [dispatch]);
 
+  useEffect(() => {
+    // Update the discounts state when coupons are fetched
+    setDiscounts(coupons);
+  }, [coupons]);
+
+  console.log("Coupons:", discounts);
+  
   const [tableSettings, setTableSettings] = useState({
     enableFullScreen: false,
     enableRowDense: false,
@@ -58,7 +80,7 @@ export default function OrdersDatatableV1() {
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
   const table = useReactTable({
-    data: orders,
+    data: discounts,
     columns: columns,
     state: {
       globalFilter,
@@ -71,7 +93,7 @@ export default function OrdersDatatableV1() {
       updateData: (rowIndex, columnId, value) => {
         // Skip page index reset until after next rerender
         skipAutoResetPageIndex();
-        setOrders((old) =>
+        setDiscounts((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
@@ -86,7 +108,7 @@ export default function OrdersDatatableV1() {
       deleteRow: (row) => {
         // Skip page index reset until after next rerender
         skipAutoResetPageIndex();
-        setOrders((old) =>
+        setDiscounts((old) =>
           old.filter((oldRow) => oldRow.order_id !== row.original.order_id),
         );
       },
@@ -94,7 +116,7 @@ export default function OrdersDatatableV1() {
         // Skip page index reset until after next rerender
         skipAutoResetPageIndex();
         const rowIds = rows.map((row) => row.original.order_id);
-        setOrders((old) => old.filter((row) => !rowIds.includes(row.order_id)));
+        setDiscounts((old) => old.filter((row) => !rowIds.includes(row.order_id)));
       },
       setTableSettings,
     },
@@ -119,7 +141,7 @@ export default function OrdersDatatableV1() {
     autoResetPageIndex,
   });
 
-  useDidUpdate(() => table.resetRowSelection(), [orders]);
+  useDidUpdate(() => table.resetRowSelection(), [discounts]);
 
   useLockScrollbar(tableSettings.enableFullScreen);
 

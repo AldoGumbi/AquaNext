@@ -1,5 +1,4 @@
 import db from '../config/db.js';
-import InventoryModel from "./inventoryModel.js";
 
 class couponsModel {
   static async createCoupon(coupon) {
@@ -19,6 +18,37 @@ class couponsModel {
       ]
     );
     return rows.insertId;
+  }
+  static async getCoupons() {
+    const query = `SELECT * FROM cupones`;
+    const [rows] = await db.query(query);
+    return rows;
+  }
+
+  static async UsagesById(cpId){
+    const [rows] = await db.query(
+      `SELECT cp.* , t.*
+      FROM cupones_uso cp 
+      INNER JOIN transacciones t ON cp.transaccion_id = t.id 
+      WHERE transaccion_id = ?`,
+      [cpId]
+    );
+    return rows;
+  }
+  
+  static async AllActiveCoupons(){
+    const [cupons] = await db.query(`
+      SELECT * FROM cupones
+      WHERE activo = true
+      AND usos_actuales < usos_maximos
+      AND CURDATE() BETWEEN fecha_inicio AND fecha_fin;
+    `);
+    return cupons;
+  }
+  
+  static async GetCouponById(cpId){
+    const [rows] = await db.query(`SELECT * FROM cupones WHERE id = ?`, [cpId]);
+    return rows;
   }
 }
 

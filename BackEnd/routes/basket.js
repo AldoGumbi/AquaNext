@@ -5,7 +5,8 @@ import {
 	getBasket,
 	deleteBasket,
 	updateBasket,
-	allBaskets
+	allBaskets,
+	applyCuponBasket
 } from '../controllers/basketController.js';
 
 const router = express.Router();
@@ -20,5 +21,7 @@ router.put("/update-basket/:id", updateBasket);
 router.delete("/delete-basket/:id", deleteBasket);
 // get all baskets and their items
 router.get("/all-baskets", allBaskets);
+// Apply the discount coupon to the cart
+router.put("/apply-coupon", applyCuponBasket);
 
 export default router;

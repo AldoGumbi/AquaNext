@@ -72,7 +72,7 @@ export const salePoint = {
       title: 'Caja',
       Icon: Store,
       childs: [
-        // OPEN CASH REGISTER
+        // CASH REGISTER HOME
         {
           id: 'salePoint.cashRegisterActions',
           type: NAV_TYPE_ITEM,
@@ -86,6 +86,21 @@ export const salePoint = {
           type: NAV_TYPE_ITEM,
           path: path(ROOT_POINT_SALE, '/cash-register/operations'),
           title: 'Operaciones de Caja',
+          Icon: 'prototypes'
+        },
+        // CASH REGISTER ADD NEW
+        {
+          id: 'salePoint.cashRegisterAddNew',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/cash-register/open'),
+          title: 'Abrir Caja',
+          Icon: 'prototypes'
+        },
+        {
+          id: 'salePoint.cashRegisterClose',
+          type: NAV_TYPE_ITEM,
+          path: path(ROOT_POINT_SALE, '/cash-register/close'),
+          title: 'Cierre de Caja',
           Icon: 'prototypes'
         },
       ]

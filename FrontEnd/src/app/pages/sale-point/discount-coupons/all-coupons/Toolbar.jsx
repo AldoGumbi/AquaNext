@@ -15,13 +15,15 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
-import { TbCurrencyDollar } from "react-icons/tb";
+// import { TbCurrencyDollar } from "react-icons/tb";
 import PropTypes from "prop-types";
+
+import { Link } from "react-router";
 
 // Local Imports
 import { DateFilter } from "components/shared/table/DateFilter";
 import { FacedtedFilter } from "components/shared/table/FacedtedFilter";
-import { RangeFilter } from "components/shared/table/RangeFilter";
+// import { RangeFilter } from "components/shared/table/RangeFilter";
 import { Button, Input } from "components/ui";
 import { TableConfig } from "./TableConfig";
 import { useBreakpointsContext } from "app/contexts/breakpoint/context";
@@ -67,15 +69,17 @@ export function Toolbar({ table }) {
             >
               <MenuItem>
                 {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>New Order</span>
-                  </button>
+                  <Link to="/sale-point/discount-coupons/add-coupon">
+                    <button
+                      className={clsx(
+                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                        focus &&
+                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+                      )}
+                    >
+                      <span>Crear código</span>
+                    </button>
+                  </Link>
                 )}
               </MenuItem>
               <MenuItem>
@@ -128,7 +132,7 @@ export function Toolbar({ table }) {
                         "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                     )}
                   >
-                    <span>Export as PDF</span>
+                    <span>Exportar PDF</span>
                   </button>
                 )}
               </MenuItem>
@@ -141,7 +145,7 @@ export function Toolbar({ table }) {
                         "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                     )}
                   >
-                    <span>Export as CSV</span>
+                    <span>Exportar CSV</span>
                   </button>
                 )}
               </MenuItem>
@@ -167,7 +171,7 @@ export function Toolbar({ table }) {
               className="h-8 space-x-2 rounded-md px-3 text-xs "
             >
               <PrinterIcon className="size-4" />
-              <span>Print</span>
+              <span>Imprimir</span>
             </Button>
 
             <Menu
@@ -245,15 +249,17 @@ export function Toolbar({ table }) {
               >
                 <MenuItem>
                   {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>New Order</span>
-                    </button>
+                    <Link to="/sale-point/discount-coupons/add-coupon">
+                      <button
+                        className={clsx(
+                          "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                          focus &&
+                            "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+                        )}
+                      >
+                        <span>Crear código</span>
+                      </button>
+                    </Link>
                   )}
                 </MenuItem>
                 <MenuItem>
@@ -366,27 +372,35 @@ function Filters({ table }) {
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
     <>
-      {table.getColumn("order_status") && (
+      {table.getColumn("descuento") && (
         <FacedtedFilter
-          options={orderStatusOptions}
-          column={table.getColumn("order_status")}
-          title="Status"
+        options={orderStatusOptions}
+          column={table.getColumn("descuento")}
+          title="Descuento"
           Icon={MapPinIcon}
         />
       )}
 
+     {table.getColumn("codeName") && (
+        <FacedtedFilter
+          options={orderStatusOptions}
+          column={table.getColumn("codeName")}
+          title="Nombre / Código"
+          Icon={MapPinIcon}
+        />
+      )}
       {table.getColumn("created_at") && (
         <DateFilter
           column={table.getColumn("created_at")}
-          title="Order Date Range"
+          title="Validez"
           config={{
-            maxDate: new Date().fp_incr(1),
+            // maxDate: new Date().fp_incr(1),  
             mode: "range",
           }}
         />
       )}
 
-      {table.getColumn("total") && (
+      {/* {table.getColumn("total") && (
         <RangeFilter
           column={table.getColumn("total")}
           title="Total Amount"
@@ -401,7 +415,7 @@ function Filters({ table }) {
             </>
           )}
         />
-      )}
+      )} */}
 
       {isFiltered && (
         <Button
