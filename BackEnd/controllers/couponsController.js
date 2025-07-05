@@ -154,3 +154,58 @@ export const getUsagesById = async (req, res) => {
     });
   }
 }
+
+// this return all the cupons that are avaliable this mean
+// that has to be active and between the range of date between
+// fecha de inicio and fecha de fin.
+export const getAllActiveCoupons = async (req, res) => {
+  try {
+    const coupons = await couponsModel.AllActiveCoupons();
+    if (!coupons || coupons.length === 0) {
+      return res.status(404).json({
+        data: false,
+        message: 'No se encontraron cupones de descuento.'
+      });
+    }
+    res.status(200).json({
+      data: coupons,
+      message: 'Cupones de descuento obtenidos exitosamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener los cupones de descuento',
+      error : error.message
+    });
+  }
+}
+
+export const getCouponById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({
+        data: false,
+        error: true,
+        message : "Es necesario el identificador del codigo de descuento."
+      });
+    }
+    
+    const coupon = await couponsModel.GetCouponById(id);
+    if (!coupon || coupon.length === 0) {
+      return res.status(404).json({
+        data: false,
+        message: 'No se encontraró cupon de descuento.'
+      });
+    }
+    res.status(200).json({
+      data: coupon,
+      message: 'Cupon de descuento obtenido exitosamente!'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener los cupones de descuento',
+      error : error.message
+    });
+  }
+}

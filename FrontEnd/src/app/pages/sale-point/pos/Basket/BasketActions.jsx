@@ -20,7 +20,7 @@ import { createBasketThunk, deleteBasketThunk } from "slices/basket/thunk.js"
 
 import { toast } from "react-toastify";
 
-import { DiscountModal } from "./DiscountModal";
+import { DiscountModal } from "./DiscountModal.jsx";
 // ----------------------------------------------------------------------
 
 export function BasketActions() {

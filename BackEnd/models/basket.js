@@ -15,10 +15,13 @@ class basketModel {
 			p.nombre,
 			p.precio_venta,
 			p.imagen,
-			p.id as producto_id
+			p.id as producto_id,
+				
+			c.id_cupones
 			
 			FROM carrito_items CI 
 			INNER JOIN productos p on p.id = CI.producto_id
+			INNER JOIN carritos c on c.id = CI.carrito_id
       WHERE CI.carrito_id = ?
 			`, [basketId]);
 
@@ -93,6 +96,16 @@ class basketModel {
 		}
 	}
 
+	static async applyDiscount(data){
+		try{
+			const [answer] = await db.query(`
+			UPDATE carritos SET id_cupones = ? WHERE id = ?
+			`,[data.coupon_id,data.basket_id]);
+			return answer.affectedRows;
+		}catch(error){
+			throw error;
+		}
+	}
 }
 
 export default basketModel;

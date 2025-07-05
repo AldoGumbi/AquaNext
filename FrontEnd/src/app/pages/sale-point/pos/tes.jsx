@@ -61,8 +61,7 @@ export function Blur() {
                 </DialogTitle>
 
                 <p className="mt-2">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Consequuntur dignissimos soluta totam?
+                  L?
                 </p>
                 <Button onClick={close} color="success" className="mt-6">
                   Close

@@ -1,8 +1,8 @@
 // Local Imports
 import { Page } from "components/shared/Page";
 import { CajasHistoricos } from "./HistoricosTable";
-import { Analytics } from "./Analytics";
-import { Expense } from "./Expense";
+// import { Analytics } from "./Analytics";
+// import { Expense } from "./Expense";
 import { Calendar } from "./Calendar";
 
 
@@ -18,8 +18,8 @@ export default function Caja() {
           </div>
           <div className="col-span-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:sticky lg:top-20 lg:col-span-4 lg:grid-cols-1 lg:gap-6 lg:self-start xl:col-span-3">
             <Calendar />
-            <Expense />
-            <Analytics />
+            {/*<Expense />*/}
+            {/*<Analytics />*/}
           </div>
         </div>  
       </div>

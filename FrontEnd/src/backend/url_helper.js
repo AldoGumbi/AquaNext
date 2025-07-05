@@ -24,6 +24,7 @@ export const GET_BASKET = BASE_BASKET_URL + '/get-basket';
 export const UPDATE_BASKET = BASE_BASKET_URL + '/update-basket';
 export const DELETE_BASKET = BASE_BASKET_URL + '/delete-basket';
 export const ALL_BASKETS = BASE_BASKET_URL + '/all-baskets';
+export const APPLY_COUPON = BASE_BASKET_URL + '/apply-coupon';
 
 // Basket Items
 const BASE_BASKET_ITEM_URL = '/basket-items';
@@ -49,6 +50,8 @@ export const DELETE_PROFESOR = BASE_PROFESOR_URL + '/delete-profesor';
 const BASE_DISCOUNT_URL = '/coupons';
 export const CREATE_DISCOUNT_COUPON = BASE_DISCOUNT_URL + '/create-coupon';
 export const GET_DISCOUNT_COUPONS = BASE_DISCOUNT_URL + '/get-coupons';
+export const GET_ALL_AVALIABLE_CUPONS = BASE_DISCOUNT_URL + '/All-active-coupons';
+export const GET_COUPON_BY_ID = BASE_DISCOUNT_URL + '/get-coupon-by-id';
 
 // CASH REGISTER
 const BASE_CASH_REGISTER_URL = '/cash-register';

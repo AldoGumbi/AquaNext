@@ -34,7 +34,6 @@ export default function Pos() {
   // State to manage the cash withdrawal counter (same as cash register)
   const [isModalOpen, setIsModalOpen] = useState({
     isOpen: false,
-    isCreating: true,
   });
 
 
@@ -50,8 +49,6 @@ export default function Pos() {
       setIsModalOpen({ isOpen: true, isCreating: true });
     }
   }, [openCashRegister]);
-  console.log("openCashRegister", openCashRegister);
-
 
 
   return (
@@ -73,7 +70,6 @@ export default function Pos() {
           <CashWithrawalActionsModal
             isOpen={isModalOpen.isOpen}
             onClose={() => setIsModalOpen(prev => ({ ...prev, isOpen: false }))}
-            isCreating={isModalOpen.isCreating}
           />
         </>
       )}

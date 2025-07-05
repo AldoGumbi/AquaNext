@@ -35,6 +35,21 @@ class couponsModel {
     );
     return rows;
   }
+  
+  static async AllActiveCoupons(){
+    const [cupons] = await db.query(`
+      SELECT * FROM cupones
+      WHERE activo = true
+      AND usos_actuales < usos_maximos
+      AND CURDATE() BETWEEN fecha_inicio AND fecha_fin;
+    `);
+    return cupons;
+  }
+  
+  static async GetCouponById(cpId){
+    const [rows] = await db.query(`SELECT * FROM cupones WHERE id = ?`, [cpId]);
+    return rows;
+  }
 }
 
 export default couponsModel;

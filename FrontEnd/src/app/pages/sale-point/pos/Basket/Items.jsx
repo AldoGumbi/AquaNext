@@ -71,12 +71,12 @@ export function Items() {
                     </Button>
                   </div>
                   <p className="truncate text-xs-plus text-gray-400 dark:text-dark-300">
-                    {item.comentario || 'Sin comentario'}
+                    {item.comentario || ' '}
                   </p>
                 </div>
               </div>
               <p className="font-semibold">
-                {item.precio_venta ? (item.precio_venta * item.cantidad) : '$0.00'}
+                {item.precio_venta ?  '$ ' + Number(item.precio_venta * item.cantidad).toFixed(2) : '$0.00'}
               </p>
             </div>
           ))
