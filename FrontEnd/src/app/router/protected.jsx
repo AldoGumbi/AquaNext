@@ -30,7 +30,7 @@ const protectedRoutes = {
             {
               path: "home",
               lazy: async () => ({
-                Component: (await import("app/pages/dashboards/home")).default,
+                Component: (await import("app/pages/dashboards/sales")).default,
               }),
             },
           ],
@@ -162,6 +162,12 @@ const protectedRoutes = {
               path: "all-students",
               lazy: async () => ({
                 Component: (await import("app/pages/students/all-students")).default,
+              }),
+            },
+            {
+              path: "new-insc-mens",
+              lazy: async () => ({
+                Component: (await import("app/pages/students/new-insc-mens")).default,
               }),
             },
           ],
