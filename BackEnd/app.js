@@ -9,6 +9,9 @@ import { conditionalAuth } from './middlewares/authMiddleware.js';
 
 // Importar rutas
 
+//Dashboard
+import dashboardRoutes from './routes/dashboard.js';
+
 //AUTH
 import auth from './routes/authRouter.js';
 // SALE POINT
@@ -30,27 +33,27 @@ const app = express();
 // middlewares basicos
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+// CORS CORRECTAMENTE CONFIGURADO
 app.use(cors({
-    origin: ALLOWED_ORIGINS,
-    credentials: true,
-	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(cookieParser());
 
-// middleware de logging
+// middleware de logging y auth
 if (NODE_ENV === 'production') {
-    app.use(morgan('combined'));  // Más formal para producción
-	// middleware de autenticación condicional
-	// Este middleware se ejecutará en todas las rutas excepto login
-	app.use(conditionalAuth);
+  app.use(morgan('combined'));
+  app.use(conditionalAuth);
 } else {
-    app.use(morgan('dev'));       // Con colores para desarrollo
+  app.use(morgan('dev'));
 }
 
-
-
-// Routes
+// ✅ ahora sí: rutas
+app.use('/dashboard', dashboardRoutes);
 app.use('/auth', auth);
 app.use('/products', products);
 app.use('/baskets', baskets);
@@ -61,17 +64,16 @@ app.use('/profesores', profesores);
 app.use('/cash-register', cashRegister);
 app.use('/groups', grupos);
 
-// Manejo de errores
+// Errores
 app.use((req, res, next) => {
-	res.status(404).json({ message: 'Not found' });
+  res.status(404).json({ message: 'Not found' });
 });
-
 app.use((err, req, res, next) => {
-	console.error(`[${new Date().toISOString()}] Error:`, err.stack);
-	res.status(500).json({
-		message: 'Something broke!',
-		...(NODE_ENV === 'development' && { error: err.message })
-	});
+  console.error(`[${new Date().toISOString()}] Error:`, err.stack);
+  res.status(500).json({
+    message: 'Something broke!',
+    ...(NODE_ENV === 'development' && { error: err.message })
+  });
 });
 
 export default app;
