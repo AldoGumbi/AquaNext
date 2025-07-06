@@ -9,6 +9,7 @@ import couponsSlicer from './coupons/reducer.js';
 import profesoresSlicer from './profesores/reducer.js';
 import cashRegisterSlicer from './cash-register/reducer.js';
 import groupsSlicer from './groups/reducer.js';
+import dashboardSlicer from './dashboard/reducer.js';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -28,6 +29,9 @@ const rootReducer = combineReducers({
   cashRegister: cashRegisterSlicer,
   // groups
   groups: groupsSlicer,
+  //  Dashboard
+  dashboard: dashboardSlicer, 
+
 });
 
 // Export the combined reducer

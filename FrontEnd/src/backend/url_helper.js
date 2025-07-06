@@ -9,6 +9,14 @@ export const SIGN_IN_REQUEST = AUTH_BASE_URL + '/sign-in';
 export const GET_PROFILE = AUTH_BASE_URL + '/profile';
 export const LOG_OUT_REQUEST = AUTH_BASE_URL + '/logout';
 
+//DASHBOARD
+const BASE_DASHBOARD_URL = '/dashboard';
+export const GET_DASHBOARD_STATS = BASE_DASHBOARD_URL + '/stats';
+export const GET_INGRESOS = BASE_DASHBOARD_URL + '/ingresos';
+export const GET_INSCRIPCIONES_STATUS = BASE_DASHBOARD_URL + '/inscripciones-status';
+export const GET_MENSUALIDADES_STATUS = BASE_DASHBOARD_URL + '/mensualidades-status';
+export const GET_ALUMNOS_ALBERCA = BASE_DASHBOARD_URL + '/alumnos-en-alberca';
+export const GET_VENTAS_TIENDA = BASE_DASHBOARD_URL + '/ventas-tienda';
 
 // PRODUCTS
 export const ADD_PRODUCT = '/products/add';

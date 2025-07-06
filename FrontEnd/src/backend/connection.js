@@ -61,3 +61,13 @@ export const getCouponById = (id) => api.get(`${url.GET_COUPON_BY_ID}/${id}`,nul
 export const openCashRegister = (data) => api.create(url.OPEN_CASH_REGISTER, data);
 export const getOpenCashRegister = () => api.get(url.GET_OPEN_CASH_REGISTER, null);
 export const closeCashRegister = (cash_register_id,data) => api.put(`${url.CLOSE_CASH_REGISTER}/${cash_register_id}`, data);
+
+// DASHBOARD
+export const getAlumnosStats = () => api.get(url.GET_ALUMNOS_STATS, null);
+export const getDashboardStats = () => api.get(url.GET_DASHBOARD_STATS, null);
+export const getIngresosDashboard = () => api.get(url.GET_INGRESOS, null);
+export const getInscripcionesStatus = () => api.get(url.GET_INSCRIPCIONES_STATUS, null);
+export const getMensualidadesStatus = () => api.get(url.GET_MENSUALIDADES_STATUS, null);
+export const getAlumnosEnAlberca = () => api.get(url.GET_ALUMNOS_ALBERCA, null);
+export const getVentasTiendaDashboard = () => api.get(url.GET_VENTAS_TIENDA, null);
+

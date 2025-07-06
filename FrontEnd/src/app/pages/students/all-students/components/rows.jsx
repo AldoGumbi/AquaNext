@@ -1,7 +1,7 @@
 // Import Dependencies
 import PropTypes from "prop-types";
 import { DateTime } from "luxon";
-import { Badge } from "components/ui";
+import { Badge, Button } from "components/ui";
 import {
   UserCheck,
   UserX,
@@ -9,9 +9,11 @@ import {
   CheckCircle,
   XCircle,
   Phone,
-  Mail,
-  User
+  Mail
 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+
+
 
 // ----------------------------------------------------------------------
 
@@ -51,14 +53,31 @@ const SignatureOptions = [
   }
 ];
 
+export function RegisterCell() {
+  const navigate = useNavigate();
+const label = "Nuevo"
+  const handleClick = () => {
+    // Por ejemplo: redirige a /alumnos/:id
+    navigate(`/students/new-insc-mens`);
+  };
+
+  return (
+    <Button  color="primary" variant="outlined"
+      onClick={handleClick}
+      className="flex items-center space-x-3 text-left hover:bg-gray-100 dark:hover:bg-dark-700 w-full p-2 rounded-md transition px-3 py-1 text-xs"
+    >
+      <div>
+        <p className="font-bold text-gray-800 dark:text-dark-100">{label}</p>
+      </div>
+    </Button>
+  );
+}
+
 export function NameCell({ row }) {
   const fullName = `${row.original.nombre} ${row.original.apellido_paterno} ${row.original.apellido_materno || ''}`.trim();
   
   return (
     <div className="flex items-center space-x-3">
-      <div className="size-9 flex items-center justify-center bg-gray-100 dark:bg-dark-600 rounded-full">
-        <User className="size-5 text-gray-600 dark:text-dark-300" />
-      </div>
       <div>
         <p className="font-bold text-gray-800 dark:text-dark-100">
           {fullName}

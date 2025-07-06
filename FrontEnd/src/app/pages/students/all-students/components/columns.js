@@ -9,6 +9,7 @@ import {
 
 import { RowActions } from "./RowActions";
 import { 
+  RegisterCell,
   NameCell, 
   ContactCell, 
   StatusCell, 
@@ -25,6 +26,11 @@ export const columns = [
     id: "select",
     header: SelectHeader,
     cell: SelectCell,
+  }),
+  columnHelper.display({
+    id: "inscripcion_mensualidad",
+    header: () => "Inscripción/\nMensualidad",
+    cell: RegisterCell,
   }),
   columnHelper.accessor((row) => `${row.nombre} ${row.apellido_paterno} ${row.apellido_materno}`, {
     id: "nombre_completo",
