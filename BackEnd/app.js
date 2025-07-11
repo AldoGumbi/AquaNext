@@ -27,6 +27,8 @@ import profesores from "./routes/teacherRouter.js";
 import cashRegister from "./routes/cashRegister.js";
 // GRUPOS
 import grupos from "./routes/groupsRouter.js";
+// INSCRIPCIONES Y MENSUALIDADES
+import inscripcionesMensualidades from "./routes/InscripcionesMensualidades.js";
 
 const app = express();
 
@@ -63,6 +65,7 @@ app.use('/coupons', coupons);
 app.use('/profesores', profesores);
 app.use('/cash-register', cashRegister);
 app.use('/groups', grupos);
+app.use('/school-transactions', inscripcionesMensualidades);
 
 // Errores
 app.use((req, res, next) => {

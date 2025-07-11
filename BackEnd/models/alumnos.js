@@ -242,7 +242,7 @@ class alumnosModel {
           fecha_creacion,
           fecha_actualizacion
         FROM alumnos 
-        WHERE estatus = ?
+        WHERE estatus = ? AND deleted = 0
         ORDER BY fecha_creacion DESC;
       `, [estatus]);
       
