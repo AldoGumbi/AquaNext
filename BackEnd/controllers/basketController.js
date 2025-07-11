@@ -133,21 +133,21 @@ export const allBaskets = async (req, res) => {
 	}
 }
 
-//applyDiscount
+// applying discount to the cart
 export const applyCuponBasket = async (req, res) => {
 	try {
-		if (!req.body.coupon_id) {
+		if (!req.body.coupon_id || req.body.coupon_id === null) {
 			return res.status(400).json({
 				data: false,
 				error: true,
 				message: 'Es necesario del identificador del cupon no existe.'
 			})
 		}
-		if (!req.body.basket_id) {
+		if (!req.body.basket_id || req.body.basket_id === null) {
 			return res.status(400).json({
 				data: false,
 				error: true,
-				message: 'Es necesario el identificador del carrito no existe.'
+				message: 'No se selecciono ningun carrito de venta.'
 			})
 		}
 		
@@ -175,5 +175,45 @@ export const applyCuponBasket = async (req, res) => {
 			message: 'Error interno al obtener los carritos',
 			error : error.message
 		});
+	}
+}
+
+
+export const unApplyDiscount = async (req, res) => {
+	try{
+		// (1) Making sure the id from the basket exist!
+		if(!req.params.id){
+			return res.status(400).json({
+				data: false,
+				error: true,
+				message: 'Es necesario del identificador del carrito!',
+			})
+		}
+		
+		// (2) calling the model
+		const answer = basketModel.unApplyDiscount(req.params.id);
+		
+		// (3) processing the answer in case we got it rigth
+		if(answer){
+			return res.status(200).json({
+				data : null,
+				message : "Cupon eliminado correctamente al carrito."
+			})
+		}
+		
+		// (4) if the cart dosent exit or the cart dont have any coupon linked
+		res.status(404).json({
+			data: null,
+			message: 'No se encontro el carrito o el carrito no cuenta con un descuento activo!',
+		})
+		
+	
+	}catch (error){
+		res.status(500).json({
+			data: false,
+			message: 'Error interno al desasignar el descuento al carrito!',
+			error : true,
+			error_message : error.message
+		})
 	}
 }

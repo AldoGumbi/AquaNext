@@ -10,8 +10,10 @@ import { GetCouponByIdThunk } from "slices/thunk";
 
 export function Checkout() {
   const dispatch = useDispatch();
-  const { basket_items } = useSelector((state) => state.basket);
+  const { basket_items,basket_total } = useSelector((state) => state.basket);
   const { activeCoupon } = useSelector((state) => state.coupons);
+  
+  
   
   const [subtotal, setSubTotal] = useState(0);
   const [iva, setIva] = useState(0);
@@ -21,11 +23,14 @@ export function Checkout() {
   
   // Calcula subtotal, IVA y total considerando descuentos
   useEffect(() => {
-    const t = basket_items?.reduce((total, item) => total + (item.precio_venta * item.cantidad), 0) || 0;
+    // if(!idCupones) return;
+    const t = basket_total || 0;
     const ivaValue = t * 0.16;
     
+
+    
     let discount = 0;
-    if (activeCoupon) {
+    if (activeCoupon ) {
       if (activeCoupon.tipo === 'porcentaje') {
         // Descuento porcentual
         discount = (t * (parseFloat(activeCoupon.valor) / 100));
@@ -38,7 +43,7 @@ export function Checkout() {
     setSubTotal(Number(t));
     setIva(Number(ivaValue));
     setTotal(Number(t + ivaValue - discount));
-  }, [basket_items, activeCoupon]);
+  }, [basket_items, activeCoupon,basket_total]);
   
   // Obtiene el cupón si existe
   useEffect(() => {
@@ -50,7 +55,7 @@ export function Checkout() {
   // Componente de visualización del descuento (solo UI)
   // Modifica el discountComponent para mostrar correctamente ambos tipos
   const discountComponent = (coupon) => {
-    if (!coupon) return null;
+    if (!coupon || !idCupones) return null;
     
     let discountValue;
     let displayText;

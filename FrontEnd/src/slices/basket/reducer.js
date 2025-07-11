@@ -7,8 +7,7 @@ import {
 	allBasketsThunk,
 	insertBasketItemsThunk,
 	deleteBasketItemThunk,
-  updateBasketItemThunk,
-  applyCouponToBasketThunk
+  // updateBasketItemThunk
 } from './thunk.js';
 import { toast } from "sonner";
 
@@ -16,9 +15,12 @@ const initialState = {
 	baskets: [],
 	loading: false,
 	error: false,
-
+  
+  // productos relacionados al carrito
 	basket_items : null,
+  // valor total de todos los productos relacionados al carrito
 	basket_total : 0,
+  // ID del carrito activo
 	activeBasket : null
 }
 
@@ -28,12 +30,6 @@ const basketSlice = createSlice({
 	reducers: {
 		setActiveBasket(state, action) {
 			state.activeBasket = action.payload;
-
-			if(state.basket_items) {
-				state.basket_total = state.basket_items.reduce((total, item) => {
-					return total + (item.price * item.quantity);
-				}, 0);
-			}
 		}
 	},
 	extraReducers: (builder) => {
@@ -68,6 +64,16 @@ const basketSlice = createSlice({
 			state.loading = false;
 			state.error = false;
 			state.basket_items = action.payload.data
+      console.log("Items: ", action.payload.data);
+      
+      // calculador del valor total de los items vinculados al carrito
+      state.basket_total = action.payload.data.reduce((total, item) => {
+        const precio = parseFloat(item.precio_venta) || 0;
+        const cantidad = Number(item.cantidad) || 0;
+        return total + (precio * cantidad);
+      }, 0);
+      
+   
 		});
 		builder.addCase(getBasketThunk.rejected, (state, action) => {
 			state.loading = false;
@@ -174,7 +180,13 @@ const basketSlice = createSlice({
 				action.payload.data
 
 			];
-			state.loading = false;
+      state.basket_total = state.basket_items.reduce((total, item) => {
+        const precio = parseFloat(item.precio_venta) || 0;
+        const cantidad = Number(item.cantidad) || 0;
+        return total + (precio * cantidad);
+      }, 0);
+      
+      state.loading = false;
 			state.error = false;
 		});
 		builder.addCase(insertBasketItemsThunk.rejected, (state, action) => {
@@ -200,6 +212,13 @@ const basketSlice = createSlice({
       const updatedBasketItems = basketItems.filter(item => item.id !== itemIdToDelete);
       // Update the state with the new basket items
       state.basket_items = updatedBasketItems;
+      
+      // recalculating the total between the items
+      state.basket_total = updatedBasketItems.reduce((total, item) => {
+        const precio = parseFloat(item.precio_venta) || 0;
+        const cantidad = Number(item.cantidad) || 0;
+        return total + (precio * cantidad);
+      }, 0);
 		});
 		builder.addCase(deleteBasketItemThunk.rejected, (state, action) => {
 			state.loading = false;
@@ -210,72 +229,7 @@ const basketSlice = createSlice({
 			state.loading = true;
 			state.error = false;
 		});
-
-    // UPDATE BASKET ITEM //updateBasketItemThunk
-    builder.addCase(updateBasketItemThunk.fulfilled, (state, action) => {
-      // basket items from the global state
-      const basketItems = state.basket_items || [];
-      // this is the ID of the item to be updated
-      const itemUpdated = action.payload.data;
-
-      const updatedBasketItems = basketItems.map(item => {
-        if (item.id === itemUpdated.basket_items_id) {
-          return {
-            ...item,
-            cantidad: itemUpdated.quantity,
-            comentario: itemUpdated.comment
-          };
-        }
-        return item;
-      });
-
-      state.basket_items = updatedBasketItems;
-      state.loading = false;
-      state.error = false;
-    });
-    builder.addCase(updateBasketItemThunk.rejected, (state, action) => {
-      state.loading = false;
-      state.error_message = action.payload;
-      state.error = true;
-      const ans = action.payload;
-      
-      console.error("Error al actualizar un producto en el carrito: ", action.payload.error);
-      if (ans?.error?.API_message) {
-        toast.error(`${ans?.error?.API_message}`);
-      } else {
-        toast.error("Error al actualizar un producto en el carrito");
-      }
-    });
-    builder.addCase(updateBasketItemThunk.pending, (state) => {
-      state.loading = true;
-      state.error = false;
-    });
-
-    // APPLY COUPON TO BASKET
-    builder.addCase(applyCouponToBasketThunk.fulfilled, (state) => {
-      state.loading = false;
-      state.error = false;
-
-    });
-    builder.addCase(applyCouponToBasketThunk.rejected, (state, action) => {
-      state.loading = false;
-      state.error_message = action.payload;
-      state.error = true;
-      const ans = action.payload;
-      
-      console.error("Error al aplicar codigo de descuento al carrito: ", action.payload.error);
-      if (ans?.error?.API_message) {
-        toast.error(`${ans?.error?.API_message}`);
-      } else {
-        toast.error("Error al aplicar codigo de descuento!");
-      }
-    });
-    builder.addCase(applyCouponToBasketThunk.pending, (state) => {
-      state.loading = true;
-      state.error = false;
-    });
-    
-    
+  
   }
 });
 

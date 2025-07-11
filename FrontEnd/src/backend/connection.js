@@ -32,12 +32,13 @@ export const getBasket = (id) => api.get(`${url.GET_BASKET}/${id}`);
 export const updateBasket = (id, data) => api.put(`${url.UPDATE_BASKET}/${id}`, data);
 export const deleteBasket = (id) => api.delete(`${url.DELETE_BASKET}/${id}`);
 export const allBaskets = () => api.get(url.ALL_BASKETS);
+export const applyCouponBasket = (data) => api.put(`${url.APPLY_COUPON}`, data);
+export const unApplyCouponToBasket = (id) => api.delete(`${url.UNAPPLY_COUPON}/${id}`);
 
 // BASKET ITEMS CRUD
 export const insertBasketItems = (data) => api.create(`${url.INSERT_BASKET_ITEM}`, data);
 export const deleteBasketItem = (id) => api.delete(`${url.DELETE_BASKET_ITEM}/${id}`);
 export const updateBasketItem = (id, data) => api.put(`${url.UPDATE_BASKET_ITEM}/${id}`, data);
-export const applyCouponBasket = (data) => api.put(`${url.APPLY_COUPON}`, data);
 
 //ALUMNO CRUD
 export const addAlumno = (data) => api.create(url.ADD_ALUMNO, data);

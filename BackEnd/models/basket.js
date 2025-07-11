@@ -106,6 +106,17 @@ class basketModel {
 			throw error;
 		}
 	}
+	
+	static async unApplyDiscount(basketId){
+		try{
+			const [answer] = await db.query(`
+				UPDATE carritos SET id_cupones = null WHERE id = ?
+			`,[basketId]);
+			return answer.affectedRows;
+		}catch(error){
+			throw error;
+		}
+	}
 }
 
 export default basketModel;

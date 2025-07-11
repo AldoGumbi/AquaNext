@@ -18,8 +18,9 @@ import { Button } from "components/ui";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
-import { allBasketsThunk } from "slices/basket/thunk.js"
+import { allBasketsThunk } from "slices/thunk";
 import { setActiveBasket } from "slices/basket/reducer.js";
+import {resetActiveCoupon } from "slices/coupons/reducer.js";
 
 
 // ----------------------------------------------------------------------
@@ -45,7 +46,6 @@ export function BasketSelector() {
   },[baskets, dispatch, activeBasket]);
 
 
-  // console.log(baskets, activeBasket);
 
   return (
     <div className="flex items-center gap-1">
@@ -96,6 +96,7 @@ function BasketSelectorMenu({baskets} ) {
                       "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                     )}
                     onClick={() => {
+                      dispatch(resetActiveCoupon());
                       dispatch(setActiveBasket(basket.id));
                     }}
                   >

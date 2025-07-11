@@ -15,12 +15,18 @@ import {Fragment, useEffect, useState} from "react";
 import { Button } from "components/ui";
 
 import { useDispatch,useSelector } from "react-redux";
-import { createBasketThunk, deleteBasketThunk } from "slices/basket/thunk.js"
+import {
+  createBasketThunk,
+  deleteBasketThunk,
+  unApplyCouponToBasketThunk
+} from "slices/thunk"
 
 
 import { toast } from "react-toastify";
 
-import { DiscountModal } from "./DiscountModal.jsx";
+import { DiscountModal } from "./DiscountModal";
+import {resetActiveCoupon } from "slices/coupons/reducer";
+
 // ----------------------------------------------------------------------
 
 export function BasketActions() {
@@ -46,6 +52,7 @@ export function BasketActions() {
     }
 
     dispatch(deleteBasketThunk(id));
+    dispatch(resetActiveCoupon());
   }
   return (
     <div className="flex gap-1">
@@ -67,8 +74,67 @@ export function BasketActions() {
   );
 }
 
+
 export function MenuAction() {
   const [discountModalOpen, setDiscountModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { activeBasket  } = useSelector((state) => state.basket);
+  const [basketId, setBasketId] = useState(null);
+  
+  
+  // tracker for the change of the basket
+  useEffect(() => {
+    setBasketId(activeBasket);
+  }, [activeBasket]);
+  const { activeCoupon  } = useSelector((state) => state.coupons);
+  
+  // handle for delete the discount relation with the basket
+  const handleDiscountRemoval = (id) => {
+    // console.log("Deleting discount to basket id: ",id);
+    dispatch(unApplyCouponToBasketThunk(id));
+    
+  }
+  
+  const couponAction = () => {
+    if(!activeCoupon){
+      return (
+        <MenuItem>
+          {({ focus }) => (
+            <button
+              className={clsx(
+                "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                focus &&
+                "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+              )}
+              onClick={() => setDiscountModalOpen(true)} // Open the discount modal
+            >
+              <span>Aplicar Cupon</span>
+            </button>
+          
+          )}
+        </MenuItem>
+      )
+    }else{
+      return (
+        <MenuItem>
+          {({ focus }) => (
+            <button
+              className={clsx(
+                "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
+                focus &&
+                "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
+              )}
+              onClick={() => handleDiscountRemoval(basketId)} // Open the discount modal
+            >
+              <span>Eliminar Cupon</span>
+            </button>
+          
+          )}
+        </MenuItem>
+      )
+    }
+  }
+ 
   return (
   <>
     <Menu as="div" className="relative inline-block text-left">
@@ -90,20 +156,7 @@ export function MenuAction() {
         leaveTo="opacity-0 translate-y-2"
       >
         <MenuItems className="absolute z-100 mt-1.5 min-w-[10rem] rounded-lg border border-gray-300 bg-white py-1 shadow-soft shadow-gray-200/50 outline-hidden focus-visible:outline-hidden dark:border-dark-500 dark:bg-dark-700 dark:shadow-none ltr:right-0 rtl:left-0">
-          <MenuItem>
-            {({ focus }) => (
-              <button
-                className={clsx(
-                  "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                  focus &&
-                    "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                )}
-                onClick={() => setDiscountModalOpen(true)} // Open the discount modal
-              >
-                <span>Aplicar Cupon</span>
-              </button>
-            )}
-          </MenuItem>
+          {couponAction()}
         </MenuItems>
       </Transition>
     </Menu>

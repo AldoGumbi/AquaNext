@@ -31,15 +31,19 @@ export function DiscountModal({ isOpen, onClose }) {
   
   useEffect(() => {
     dispatch(avaliableCouponsThunk());
-  }, []);
+  }, [dispatch]);
   
-  // const dispatch = useDispatch();
-  // const [errors, setErrors] = useState({});
+  // Selector for the coupons global state
   const {
     avaliableCoupons,
-    // loading
   } = useSelector((state) => state.coupons);
-  const { activeBasket  } = useSelector((state) => state.basket);
+  
+  // Selector for the basket global State
+  const {
+    activeBasket,
+    basket_total
+  } = useSelector((state) => state.basket);
+  
   const saveRef = useRef(null);
   
   const formatCouponLabel = (cupon) => {
@@ -68,6 +72,11 @@ export function DiscountModal({ isOpen, onClose }) {
     const data = {
       coupon_id: Number(selectedCoupon),
       basket_id: Number(activeBasket),
+    }
+    
+    if(Number(basket_total) <= 0){
+      toast.error("No puedes aplicar un descuento si no existen productos en el carrito!");
+      return;
     }
     dispatch(applyCouponToBasketThunk(data));
     onClose();

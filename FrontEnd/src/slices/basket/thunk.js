@@ -7,8 +7,7 @@ import {
   allBaskets,
   insertBasketItems,
   deleteBasketItem,
-  updateBasketItem,
-  applyCouponBasket
+  updateBasketItem
 } from "../../backend/connection.js";
 
 // import { setActiveBasket} from "./reducer.js";
@@ -35,8 +34,7 @@ export const getBasketThunk = createAsyncThunk("basket/get", async (id, { reject
 // Create an async thunk for updating a basket by ID
 export const updateBasketThunk = createAsyncThunk("basket/update", async ({ id, data }, { rejectWithValue }) => {
 	try {
-		const response = await updateBasket(id, data);
-		return response;
+		return await updateBasket(id, data);
 	} catch (error) {
 		console.log("Error 500 al actualizar la cesta, thunk.js: ", error);
 		return rejectWithValue({ error });
@@ -88,11 +86,4 @@ export const updateBasketItemThunk = createAsyncThunk("basket/updateItem", async
     return rejectWithValue({ error });
   }
 });
-// Create an async thunk for applying the coupon to the whole basket
-export const applyCouponToBasketThunk = createAsyncThunk("basket/applyCouponToBasket", async (data, { rejectWithValue }) => {
-  try{
-    return await applyCouponBasket(data);
-  }catch(error){
-    return rejectWithValue({ error });
-  }
-})
+

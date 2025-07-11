@@ -10,7 +10,7 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, useRef, useEffect, useState } from "react";
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 // Local Imports
 import {
@@ -45,10 +45,14 @@ const productSchema = yup.object().shape({
 
 export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 	const [formData, setFormData] = useState(rowData);
-	const dispatch = useDispatch();
 	const [errors, setErrors] = useState({});
-	const { activeBasket  } = useSelector((state) => state.basket);
-	useEffect(() => {
+	const dispatch = useDispatch();
+  
+  // global states
+	const { activeBasket,basket_items  } = useSelector((state) => state.basket);
+	const { activeCoupon  } = useSelector((state) => state.coupons);
+	
+  useEffect(() => {
 		setFormData(rowData);
 	}, [rowData]);
 
@@ -108,7 +112,6 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
       dispatch(updateBasketItemThunk(data))
         .unwrap() // <- Esto es clave para manejar el estado de la promesa
         .then(() => {
-          toast.success('Producto actualizado en la canasta correctamente.');
           onClose();
         })
         .catch((error) => {
@@ -140,7 +143,6 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
       dispatch(insertBasketItemsThunk(data))
         .unwrap() // <- Esto es clave para manejar el estado de la promesa
         .then(() => {
-          toast.success('Producto agregado a la canasta correctamente.');
           onClose();
         })
         .catch((error) => {
@@ -152,14 +154,22 @@ export function ProductModal({isOpen, onClose, rowData, isEdit }) {
 
   const handleDeleteItem = () => {
     const id = formData.id || null;
+    //the id from the product
     if(!id) {
       toast.error('No se ha seleccionado ningún producto para eliminar.');
       return;
     }
+    
+    // cant delete the last product from the cart if a discount is active
+    if(basket_items.length <= 1 && activeCoupon != null ) {
+      toast.error("No puedes vaciar el carrito si tienes un cupon activo.")
+      return;
+    }
+    
+    
     dispatch(deleteBasketItemThunk(id))
       .unwrap() // <- Esto es clave para manejar el estado de la promesa
       .then(() => {
-        toast.success('Producto eliminado de la canasta correctamente.');
         onClose();
       })
       .catch((error) => {

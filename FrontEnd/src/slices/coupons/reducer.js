@@ -4,26 +4,38 @@ import {
   CreateCouponThunk,
   GetCouponsThunk,
   avaliableCouponsThunk,
-  GetCouponByIdThunk
+  GetCouponByIdThunk,
+  applyCouponToBasketThunk,
+  unApplyCouponToBasketThunk
 } from "./thunk.js";
+
 
 const initialState = {
   // all the coupons
   coupons: [],
+  
   // all the avaliable coupons
   avaliableCoupons: [],
-  //coupons that active in the basket that is active
+  
+  // Coupon that is active in the BASKET THAT IS ACTIVE
   activeCoupon: null,
+  
+  // extras
   loading: false,
   error: false,
   error_message: "",
 }
 
 
+
 const couponsSlice = createSlice({
   name: "coupons",
   initialState,
-  reducers: {},
+  reducers: {
+    resetActiveCoupon(state) {
+      state.activeCoupon = null;
+    }
+  },
   extraReducers: (builder) => {
     // INSERT CUPON
     builder.addCase(CreateCouponThunk.fulfilled, (state) => {
@@ -104,10 +116,11 @@ const couponsSlice = createSlice({
       state.loading = true;
     });
     
-    // GET ALL AVAILABLE COUPONS
+    // GET THE COUPON BY THE ID
     builder.addCase(GetCouponByIdThunk.fulfilled, (state, action) => {
       state.loading = false;
       state.error = false;
+      // SETTING THE ONLY ONE OBJET THAT COMES FROM THE API
       state.activeCoupon = action.payload.data[0];
     });
     builder.addCase(GetCouponByIdThunk.rejected, (state, action) => {
@@ -133,7 +146,56 @@ const couponsSlice = createSlice({
       state.loading = true;
     });
     
+    // APPLY COUPON TO BASKET
+    builder.addCase(applyCouponToBasketThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = false;
+      state.activeCoupon = action.payload.data[0];
+      
+    });
+    builder.addCase(applyCouponToBasketThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error_message = action.payload;
+      state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al aplicar codigo de descuento al carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al aplicar codigo de descuento!");
+      }
+    });
+    builder.addCase(applyCouponToBasketThunk.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    // APPLY COUPON TO BASKET
+    builder.addCase(unApplyCouponToBasketThunk.fulfilled, (state) => {
+      // need to reset de active coupon
+      state.activeCoupon = null;
+      state.loading = false;
+      state.error = false;
+    });
+    builder.addCase(unApplyCouponToBasketThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error_message = action.payload;
+      state.error = true;
+      const ans = action.payload;
+      
+      console.error("Error al eliminar el codigo de descuento al carrito: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al eliminar codigo de descuento al carrito!");
+      }
+    });
+    builder.addCase(unApplyCouponToBasketThunk.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    
   }
 })
-
+export const { resetActiveCoupon } = couponsSlice.actions;
 export default couponsSlice.reducer;
