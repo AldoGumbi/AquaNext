@@ -1,7 +1,7 @@
 // Import Dependencies
 import PropTypes from "prop-types";
 import { DateTime } from "luxon";
-import { Badge, Button } from "components/ui";
+import { Badge } from "components/ui";
 import {
   UserCheck,
   UserX,
@@ -11,7 +11,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router";
 
 
 
@@ -54,22 +54,16 @@ const SignatureOptions = [
 ];
 
 export function RegisterCell() {
-  const navigate = useNavigate();
-const label = "Nuevo"
-  const handleClick = () => {
-    // Por ejemplo: redirige a /alumnos/:id
-    navigate(`/students/new-insc-mens`);
-  };
+  const label = "Nuevo"
 
   return (
-    <Button  color="primary" variant="outlined"
-      onClick={handleClick}
+    <Link to="/students/new-insc-mens"  color="primary" variant="outlined"
       className="flex items-center space-x-3 text-left hover:bg-gray-100 dark:hover:bg-dark-700 w-full p-2 rounded-md transition px-3 py-1 text-xs"
     >
       <div>
         <p className="font-bold text-gray-800 dark:text-dark-100">{label}</p>
       </div>
-    </Button>
+    </Link>
   );
 }
 

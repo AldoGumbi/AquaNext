@@ -72,3 +72,19 @@ export const getMensualidadesStatus = () => api.get(url.GET_MENSUALIDADES_STATUS
 export const getAlumnosEnAlberca = () => api.get(url.GET_ALUMNOS_ALBERCA, null);
 export const getVentasTiendaDashboard = () => api.get(url.GET_VENTAS_TIENDA, null);
 
+// MENSUALIDADES E INSCRIPCIONES CRUD
+export const createInscripcionSola = (data) => api.create(url.CREATE_INSCRIPCION, data);
+export const createMensualidadSola = (data) => api.create(url.CREATE_MENSUALIDAD, data);
+export const createInscripcionConMensualidades = (data) => api.create(url.CREATE_INSCRIPCION_CON_MENSUALIDADES, data);
+export const getAllInscripciones = (params) => api.get(url.GET_ALL_INSCRIPCIONES, params);
+export const getInscripcionesByAlumno = (alumnoId) => api.get(`${url.GET_INSCRIPCIONES_BY_ALUMNO}/${alumnoId}`, null);
+export const validateInscripcionVigente = (alumnoId) => api.get(`${url.VALIDATE_INSCRIPCION_VIGENTE}/${alumnoId}`, null);
+export const getMensualidadesByAlumno = (alumnoId) => api.get(`${url.GET_MENSUALIDADES_BY_ALUMNO}/${alumnoId}`, null);
+export const getMensualidadesByInscripcion = (inscripcionId) => api.get(`${url.GET_MENSUALIDADES_BY_INSCRIPCION}/${inscripcionId}`, null);
+export const cancelarInscripcion = (data) => api.update(`${url.CANCELAR_INSCRIPCION}/${data.id}`, data.data);
+export const cancelarMensualidad = (data) => api.update(`${url.CANCELAR_MENSUALIDAD}/${data.id}`, data.data);
+export const getTarifasMensualidad = () => api.get(url.GET_TARIFAS_MENSUALIDAD, null);
+export const createTarifaMensualidad = (data) => api.create(url.CREATE_TARIFA_MENSUALIDAD, data);
+export const updateTarifaMensualidad = (data) => api.update(`${url.UPDATE_TARIFA_MENSUALIDAD}/${data.id}`, data.data);
+export const deleteTarifaMensualidad = (data) => api.delete(`${url.DELETE_TARIFA_MENSUALIDAD}/${data.id}`);
+export const getEstadisticasInscripciones = (params) => api.get(url.GET_ESTADISTICAS_INSCRIPCIONES, params);

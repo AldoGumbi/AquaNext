@@ -75,3 +75,21 @@ const BASE_CASH_REGISTER_URL = '/cash-register';
 export const OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/open';
 export const GET_OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/AnyOpen';
 export const CLOSE_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/close';
+
+// MENSUALIDADES E INSCRIPCIONES CRUD
+const BASE_INSCRIPCION_URL = '/school-transactions';
+export const CREATE_INSCRIPCION = BASE_INSCRIPCION_URL + '/inscripcion-solo';
+export const CREATE_MENSUALIDAD = BASE_INSCRIPCION_URL + '/mensualidad-solo';
+export const CREATE_INSCRIPCION_CON_MENSUALIDADES = BASE_INSCRIPCION_URL + '/inscripcion-con-mensualidades';
+export const GET_ALL_INSCRIPCIONES = BASE_INSCRIPCION_URL + '/inscripciones';
+export const GET_INSCRIPCIONES_BY_ALUMNO = BASE_INSCRIPCION_URL + '/inscripciones/alumno'
+export const VALIDATE_INSCRIPCION_VIGENTE = BASE_INSCRIPCION_URL + '/inscripciones/validar';
+export const GET_MENSUALIDADES_BY_ALUMNO = BASE_INSCRIPCION_URL + '/mensualidades/alumno';
+export const GET_MENSUALIDADES_BY_INSCRIPCION = BASE_INSCRIPCION_URL + '/mensualidades/inscripcion';
+export const CANCELAR_INSCRIPCION = BASE_INSCRIPCION_URL + '/inscripciones/cancelar';
+export const CANCELAR_MENSUALIDAD = BASE_INSCRIPCION_URL + '/mensualidades/cancelar';
+export const GET_TARIFAS_MENSUALIDAD = BASE_INSCRIPCION_URL + '/tarifas';
+export const CREATE_TARIFA_MENSUALIDAD = BASE_INSCRIPCION_URL + '/tarifas';
+export const UPDATE_TARIFA_MENSUALIDAD = BASE_INSCRIPCION_URL + '/tarifas';
+export const DELETE_TARIFA_MENSUALIDAD = BASE_INSCRIPCION_URL + '/tarifas';
+export const GET_ESTADISTICAS_INSCRIPCIONES = BASE_INSCRIPCION_URL + '/estadisticas';

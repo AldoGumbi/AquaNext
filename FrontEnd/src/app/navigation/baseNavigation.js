@@ -36,11 +36,19 @@ export const baseNavigation = [
     title: 'Profesores',
     Icon: GraduationCap,
   },
+  
   {
     id: 'groups',
     type: NAV_TYPE_ITEM,
     path: '/groups',
     title: 'Grupos',
     Icon: UsersRound,
+  },
+  {
+    id: 'schoolTransactions',
+    type: NAV_TYPE_ITEM,
+    path: '/school-transactions',
+    title: 'Transacciones de Escuela',
+    Icon: GraduationCap,
   },
 ]

@@ -203,6 +203,34 @@ const protectedRoutes = {
       ],
     },
 
+    // school transactions routes
+    {
+      Component: DynamicLayout,
+      children: [
+        {
+          path: "school-transactions",
+          children: [
+            {
+              index: true,
+              element: <Navigate to="/school-transactions/register" />,
+            },
+            {
+              path: "register",
+              lazy: async () => ({
+                Component: (await import("app/pages/schoolTransactions/crearInscripcionMensualidad")).default,
+              }),
+            },
+            // {
+            //   path: "all-transactions",
+            //   lazy: async () => ({
+            //     Component: (await import("app/pages/teachers/all-teachers")).default,
+            //   }),
+            // },
+          ],
+        },
+      ],
+    },
+
     // Groups routes
     {
       Component: DynamicLayout,

@@ -191,7 +191,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
     const contarClasesEnPeriodo = useCallback((fechaInicio, fechaFin, diasSemana) => {
         let contador = 0;
         
-        // ✅ ASEGURAR QUE AMBAS FECHAS SEAN OBJETOS DAYJS
+        // ASEGURAR QUE AMBAS FECHAS SEAN OBJETOS DAYJS
         let fechaActual = dayjs(fechaInicio);
         const fechaFinDayjs = dayjs(fechaFin);
         
@@ -266,7 +266,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
         let tarifaMensual = 0;
         if (tarifa) {
             tarifaMensual = parseFloat(tarifa.monto_mensual) || 0;
-            // ✅ Validar que sea un número válido
+            // Validar que sea un número válido
             if (isNaN(tarifaMensual) || tarifaMensual <= 0) {
                 tarifaMensual = cantidadHorarios * 150; // Fallback
             }
@@ -274,7 +274,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             tarifaMensual = cantidadHorarios * 150;
         }
 
-        // ✅ NUEVO: Cálculo proporcional basado en clases reales
+        // NUEVO: Cálculo proporcional basado en clases reales
         let montoTotal = 0;
         
         for (let mesIndex = 0; mesIndex < mesesDuracion; mesIndex++) {
@@ -394,13 +394,13 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
         const finMesCompleto = fechaInicio.endOf('month');
         const clasesTotalesDelMes = contarClasesEnPeriodo(inicioMesCompleto, finMesCompleto, diasSemana);
 
-        // ✅ OBTENER TARIFA CON VALIDACIÓN NUMÉRICA
+        // OBTENER TARIFA CON VALIDACIÓN NUMÉRICA
         const tarifa = tarifas?.find(t => 
             t.tipo_clase === grupoInfo?.tipo && 
             t.clases_por_semana === cantidadHorarios
         );
         
-        // ✅ ASEGURAR QUE tarifaMensual SEA SIEMPRE UN NÚMERO
+        // ASEGURAR QUE tarifaMensual SEA SIEMPRE UN NÚMERO
         let tarifaMensual = 0;
         if (tarifa && tarifa.monto_mensual) {
             // Convertir a número y validar
@@ -428,12 +428,12 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             montoCalculado = tarifaMensual;
         }
 
-        // ✅ VALIDACIÓN FINAL - ASEGURAR QUE montoCalculado SEA UN NÚMERO VÁLIDO
+        // VALIDACIÓN FINAL - ASEGURAR QUE montoCalculado SEA UN NÚMERO VÁLIDO
         if (isNaN(montoCalculado) || montoCalculado < 0) {
             montoCalculado = 0;
         }
 
-        // ✅ REDONDEAR A 2 DECIMALES PARA CONSISTENCIA
+        // REDONDEAR A 2 DECIMALES PARA CONSISTENCIA
         montoCalculado = Math.round(montoCalculado * 100) / 100;
         tarifaMensual = Math.round(tarifaMensual * 100) / 100;
 
@@ -470,7 +470,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             meses_duracion: 1,
             grupo_id: '',
             horarios: [{ horario_id: '' }],
-            // ✅ ELIMINAR monto_total
+            // ELIMINAR monto_total
             descuento_aplicado: 0,
             metodo_pago: 'efectivo'
         });
@@ -608,12 +608,12 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
     // Calcular totales
     const totales = useMemo(() => {
         return watchedMensualidades.reduce((acc, mensualidad) => {
-            // ✅ CALCULAR MONTO AUTOMÁTICAMENTE
-            // ✅ CÓDIGO CORREGIDO:
+            // CALCULAR MONTO AUTOMÁTICAMENTE
+            // CÓDIGO CORREGIDO:
             const monto = calcularMontoMensualidad(mensualidad);
             const descuento = parseFloat(mensualidad.descuento_aplicado || 0);
     
-            // ✅ Validar que los valores sean números
+            // Validar que los valores sean números
             const montoValidado = parseFloat(monto) || 0;
             const descuentoValidado = parseFloat(descuento) || 0;
     
@@ -959,7 +959,7 @@ const MensualidadCard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getValues, mensualidadIndex, forceUpdate]);
 
-    // ✅ AGREGAR ESTAS VARIABLES ANTES DE LOS useEffect PROBLEMÁTICOS
+    // AGREGAR ESTAS VARIABLES ANTES DE LOS useEffect PROBLEMÁTICOS
     const descuentoWatch = watch(`mensualidades.${mensualidadIndex}.descuento_aplicado`);
     const metodoPagoWatch = watch(`mensualidades.${mensualidadIndex}.metodo_pago`);
 
@@ -1215,7 +1215,7 @@ const MensualidadCard = ({
 
             {/* Información financiera */}
             <div className="space-y-4">
-                {/* ✅ SECCIÓN MEJORADA: Mostrar cálculo automático basado en clases reales */}
+                {/* SECCIÓN MEJORADA: Mostrar cálculo automático basado en clases reales */}
                 <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
                     <h5 className="text-sm font-medium text-emerald-900 dark:text-emerald-100 mb-3 flex items-center">
                         <CurrencyDollarIcon className="h-4 w-4 mr-2" />
@@ -1351,7 +1351,7 @@ const MensualidadCard = ({
                                     </div>
                                 )}
 
-                                {/* ✅ INFORMACIÓN DE MESES ADICIONALES */}
+                                {/* INFORMACIÓN DE MESES ADICIONALES */}
                                 {mesesDuracion > 1 && (
                                     <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
                                         <div className="flex justify-between items-center text-xs">
