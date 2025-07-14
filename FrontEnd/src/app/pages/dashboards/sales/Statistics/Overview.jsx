@@ -42,16 +42,16 @@ export function Overview() {
   }, [dispatch]);
 
   // ✅ Extraemos los primeros objetos de cada arreglo o dejamos objeto vacío
-  const statsData = stats?.[0] || {};
-  const ingresosData = ingresos?.[0] || {};
+  const statsData = stats || {};
+  const ingresosData = ingresos || {};
   const inscripcionesData = inscripciones?.[0] || {};
   const mensualidadesData = mensualidades?.[0] || {};
   const albercaData = alumnosEnAlberca?.[0] || {};
-
+  const total= statsData.Total || 0;
 
   const cards = [
     {
-      title: "Alumnos",
+      title: "Alumnos: "+ total,
       icon: UsersIcon,
       color: "info",
       buttons: [
@@ -121,29 +121,17 @@ export function Overview() {
     },
   ];
 
- useEffect(() => {
-  console.log("📦 STATS:", stats);
-}, [stats]);
-
 useEffect(() => {
-  console.log("📦 INGRESOS:", ingresos);
-}, [ingresos]);
+  console.log("📊 Estado del dashboard completo:", {
+    stats,
+    ingresos,
+    inscripciones,
+    mensualidades,
+    alumnosEnAlberca,
+    ventasTienda
+  });
+}, [stats, ingresos, inscripciones, mensualidades, alumnosEnAlberca, ventasTienda]);
 
-useEffect(() => {
-  console.log("📦 INSCRIPCIONES:", inscripciones);
-}, [inscripciones]);
-
-useEffect(() => {
-  console.log("📦 MENSUALIDADES:", mensualidades);
-}, [mensualidades]);
-
-useEffect(() => {
-  console.log("📦 ALBERCA:", alumnosEnAlberca);
-}, [alumnosEnAlberca]);
-
-useEffect(() => {
-  console.log("📦 TIENDA:", ventasTienda);
-}, [ventasTienda]);
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card, idx) => (

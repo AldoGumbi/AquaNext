@@ -149,7 +149,7 @@ export function ProductsTable() {
         </h2>
         <div className="flex">
           <CollapsibleSearch
-            placeholder="Search here..."
+            placeholder="Buscar..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />

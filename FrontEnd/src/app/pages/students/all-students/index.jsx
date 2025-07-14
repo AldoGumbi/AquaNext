@@ -1,6 +1,8 @@
+// StudentsPage.jsx
+
 // Local Imports
 import { Page } from "components/shared/Page";
-import { StudentsTable } from "./components";
+import OrdersTable from "./components/OrdersTable";
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +16,7 @@ export default function StudentsPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
-          <StudentsTable />
+          <OrdersTable />
         </div>
       </div>
     </Page>

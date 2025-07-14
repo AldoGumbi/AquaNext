@@ -97,7 +97,7 @@ export function SearchDialog({ close }) {
         <div className="flex items-center justify-between pl-2 pr-4 rtl:pl-4 rtl:pr-2">
           <Input
             ref={searchRef}
-            placeholder="Search here..."
+            placeholder="Buscar..."
             value={query}
             data-search-item
             onChange={(event) => setQuery(event.target.value)}

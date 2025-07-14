@@ -1,8 +1,8 @@
-// Import Dependencies
+// Importar dependencias
 import PropTypes from "prop-types";
 import { TbPinned, TbPinnedOff } from "react-icons/tb";
 
-// Local Imports
+// Importaciones locales
 import { Button, Checkbox, Switch } from "components/ui";
 
 // ----------------------------------------------------------------------
@@ -10,16 +10,14 @@ import { Button, Checkbox, Switch } from "components/ui";
 export function TableSettings({ table }) {
   const tableSettings = table.getState().tableSettings;
   const setTableSettings = table.options.meta.setTableSettings;
+
   return (
     <>
       {Object.keys(tableSettings).length > 0 && (
         <div className="mb-4 mt-3 flex flex-col items-start space-y-2 px-3 text-gray-600 dark:text-dark-100">
-          {Object.prototype.hasOwnProperty.call(
-            tableSettings,
-            "enableFullScreen",
-          ) && (
+          {Object.prototype.hasOwnProperty.call(tableSettings, "enableFullScreen") && (
             <Switch
-              label="Full Screen"
+              label="Pantalla completa"
               checked={tableSettings.enableFullScreen}
               onChange={(e) =>
                 setTableSettings((state) => ({
@@ -30,12 +28,10 @@ export function TableSettings({ table }) {
               className="h-4 w-8"
             />
           )}
-          {Object.prototype.hasOwnProperty.call(
-            tableSettings,
-            "enableRowDense",
-          ) && (
+
+          {Object.prototype.hasOwnProperty.call(tableSettings, "enableRowDense") && (
             <Switch
-              label="Row Dense"
+              label="Filas compactas"
               checked={tableSettings.enableRowDense}
               onChange={(e) =>
                 setTableSettings((state) => ({
@@ -46,12 +42,10 @@ export function TableSettings({ table }) {
               className="h-4 w-8"
             />
           )}
-          {Object.prototype.hasOwnProperty.call(
-            tableSettings,
-            "enableColumnFilters",
-          ) && (
+
+          {Object.prototype.hasOwnProperty.call(tableSettings, "enableColumnFilters") && (
             <Switch
-              label="Column Filters"
+              label="Filtros por columna"
               checked={tableSettings.enableColumnFilters}
               onChange={(e) => {
                 setTableSettings((state) => ({
@@ -64,12 +58,10 @@ export function TableSettings({ table }) {
               className="h-4 w-8"
             />
           )}
-          {Object.prototype.hasOwnProperty.call(
-            tableSettings,
-            "enableSorting",
-          ) && (
+
+          {Object.prototype.hasOwnProperty.call(tableSettings, "enableSorting") && (
             <Switch
-              label="Sort"
+              label="Ordenamiento"
               checked={tableSettings.enableSorting}
               onChange={(e) => {
                 setTableSettings((state) => ({
@@ -85,7 +77,7 @@ export function TableSettings({ table }) {
       )}
 
       <div className="flex items-center space-x-2 px-3 ">
-        <p className="text-tiny uppercase">column visibility</p>
+        <p className="text-tiny uppercase">visibilidad de columnas</p>
         <hr className="flex-1 border-gray-300 dark:border-dark-500" />
       </div>
 
@@ -111,8 +103,8 @@ export function TableSettings({ table }) {
                     variant="flat"
                     className="size-6 rounded-full"
                     isIcon
-                    title="UnPin Column"
-                    aria-label="UnPin Column"
+                    title="Desanclar columna"
+                    aria-label="Desanclar columna"
                   >
                     <TbPinnedOff className="size-4" />
                   </Button>
@@ -125,8 +117,8 @@ export function TableSettings({ table }) {
                       variant="flat"
                       className="size-6 rounded-full rtl:rotate-180"
                       isIcon
-                      title="Pin Left"
-                      aria-label="Pin Left"
+                      title="Anclar a la izquierda"
+                      aria-label="Anclar a la izquierda"
                     >
                       <TbPinned className="size-4 rotate-90" />
                     </Button>
@@ -138,8 +130,8 @@ export function TableSettings({ table }) {
                       variant="flat"
                       className="size-6 -rotate-90 rounded-full"
                       isIcon
-                      title="Pin Right"
-                      aria-label="Pin Right"
+                      title="Anclar a la derecha"
+                      aria-label="Anclar a la derecha"
                     >
                       <TbPinned className="size-4 rtl:rotate-180" />
                     </Button>
@@ -154,7 +146,7 @@ export function TableSettings({ table }) {
         className="h-9 w-full shrink-0 rounded-t-none border-t border-gray-300 text-xs-plus leading-none dark:border-dark-500"
         onClick={() => table.resetColumnVisibility()}
       >
-        Show All Columns
+        Mostrar todas las columnas
       </Button>
     </>
   );

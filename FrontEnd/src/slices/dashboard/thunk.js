@@ -15,7 +15,7 @@ export const getDashboardStatsThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getDashboardStats();
-      console.log("✅ [THUNK] /dashboard/stats →", response.data);
+      //console.log("✅ [THUNK] /dashboard/stats →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/stats:", error);
@@ -29,7 +29,7 @@ export const getAlumnosStatsThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAlumnosStats();
-      console.log("📊 [THUNK] /dashboard/alumnosStats →", response.data);
+      //console.log("📊 [THUNK] /dashboard/alumnosStats →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/alumnosStats:", error);
@@ -45,7 +45,7 @@ export const getIngresosDashboardThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getIngresosDashboard();
-      console.log("✅ [THUNK] /dashboard/ingresos →", response.data);
+      //console.log("✅ [THUNK] /dashboard/ingresos →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/ingresos:", error);
@@ -60,7 +60,7 @@ export const getInscripcionesStatusThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getInscripcionesStatus();
-      console.log("✅ [THUNK] /dashboard/inscripciones →", response.data);
+      //console.log("✅ [THUNK] /dashboard/inscripciones →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/inscripciones:", error);
@@ -75,7 +75,7 @@ export const getMensualidadesStatusThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getMensualidadesStatus();
-      console.log("✅ [THUNK] /dashboard/mensualidades →", response.data);
+      //console.log("✅ [THUNK] /dashboard/mensualidades →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/mensualidades:", error);
@@ -90,7 +90,7 @@ export const getAlumnosEnAlbercaThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAlumnosEnAlberca();
-      console.log("✅ [THUNK] /dashboard/alberca →", response.data);
+      //console.log("✅ [THUNK] /dashboard/alberca →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/alberca:", error);
@@ -105,7 +105,7 @@ export const getVentasTiendaDashboardThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getVentasTiendaDashboard();
-      console.log("✅ [THUNK] /dashboard/tienda →", response.data);
+      //console.log("✅ [THUNK] /dashboard/tienda →", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ [Dashboard] Error en /dashboard/tienda:", error);

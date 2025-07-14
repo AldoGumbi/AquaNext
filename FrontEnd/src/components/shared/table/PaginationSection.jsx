@@ -20,7 +20,7 @@ export function PaginationSection({ table }) {
   return (
     <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
       <div className="flex items-center space-x-2 text-xs-plus ">
-        <span>Show</span>
+        <span>Mostrar</span>
         <Select
           data={[10, 20, 30, 40, 50, 100]}
           value={paginationState.pageSize}
@@ -32,7 +32,7 @@ export function PaginationSection({ table }) {
             select: "h-7 rounded-full py-1 text-xs ltr:pr-7! rtl:pl-7!",
           }}
         />
-        <span>entries</span>
+        <span>registros</span>
       </div>
       <div>
         <Pagination
@@ -49,8 +49,8 @@ export function PaginationSection({ table }) {
       </div>
       <div className="truncate text-xs-plus">
         {paginationState.pageIndex * paginationState.pageSize + 1} -{" "}
-        {table.getRowModel().rows.length} of{" "}
-        {table.getCoreRowModel().rows.length} entries
+        {table.getRowModel().rows.length} de{" "}
+        {table.getCoreRowModel().rows.length} Registros
       </div>
     </div>
   );

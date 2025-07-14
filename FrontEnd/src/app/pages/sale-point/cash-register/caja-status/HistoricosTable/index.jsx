@@ -83,7 +83,7 @@ export function CajasHistoricos() {
         </h2>
         <div className="flex ltr:-mr-1.5 rtl:-ml-1.5">
           <CollapsibleSearch
-            placeholder="Search here..."
+            placeholder="Buscar..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
