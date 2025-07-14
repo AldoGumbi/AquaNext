@@ -1,36 +1,30 @@
 import db from '../config/db.js';
 
 class dashboardModel {
+  
   static async getAlumnosStats() {
-    const rows = [
-      {
-        Total: 138,
-        Activos: 120,
-        Inactivos: 18,
-        Tabla: {
-          id: 1,
-          tipo_alumno: "regular",
-          nombre: "Juan",
-          apellido_paterno: "Pérez",
-          apellido_materno: "López",
-          fecha_nacimiento: "2010-05-15",
-          domicilio: "Calle Falsa 123",
-          email: "juan.perez@example.com",
-          telefono: "1234567890",
-          telefono_emergencia: "0987654321",
-          foto: null,
-          estatus: "activo",
-          firma: true,
-          fecha_creacion: "2023-01-01",
-          fecha_modificacion: "2023-02-01",
-          deleted: 0,
-          deleted_at: null
-        }
-      }
-    ];
-    const columns = Object.keys(rows[0]);
-    return { data: rows, columns };
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+          COUNT(*) AS Total,
+          SUM(CASE WHEN estatus = 'activo' THEN 1 ELSE 0 END) AS Activos,
+          SUM(CASE WHEN estatus = 'inactivo' THEN 1 ELSE 0 END) AS Inactivos
+        FROM alumnos
+        WHERE deleted_at IS NULL
+      `);
+
+      const data = rows; // ya es un array con un solo objeto
+      const columns = Object.keys(rows[0]);
+
+      return { data, columns };
+    } catch (error) {
+      console.error("❌ Error en getAlumnosStats:", error);
+      throw new Error("No se pudieron obtener las estadísticas de alumnos.");
+    }
   }
+
+
+
 
   static async getAlumnosEnAlberca() {
     const rows = [
@@ -66,7 +60,7 @@ class dashboardModel {
       {
         Ingreso: 1000,
         Total: 100,
-        Activas: 88,
+        Activas: 80,
         Inactivas: 12,
         Tabla: {
           ID: 1,
