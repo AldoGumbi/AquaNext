@@ -22,7 +22,7 @@ const path = (root, item) => `${root}${item}`;
 export const salePoint = {
   id: 'salePoint',
   type: NAV_TYPE_ROOT,
-  path: '/sale-point/home',
+  path: '/sale-point',
   title: 'Punto de Venta',
   Icon: HomeIcon ,
   childs: [
