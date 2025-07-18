@@ -1,6 +1,5 @@
 import { NAV_TYPE_ITEM, } from "constants/app.constant";
 import { 
-  GraduationCap,
   UsersRound,
   Store,
   SquareUserRound,
@@ -9,11 +8,11 @@ import {
 
 export const baseNavigation = [
   {
-      id: 'dashboards',
-      type: NAV_TYPE_ITEM,
-      path: '/dashboards',
-      title: 'Dashboards',
-      Icon: House,
+    id: 'dashboards',
+    type: NAV_TYPE_ITEM,
+    path: '/dashboards',
+    title: 'Dashboards',
+    Icon: House,
   },
   {
     id: 'salePoint',
@@ -30,25 +29,10 @@ export const baseNavigation = [
     Icon: SquareUserRound,
   },
   {
-    id: 'teachers',
-    type: NAV_TYPE_ITEM,
-    path: '/teachers',
-    title: 'Profesores',
-    Icon: GraduationCap,
-  },
-  
-  {
-    id: 'groups',
-    type: NAV_TYPE_ITEM,
-    path: '/groups',
-    title: 'Grupos',
+    id: 'controlClases', // 👈 este es el que debe cambiar
+    type: NAV_TYPE_ITEM, // 👈 IMPORTANTE: debe ser ROOT
+    path: '/control-clases', // aunque este path sea ficticio, sirve como agrupador
+    title: 'Control de Clases',
     Icon: UsersRound,
   },
-  {
-    id: 'schoolTransactions',
-    type: NAV_TYPE_ITEM,
-    path: '/school-transactions',
-    title: 'Transacciones de Escuela',
-    Icon: GraduationCap,
-  },
-]
+];

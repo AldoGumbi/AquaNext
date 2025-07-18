@@ -80,7 +80,6 @@ export default function StudentsTableAdvanced() {
   const cardRef = useRef();
   const { width: cardWidth } = useBoxSize({ ref: cardRef });
 
-  // Obtener alumnos del backend
   useEffect(() => {
     dispatch(getAlumnosThunk());
   }, [dispatch]);
@@ -92,21 +91,7 @@ export default function StudentsTableAdvanced() {
   }, [studentsList]);
 
   const handleEdit = (row) => {
-    const data = {
-      id: row.original.id,
-      nombre: row.original.nombre,
-      apellido_paterno: row.original.apellido_paterno,
-      apellido_materno: row.original.apellido_materno || "",
-      fecha_nacimiento: row.original.fecha_nacimiento,
-      domicilio: row.original.domicilio || "",
-      email: row.original.email || "",
-      telefono: row.original.telefono || "",
-      telefono_emergencia: row.original.telefono_emergencia || "",
-      estatus: row.original.estatus,
-      firma: row.original.firma || 0,
-      fecha_creacion: row.original.fecha_creacion,
-      fecha_modificacion: row.original.fecha_modificacion,
-    };
+    const data = { ...row.original };
     setEditingStudent(data);
     setIsEditModalOpen(true);
   };
@@ -199,10 +184,8 @@ export default function StudentsTableAdvanced() {
                         className={clsx(
                           "bg-gray-200 font-semibold uppercase text-gray-800 dark:bg-dark-800 dark:text-dark-100",
                           header.column.getCanPin() && [
-                            header.column.getIsPinned() === "left" &&
-                              "sticky z-2 ltr:left-0 rtl:right-0",
-                            header.column.getIsPinned() === "right" &&
-                              "sticky z-2 ltr:right-0 rtl:left-0",
+                            header.column.getIsPinned() === "left" && "sticky z-10 ltr:left-0 rtl:right-0",
+                            header.column.getIsPinned() === "right" && "sticky z-10 ltr:right-0 rtl:left-0",
                           ],
                         )}
                       >
@@ -248,20 +231,21 @@ export default function StudentsTableAdvanced() {
                         <Td
                           key={cell.id}
                           className={clsx(
-                            "relative z-100 overflow-visible",
+                            "relative overflow-visible",
                             cardSkin === "shadow-sm"
                               ? "dark:bg-dark-700"
                               : "dark:bg-dark-900",
                             cell.column.getCanPin() && [
-                              cell.column.getIsPinned() === "left" && "sticky z-2 ltr:left-0 rtl:right-0",
-                              cell.column.getIsPinned() === "right" && "sticky z-2 ltr:right-0 rtl:left-0",
+                              cell.column.getIsPinned() === "left" && "sticky z-1 ltr:left-0 rtl:right-0",
+                              cell.column.getIsPinned() === "right" && "sticky z-1 ltr:right-0 rtl:left-0",
                             ],
+                            
                           )}
                         >
                           {cell.column.getIsPinned() && (
                             <div
                               className={clsx(
-                                "pointer-events-none absolute inset-0 border-gray-200 dark:border-dark-500",
+                                "pointer-events-none absolute inset-0 borders-gray-200 dark:border-dark-500",
                                 cell.column.getIsPinned() === "left"
                                   ? "ltr:border-r rtl:border-l"
                                   : "ltr:border-l rtl:border-r",

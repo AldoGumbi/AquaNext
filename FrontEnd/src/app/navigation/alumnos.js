@@ -1,7 +1,6 @@
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM } from 'constants/app.constant'
 import {
   UserPlusIcon,
-  UserGroupIcon
 } from '@heroicons/react/24/outline';
 
 
@@ -29,7 +28,16 @@ export const alumnos = {
       path: path(ROOT_ALUMNOS, '/all-students'),
       type: NAV_TYPE_ITEM,
       title: 'Alumnos',
-      Icon: UserGroupIcon,
+      Icon: SquareUserRound,
+    },
+
+    {
+      id: 'students.transactions',
+      path: path(ROOT_ALUMNOS, '/transaction'),
+      type: NAV_TYPE_ITEM,
+      title: 'Transacciones de Escuela',
+      Icon: SquareUserRound,
     }
   ]
-}
+};
+    

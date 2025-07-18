@@ -40,7 +40,7 @@ export function TableConfig({ table }) {
         <PopoverPanel
           style={{ width: "16rem", maxHeight: "27rem" }}
           anchor={{ to: "top end", gap: 8 }}
-          className="absolute z-100 flex flex-col rounded-md border border-gray-300 bg-white text-xs-plus shadow-lg shadow-gray-200/50 outline-hidden ring-primary-500/50 focus-visible:outline-hidden focus-visible:ring-3 dark:border-dark-500 dark:bg-dark-750 dark:shadow-none"
+          className="absolute z-10 flex flex-col rounded-md border border-gray-300 bg-white text-xs-plus shadow-lg shadow-gray-200/50 outline-hidden ring-primary-500/50 focus-visible:outline-hidden focus-visible:ring-3 dark:border-dark-500 dark:bg-dark-750 dark:shadow-none"
         >
           <h3 className="px-3 pt-2.5 text-sm-plus font-medium tracking-wide text-gray-800 dark:text-dark-100">
             Configuracion de tabla

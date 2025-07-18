@@ -17,8 +17,8 @@ const protectedRoutes = {
       Component: DynamicLayout,
       children: [
         {
-          index: true,
-          element: <Navigate to="/dashboards" />,
+          path: "dashboards",
+          element: <Navigate to="/dashboards/home" />, // 👈 este hace el redirect
         },
         {
           path: "dashboards",
@@ -37,6 +37,7 @@ const protectedRoutes = {
         },
       ],
     },
+
     {
       Component: DynamicLayout,
       children: [
@@ -93,6 +94,7 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/home")).default,
                   }),
                 },
+<<<<<<< Updated upstream
                 // CASH REGISTER - operation same user
                 {
                   path: "operations",
@@ -100,6 +102,16 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
+
+=======
+                // CASH REGISTER - OPEN
+                {
+                  path: "control-caja",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/sale-point/cash-register/open")).default,
+                  }),
+                },
+>>>>>>> Stashed changes
 
               ],
             },
@@ -156,32 +168,10 @@ const protectedRoutes = {
                 Component: (await import("app/pages/students/new-insc-mens")).default,
               }),
             },
-          ],
-        },
-      ],
-    },
-
-    // professors routes
-    {
-      Component: DynamicLayout,
-      children: [
-        {
-          path: "teachers",
-          children: [
             {
-              index: true,
-              element: <Navigate to="/teachers/register" />,
-            },
-            {
-              path: "register",
+              path: "transaction",
               lazy: async () => ({
-                Component: (await import("app/pages/teachers/register")).default,
-              }),
-            },
-            {
-              path: "all-teachers",
-              lazy: async () => ({
-                Component: (await import("app/pages/teachers/all-teachers")).default,
+                Component: (await import("app/pages/schoolTransactions/crearInscripcionMensualidad")).default,
               }),
             },
           ],
@@ -189,6 +179,7 @@ const protectedRoutes = {
       ],
     },
 
+   
     // school transactions routes
     {
       Component: DynamicLayout,
@@ -217,19 +208,19 @@ const protectedRoutes = {
       ],
     },
 
-    // Groups routes
+// Este bloque ya cubre tanto grupos como profesores:
     {
       Component: DynamicLayout,
       children: [
         {
-          path: "groups",
+          path: "control-clases",
           children: [
             {
               index: true,
-              element: <Navigate to="/groups/register" />,
+              element: <Navigate to="/control-clases/register-group" />,
             },
             {
-              path: "register",
+              path: "register-group",
               lazy: async () => ({
                 Component: (await import("app/pages/groups/register")).default,
               }),
@@ -240,10 +231,25 @@ const protectedRoutes = {
                 Component: (await import("app/pages/groups/all-groups/index_1")).default,
               }),
             },
+            
+            {
+              path: "register-teacher",
+              lazy: async () => ({
+                Component: (await import("app/pages/teachers/register")).default,
+              }),
+            },
+            {
+              path: "all-teachers",
+              lazy: async () => ({
+                Component: (await import("app/pages/teachers/all-teachers")).default,
+              }),
+            },
           ],
         },
       ],
     },
+
+
 
     // The app layout supports only the main layout. Avoid using it for other layouts.
     {

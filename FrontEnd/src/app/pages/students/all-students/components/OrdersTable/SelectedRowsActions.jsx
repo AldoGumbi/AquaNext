@@ -99,7 +99,7 @@ export function SelectedRowsActions({ table }) {
                 >
                   <MenuItems
                     anchor={{ to: "top end", gap: "8px" }}
-                    className="absolute z-100 min-w-[10rem] rounded-lg border border-gray-300 bg-white py-1 text-xs-plus text-gray-600 shadow-soft outline-hidden focus-visible:outline-hidden dark:border-dark-500 dark:bg-dark-750 dark:text-dark-200 dark:shadow-none"
+                    className="absolute z-10 min-w-[10rem] rounded-lg border border-gray-300 bg-white py-1 text-xs-plus text-gray-600 shadow-soft outline-hidden focus-visible:outline-hidden dark:border-dark-500 dark:bg-dark-750 dark:text-dark-200 dark:shadow-none"
                   >
                     <MenuItem>
                       {({ focus }) => (

@@ -23,7 +23,7 @@ export function Toolbar({ table }) {
       </h2>
       <div className={clsx("flex", enableFullScreen && "ltr:-mr-2 rtl:-ml-2")}>
         <CollapsibleSearch
-          placeholder="Buscar..."
+          placeholder="Search here..."
           value={table.getState().globalFilter}
           onChange={(e) => table.setGlobalFilter(e.target.value)}
         />

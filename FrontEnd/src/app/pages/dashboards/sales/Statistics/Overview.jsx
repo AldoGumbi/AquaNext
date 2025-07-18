@@ -122,14 +122,14 @@ export function Overview() {
   ];
 
 useEffect(() => {
-  console.log("📊 Estado del dashboard completo:", {
-    stats,
-    ingresos,
-    inscripciones,
-    mensualidades,
-    alumnosEnAlberca,
-    ventasTienda
-  });
+  // console.log("📊 Estado del dashboard completo:", {
+  //   stats,
+  //   ingresos,
+  //   inscripciones,
+  //   mensualidades,
+  //   alumnosEnAlberca,
+  //   ventasTienda
+  // });
 }, [stats, ingresos, inscripciones, mensualidades, alumnosEnAlberca, ventasTienda]);
 
   return (

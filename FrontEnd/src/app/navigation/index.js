@@ -1,17 +1,12 @@
 import { dashboards } from "./dashboards";
 import { salePoint } from "./SalePoint.js";
 import { alumnos } from "./alumnos";
-import { profesores } from "./profesores";
-import { groups } from "./groups";
-import { schoolTransactions } from "./schoolTransactions.js";
-
+import { controlClases } from "./controlClases";
 export const navigation = [
   dashboards,
-  salePoint,
   alumnos,
-  profesores,
-  groups,
-  schoolTransactions,
+  controlClases,
+  salePoint
 ];
 
 export { baseNavigation } from "./baseNavigation";

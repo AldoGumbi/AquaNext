@@ -11,7 +11,7 @@ const path = (root, item) => `${root}${item}`;
 export const dashboards = {
     id: 'dashboards',
     type: NAV_TYPE_ROOT,
-    path: '/dashboards',
+    path: '/dashboards/home',
     title: 'Dashboard',
     // transKey: 'nav.dashboards.dashboards',
     Icon: House,
