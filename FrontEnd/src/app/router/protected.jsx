@@ -17,8 +17,8 @@ const protectedRoutes = {
       Component: DynamicLayout,
       children: [
         {
-          path: "dashboards",
-          element: <Navigate to="/dashboards/home" />, // 👈 este hace el redirect
+          index: true,
+          element: <Navigate to="/dashboards/home" />,
         },
         {
           path: "dashboards",
