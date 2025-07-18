@@ -94,7 +94,6 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/home")).default,
                   }),
                 },
-<<<<<<< Updated upstream
                 // CASH REGISTER - operation same user
                 {
                   path: "operations",
@@ -102,16 +101,6 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
-
-=======
-                // CASH REGISTER - OPEN
-                {
-                  path: "control-caja",
-                  lazy: async () => ({
-                    Component: (await import("app/pages/sale-point/cash-register/open")).default,
-                  }),
-                },
->>>>>>> Stashed changes
 
               ],
             },
