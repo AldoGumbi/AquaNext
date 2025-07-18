@@ -1,10 +1,13 @@
 import { NAV_TYPE_ITEM, } from "constants/app.constant";
 import { 
   UsersRound,
-  Store,
   SquareUserRound,
   House
 } from 'lucide-react';
+
+import {
+  BuildingStorefrontIcon
+} from '@heroicons/react/24/outline';
 
 export const baseNavigation = [
   {
@@ -13,13 +16,6 @@ export const baseNavigation = [
     path: '/dashboards',
     title: 'Dashboards',
     Icon: House,
-  },
-  {
-    id: 'salePoint',
-    type: NAV_TYPE_ITEM,
-    path: '/sale-point',
-    title: 'Punto de Venta',
-    Icon: Store,
   },
   {
     id: 'students',
@@ -34,5 +30,12 @@ export const baseNavigation = [
     path: '/control-clases', // aunque este path sea ficticio, sirve como agrupador
     title: 'Control de Clases',
     Icon: UsersRound,
+  },
+  {
+    id: 'salePoint',
+    type: NAV_TYPE_ITEM,
+    path: '/sale-point',
+    title: 'Punto de Venta',
+    Icon: BuildingStorefrontIcon,
   },
 ];

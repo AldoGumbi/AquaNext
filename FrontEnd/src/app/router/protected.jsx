@@ -42,13 +42,12 @@ const protectedRoutes = {
       Component: DynamicLayout,
       children: [
         {
-          index: true,
-          element: <Navigate to="app/pages/sale-point/pos" />,
-        },
-        {
           path: "sale-point",
           children: [
-            // POS VIEW
+            {
+              index: true,
+              element: <Navigate to="/sale-point/home" />,
+            },
             {
               path: "home",
               lazy: async () => ({

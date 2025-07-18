@@ -1,10 +1,10 @@
 import {
-  HomeIcon,
   BanknotesIcon,
   // CurrencyDollarIcon,
   ShoppingBagIcon,
   InboxIcon,
-  DivideIcon
+  DivideIcon,
+  BuildingStorefrontIcon
 } from '@heroicons/react/24/outline';
 
 
@@ -24,7 +24,7 @@ export const salePoint = {
   type: NAV_TYPE_ROOT,
   path: '/sale-point',
   title: 'Punto de Venta',
-  Icon: HomeIcon ,
+  Icon: BuildingStorefrontIcon ,
   childs: [
     // POS VIEW
     {
