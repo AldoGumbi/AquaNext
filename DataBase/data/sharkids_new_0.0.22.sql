@@ -141,10 +141,11 @@ CREATE TABLE `caja_registradora` (
   `status` enum('open','close','reopened') DEFAULT 'open',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `comment` text,
   PRIMARY KEY (`id`),
   KEY `user_id_creted_caja_idx` (`user_id`),
   CONSTRAINT `user_id_creted_caja` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +154,7 @@ CREATE TABLE `caja_registradora` (
 
 LOCK TABLES `caja_registradora` WRITE;
 /*!40000 ALTER TABLE `caja_registradora` DISABLE KEYS */;
-INSERT INTO `caja_registradora` VALUES (3,3,'matutino',1000.00,0.00,0.00,0.00,'open','2025-07-06 19:11:53','2025-07-18 02:57:55'),(4,3,'matutino',1000.00,0.00,0.00,0.00,'close','2025-07-06 19:38:02','2025-07-18 02:58:31');
+INSERT INTO `caja_registradora` VALUES (3,3,'matutino',1000.00,899.00,0.00,0.00,'close','2025-07-06 19:11:53','2025-07-18 05:01:13',''),(4,3,'matutino',1000.00,0.00,0.00,0.00,'close','2025-07-06 19:38:02','2025-07-18 02:58:31',NULL),(5,1,'matutino',1000.00,900.00,0.00,0.00,'close','2025-07-18 05:02:46','2025-07-18 05:05:27','hola');
 /*!40000 ALTER TABLE `caja_registradora` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,6 +171,7 @@ CREATE TABLE `carrito_items` (
   `comentario` text,
   `producto_id` int NOT NULL,
   `carrito_id` int NOT NULL,
+  `comment` text,
   PRIMARY KEY (`id`),
   KEY `carrito_items_carritos_id_fk` (`carrito_id`),
   KEY `carrito_items_productos_id_fk` (`producto_id`),
@@ -205,7 +207,7 @@ CREATE TABLE `carritos` (
   KEY `carritos_cupones_id_fk` (`id_cupones`),
   CONSTRAINT `carritos_cupones_id_fk` FOREIGN KEY (`id_cupones`) REFERENCES `cupones` (`id`),
   CONSTRAINT `carritos_usuarios_id_fk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +216,7 @@ CREATE TABLE `carritos` (
 
 LOCK TABLES `carritos` WRITE;
 /*!40000 ALTER TABLE `carritos` DISABLE KEYS */;
-INSERT INTO `carritos` VALUES (10,NULL,1,'2025-06-28 03:22:54','2025-06-28 03:22:54');
+INSERT INTO `carritos` VALUES (10,NULL,1,'2025-06-28 03:22:54','2025-06-28 03:22:54'),(11,NULL,1,'2025-07-18 05:38:41','2025-07-18 05:38:41'),(12,NULL,1,'2025-07-18 06:21:28','2025-07-18 06:21:28');
 /*!40000 ALTER TABLE `carritos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +278,7 @@ CREATE TABLE `cupones` (
   UNIQUE KEY `codigo` (`codigo`),
   KEY `idx_codigo` (`codigo`),
   KEY `idx_fechas` (`fecha_inicio`,`fecha_fin`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,6 +287,7 @@ CREATE TABLE `cupones` (
 
 LOCK TABLES `cupones` WRITE;
 /*!40000 ALTER TABLE `cupones` DISABLE KEYS */;
+INSERT INTO `cupones` VALUES (1,'VERANO2025A','CODIGO DE VERANO 2025','porcentaje',30.00,100,0,'2025-07-17','2025-08-30',1,'2025-07-18 05:14:42'),(2,'NAVIDADSHARK2025','CODIGO DE NAVIDAD 2025','porcentaje',10.00,100,0,'2025-12-16','2025-12-31',1,'2025-07-18 05:15:51');
 /*!40000 ALTER TABLE `cupones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -753,7 +756,7 @@ CREATE TABLE `refresh_tokens` (
 
 LOCK TABLES `refresh_tokens` WRITE;
 /*!40000 ALTER TABLE `refresh_tokens` DISABLE KEYS */;
-INSERT INTO `refresh_tokens` VALUES (3,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc1MTU5MDYzMSwiZXhwIjoxNzUyMTk1NDMxfQ.db_i0ZIUsIyKCYbXcimW_smH_FJG6SuW-7-3oEKZXDg','2025-07-03 06:26:58','2025-07-04 00:57:11');
+INSERT INTO `refresh_tokens` VALUES (1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc1MjgyMjg3NywiZXhwIjoxNzUzNDI3Njc3fQ.1kB1Q6w8R6bDKac_T59yRrvKsJ_fwn-3gezQB27KbGs','2025-07-18 03:11:40','2025-07-18 07:14:37'),(3,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc1MjgxMTQzOCwiZXhwIjoxNzUzNDE2MjM4fQ.1A_Qucdd95cJmX_I-ge_h2JsucBGmkZ0rt4GnQ6hGlg','2025-07-03 06:26:58','2025-07-18 04:03:58');
 /*!40000 ALTER TABLE `refresh_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -960,4 +963,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-17 20:02:32
+-- Dump completed on 2025-07-18  0:28:21
