@@ -1,4 +1,8 @@
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM } from 'constants/app.constant'
+import {
+  UserPlusIcon,
+  UserGroupIcon
+} from '@heroicons/react/24/outline';
 
 
 import { SquareUserRound } from 'lucide-react';
@@ -18,14 +22,14 @@ export const alumnos = {
       path: path(ROOT_ALUMNOS, '/register'),
       type: NAV_TYPE_ITEM,
       title: 'Nuevo Alumno',
-      Icon: SquareUserRound,
+      Icon: UserPlusIcon,
     },
     {
       id: 'students.allStudents',
       path: path(ROOT_ALUMNOS, '/all-students'),
       type: NAV_TYPE_ITEM,
       title: 'Alumnos',
-      Icon: SquareUserRound,
+      Icon: UserGroupIcon,
     }
   ]
 }

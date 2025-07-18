@@ -1,8 +1,12 @@
 import {
   HomeIcon,
+  BanknotesIcon,
+  CurrencyDollarIcon,
+  ShoppingBagIcon,
+  InboxIcon,
+  DivideIcon
 } from '@heroicons/react/24/outline';
 
-import { Store } from 'lucide-react';
 
 
 import {
@@ -18,17 +22,17 @@ const path = (root, item) => `${root}${item}`;
 export const salePoint = {
   id: 'salePoint',
   type: NAV_TYPE_ROOT,
-  path: '/sale-point',
+  path: '/sale-point/home',
   title: 'Punto de Venta',
-  Icon: Store ,
+  Icon: HomeIcon ,
   childs: [
     // POS VIEW
     {
       id: 'salePoint.home',
       path: path(ROOT_POINT_SALE, '/home'),
       type: NAV_TYPE_ITEM,
-      title: 'Inicio',
-      Icon: HomeIcon,
+      title: 'Caja',
+      Icon: BanknotesIcon,
     },
     // SALES TABLE
     {
@@ -36,7 +40,7 @@ export const salePoint = {
       path: path(ROOT_POINT_SALE, '/sales'),
       type: NAV_TYPE_ITEM,
       title: 'Ventas',
-      Icon: HomeIcon,
+      Icon: CurrencyDollarIcon,
     },
     // PRODUCTS
     {
@@ -44,7 +48,7 @@ export const salePoint = {
       path: path(ROOT_POINT_SALE, '/products'),
       type: NAV_TYPE_COLLAPSE,
       title: 'Productos',
-      Icon: Store,
+      Icon: ShoppingBagIcon,
       childs: [
         // ADD NEW PRODUCT
         {
@@ -70,14 +74,15 @@ export const salePoint = {
       path: path(ROOT_POINT_SALE, '/cash-register'),
       type: NAV_TYPE_COLLAPSE,
       title: 'Caja',
-      Icon: Store,
+      Icon: InboxIcon,
       childs: [
+   
         // CASH REGISTER HOME
         {
           id: 'salePoint.cashRegisterActions',
           type: NAV_TYPE_ITEM,
           path: path(ROOT_POINT_SALE, '/cash-register/home'),
-          title: 'Resumen de Cajas',
+          title: 'Operaciones de Caja',
           Icon: 'prototypes'
         },
         // CASH REGISTER HISTORY
@@ -85,24 +90,9 @@ export const salePoint = {
           id: 'salePoint.cashRegisterHistory',
           type: NAV_TYPE_ITEM,
           path: path(ROOT_POINT_SALE, '/cash-register/operations'),
-          title: 'Operaciones de Caja',
+          title: 'Historicos de Cajas',
           Icon: 'prototypes'
-        },
-        // CASH REGISTER ADD NEW
-        {
-          id: 'salePoint.cashRegisterAddNew',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/cash-register/open'),
-          title: 'Abrir Caja',
-          Icon: 'prototypes'
-        },
-        {
-          id: 'salePoint.cashRegisterClose',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/cash-register/close'),
-          title: 'Cierre de Caja',
-          Icon: 'prototypes'
-        },
+        }
       ]
     },
     // Discount Coupons
@@ -111,7 +101,7 @@ export const salePoint = {
       path: path(ROOT_POINT_SALE, '/discount-coupons'),
       type: NAV_TYPE_COLLAPSE,
       title: 'Cupones de Descuento',
-      Icon: Store,
+      Icon: DivideIcon,
       childs: [
         // ALL DISCOUNT COUPONS
         {

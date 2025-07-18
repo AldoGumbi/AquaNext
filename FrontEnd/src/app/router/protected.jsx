@@ -100,20 +100,6 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
-                // CASH REGISTER - OPEN
-                {
-                  path: "open",
-                  lazy: async () => ({
-                    Component: (await import("app/pages/sale-point/cash-register/open")).default,
-                  }),
-                },
-                // CASH REGISTER - CLOSE
-                {
-                  path: "close",
-                  lazy: async () => ({
-                    Component: (await import("app/pages/sale-point/cash-register/close")).default,
-                  }),
-                },
 
               ],
             },

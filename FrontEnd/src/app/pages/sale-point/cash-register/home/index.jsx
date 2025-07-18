@@ -18,6 +18,7 @@ import {
   BanknoteArrowUp
   // BanknoteArrowDown
 } from "lucide-react";
+// import { Page } from "components/shared/Page";
 
 import {
 Page,
@@ -108,10 +109,10 @@ export default function CashRegisterComponent() {
         console.log("CashRegister closed");
         setCashRegisterState(prevState => ({
           ...prevState,
-          user: user.username,
-          lastModified: fechaActual,
+          user: ' ',
+          lastModified: ' ',
           isOpen: false,
-          shift: "NO DEFINIDO",
+          shift: " ",
         }))
       }
     }
@@ -366,8 +367,8 @@ export default function CashRegisterComponent() {
                   </div>
                   <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
                     {!cashRegisterState?.isOpen ? (
-                      lastClosedCashRegister?.updated_at || 'N/A'  ): (
-                      cashRegisterState?.lastModified || "N/A"
+                      lastClosedCashRegister?.updated_at || ' '  ): (
+                      cashRegisterState?.lastModified || " "
                     )}
                   </span>
                 </div>
@@ -380,8 +381,8 @@ export default function CashRegisterComponent() {
                   </div>
                   <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
                    {!cashRegisterState?.isOpen ? (
-                     lastClosedCashRegister?.username || 'N/A'  ): (
-                     cashRegisterState?.username || "N/A"
+                     lastClosedCashRegister?.username || ''  ): (
+                     cashRegisterState?.username || " "
                    )}
                   </span>
                 </div>
@@ -394,8 +395,8 @@ export default function CashRegisterComponent() {
                   </div>
                   <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
                      {!cashRegisterState?.isOpen ? (
-                       lastClosedCashRegister?.shift || 'N/A'  ): (
-                       cashRegisterState?.shift || "N/A"
+                       lastClosedCashRegister?.shift || ' '  ): (
+                       cashRegisterState?.shift || " "
                      )}
                   </span>
                 </div>

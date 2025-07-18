@@ -1,4 +1,7 @@
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM } from 'constants/app.constant'
+import {
+  UsersIcon
+} from '@heroicons/react/24/outline';
 
 
 import { GraduationCap } from 'lucide-react';
@@ -25,7 +28,7 @@ export const profesores = {
       path: path(ROOT_PROFESORES, '/all-teachers'),
       type: NAV_TYPE_ITEM,
       title: 'Profesores',
-      Icon: GraduationCap,
+      Icon: UsersIcon,
     }
   ]
 }

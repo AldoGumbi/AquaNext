@@ -35,8 +35,8 @@ export const Select = ({ label, error, icon: Icon, children, ...props }) => {
 
 // Componente Page
 export const Page = ({  children }) => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
+  return (//bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800
+    <div className="min-h-screen transition-all duration-300">
       <div className="mx-auto max-w-6xl p-6">
         {children}
       </div>
