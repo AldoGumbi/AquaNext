@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 // Local Imports
 import SearchIcon from "assets/dualicons/search.svg?react";
-import { RightSidebar } from "components/template/RightSidebar";
-import { LanguageSelector } from "components/template/LaguageSelector";
-import { Notifications } from "components/template/Notifications";
+// import { RightSidebar } from "components/template/RightSidebar";
+// import { LanguageSelector } from "components/template/LaguageSelector";
+// import { Notifications } from "components/template/Notifications";
 import { Button } from "components/ui";
 import { SidebarToggleBtn } from "components/shared/SidebarToggleBtn";
 import { useBreakpointsContext } from "app/contexts/breakpoint/context";
@@ -76,9 +76,9 @@ export function Header() {
             )}
           />
         </div>
-        <Notifications />
-        <RightSidebar />
-        <LanguageSelector />
+        {/*<Notifications />*/}
+        {/*<RightSidebar />*/}
+        {/*<LanguageSelector />*/}
         <Profile />
       </div>
     </header>

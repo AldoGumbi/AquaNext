@@ -4,40 +4,47 @@ import {
   PopoverButton,
   PopoverPanel,
   Transition,
+  
 } from "@headlessui/react";
 import {
   ArrowLeftStartOnRectangleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
-import { TbCoins, TbUser } from "react-icons/tb";
+import {
+  // TbCoins,
+  TbUser
+} from "react-icons/tb";
 import { Link } from "react-router";
+
+
 
 // Local Imports
 import { Avatar, AvatarDot, Button } from "components/ui";
 
+import { useAuthContext } from "app/contexts/auth/context.js";
 // ----------------------------------------------------------------------
 
 const links = [
   {
     id: "1",
-    title: "Profile",
-    description: "Your profile Setting",
+    title: "Perfil",
+    description: "Tu perfil y configuraciones",
     to: "/settings/general",
     Icon: TbUser,
     color: "warning",
   },
-  {
-    id: "2",
-    title: "Billing",
-    description: "Your billing information",
-    to: "/settings/billing",
-    Icon: TbCoins,
-    color: "error",
-  },
+  // {
+  //   id: "2",
+  //   title: "Pagos",
+  //   description: "Pago de servidores y servicios",
+  //   to: "/settings/billing",
+  //   Icon: TbCoins,
+  //   color: "error",
+  // },
   {
     id: "3",
-    title: "Settings",
-    description: "Webapp settings",
+    title: "Configuración",
+    description: "Configuraciones de app",
     to: "/settings/appearance",
     Icon: Cog6ToothIcon,
     color: "success",
@@ -45,6 +52,7 @@ const links = [
 ];
 
 export function Profile() {
+  const { logout, user } = useAuthContext();
   return (
     <Popover className="relative flex">
       <PopoverButton
@@ -83,11 +91,11 @@ export function Profile() {
                     className="hover:text-primary-600 focus:text-primary-600 dark:text-dark-100 dark:hover:text-primary-400 dark:focus:text-primary-400 text-base font-medium text-gray-700"
                     to="/settings/general"
                   >
-                    Travis Fuller
+                    {user?.username || "N/A`"}
                   </Link>
 
                   <p className="dark:text-dark-300 mt-0.5 text-xs text-gray-400">
-                    Product Designer
+                    {user?.rol || "N/A`"}
                   </p>
                 </div>
               </div>
@@ -117,9 +125,9 @@ export function Profile() {
                   </Link>
                 ))}
                 <div className="px-4 pt-4">
-                  <Button className="w-full gap-2">
+                  <Button onClick={logout} className="w-full gap-2">
                     <ArrowLeftStartOnRectangleIcon className="size-4.5" />
-                    <span>Logout</span>
+                    <span>Salir</span>
                   </Button>
                 </div>
               </div>

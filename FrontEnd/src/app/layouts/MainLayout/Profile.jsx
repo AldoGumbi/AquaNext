@@ -9,7 +9,10 @@ import {
   ArrowLeftStartOnRectangleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
-import { TbCoins, TbUser } from "react-icons/tb";
+import {
+  // TbCoins,
+  TbUser
+} from "react-icons/tb";
 import { Link } from "react-router";
 
 // Local Imports
@@ -21,24 +24,24 @@ import { useAuthContext } from "app/contexts/auth/context";
 const links = [
   {
     id: "1",
-    title: "Profile",
-    description: "Your profile Setting",
+    title: "Perfil",
+    description: "Tu perfil y configuraciones",
     to: "/settings/general",
     Icon: TbUser,
     color: "warning",
   },
-  {
-    id: "4",
-    title: "Billing",
-    description: "Your billing information",
-    to: "/settings/billing",
-    Icon: TbCoins,
-    color: "error",
-  },
+  // {
+  //   id: "4",
+  //   title: "Billing",
+  //   description: "Your billing information",
+  //   to: "/settings/billing",
+  //   Icon: TbCoins,
+  //   color: "error",
+  // },
   {
     id: "5",
-    title: "Settings",
-    description: "Webapp settings",
+    title: "Configuración",
+    description: "Configuraciones de app",
     to: "/settings/appearance",
     Icon: Cog6ToothIcon,
     color: "success",

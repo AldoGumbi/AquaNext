@@ -85,13 +85,13 @@ export const salePoint = {
           title: 'Operaciones de Caja',
           Icon: 'prototypes'
         },
-        {
-          id: 'salePoint.cashRegisterAddNew',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/cash-register/control-caja'),
-          title: 'Control Caja',
-          Icon: 'prototypes'
-        }
+        // {
+        //   id: 'salePoint.cashRegisterAddNew',
+        //   type: NAV_TYPE_ITEM,
+        //   path: path(ROOT_POINT_SALE, '/cash-register/control-caja'),
+        //   title: 'Control Caja',
+        //   Icon: 'prototypes'
+        // }
       ]
     },
     // Discount Coupons
