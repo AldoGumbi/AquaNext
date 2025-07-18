@@ -20,7 +20,8 @@ export const loginUser = (user) => async (dispatch) => {
 
 
         if (response) {
-            dispatch(loginSuccess(response));
+            // console.log("loginUser, response.data:", response.data);
+            dispatch(loginSuccess(response.data));
             // history("/dashboard");
         }
     } catch (error) {
