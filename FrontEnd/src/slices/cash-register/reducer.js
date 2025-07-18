@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   OpenCashRegisterThunk,
   GetOpenCashRegisterThunk,
-  CloseCashRegisterThunk
+  CloseCashRegisterThunk,
+  GetLastClosedCashRegisterThunk
 
 } from "./thunk.js";
-
+import { DateTime } from 'luxon';
 
 const initialState = {
   loading: false,
   error: false,
   error_message: "",
   openCashRegister: null, // This will hold the open cash register data
+  lastClosedCashRegister: null,
 }
 
 
@@ -21,9 +23,16 @@ const cashRegisterSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // OPEN CASH REGISTE
-    builder.addCase(OpenCashRegisterThunk.fulfilled, (state) => {
-      toast.success("Coupon de descuento creado correctamente");
+    // OPEN CASH REGISTER
+    builder.addCase(OpenCashRegisterThunk.fulfilled, (state,action) => {
+      toast.success("Caja abierta correctamente");
+      state.openCashRegister = {
+        ...action.payload.data,
+        updated_at: DateTime.now()
+          .setLocale('es')
+          .toFormat("dd 'de' LLLL 'de' yyyy, HH:mm"),
+        total : 0,
+      }
       state.loading = false;
       state.error = false;
     });
@@ -57,7 +66,15 @@ const cashRegisterSlice = createSlice({
         return;
       }
       if (ans.length === 1) {
-        state.openCashRegister = ans[0].id;
+        
+        const fechaLegible = DateTime.fromISO(ans[0].updated_at)
+          .setLocale('es')
+          .toFormat("dd 'de' LLLL 'de' yyyy, HH:mm");
+        
+        state.openCashRegister = {
+         ...ans[0],
+          updated_at: fechaLegible,
+        };
       } else {
         toast.info("Existen varias cajas abiertas, esto produce un error. reporte el problema al administrador.");
         console.error("Cajas abiertas:", ans);
@@ -115,6 +132,43 @@ const cashRegisterSlice = createSlice({
       }
     });
     builder.addCase(CloseCashRegisterThunk.pending, (state) => {
+      state.error = false;
+      state.loading = true;
+    });
+
+    // GET LAST CASH REGISTER
+    builder.addCase(GetLastClosedCashRegisterThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = false;
+      
+      const ans = action.payload?.data;
+      console.log("ULTIMA CAJA CERRADA:", ans);
+      if (!ans ) {
+        console.error("No existen cajas cerradas previamente.");
+        state.lastClosedCashRegister = null;
+        return;
+      }
+      
+      const fechaLegible = DateTime.fromISO(ans.updated_at).setLocale('es').toFormat("dd 'de' LLLL 'de' yyyy, HH:mm");
+      state.lastClosedCashRegister = {
+        ...ans,
+        updated_at: fechaLegible,
+      };
+      
+    });
+    builder.addCase(GetLastClosedCashRegisterThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error = true;
+      const ans = action.payload;
+
+      console.error("Error al cerrar la caja: ", action.payload.error);
+      if (ans?.error?.API_message) {
+        toast.error(`${ans?.error?.API_message}`);
+      } else {
+        toast.error("Error al cerrar la caja");
+      }
+    });
+    builder.addCase(GetLastClosedCashRegisterThunk.pending, (state) => {
       state.error = false;
       state.loading = true;
     });

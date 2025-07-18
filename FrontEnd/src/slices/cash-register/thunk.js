@@ -1,7 +1,8 @@
 import {
   getOpenCashRegister,
   openCashRegister,
-  closeCashRegister
+  closeCashRegister,
+  getLastClosedCashRegister
 } from "../../backend/connection.js";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -29,6 +30,16 @@ export const CloseCashRegisterThunk = createAsyncThunk("cash-register/close", as
   try {
     const { cash_register_id, amount_closing, comment } = data;
     return await closeCashRegister(cash_register_id, { amount_closing, comment });
+  } catch (error) {
+    return rejectWithValue({ error });
+  }
+});
+
+
+// Thunk to get the last closed cash register
+export const GetLastClosedCashRegisterThunk = createAsyncThunk("cash-register/get-last-closed", async (_, { rejectWithValue }) => {
+  try {
+    return await getLastClosedCashRegister();
   } catch (error) {
     return rejectWithValue({ error });
   }

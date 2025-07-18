@@ -22,8 +22,12 @@ class CashRegisterModel {
   // obtener caja abierta o re-abierta
   static async getOpenCashRegister() {
     const [rows] = await db.query(`
-      SELECT id FROM caja_registradora WHERE
-       status = 'open' OR status = 'reopened'
+        SELECT
+            cr.id, cr.shift, cr.total, cr.updated_at,
+            u.username
+        FROM caja_registradora cr
+                 INNER JOIN usuarios u on cr.user_id = u.id
+        WHERE status = 'open' OR status = 'reopened'
     `,);
     return rows;
   }
@@ -42,6 +46,21 @@ class CashRegisterModel {
       caja.cash_register_id
     ]);
     return result.affectedRows;
+  }
+  
+  // Last cash register closed
+  static async getLastClosedCashRegister() {
+    const [rows] = await db.query(`
+      SELECT
+          cr.id, cr.shift, cr.total, cr.updated_at,
+          u.username
+      FROM caja_registradora cr
+               INNER JOIN usuarios u on cr.user_id = u.id
+      WHERE status = 'close'
+      ORDER BY updated_at DESC
+      LIMIT 1
+    `);
+    return rows[0];
   }
 
 

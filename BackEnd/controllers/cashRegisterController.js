@@ -43,7 +43,10 @@ export const createCashRegister = async (req, res) => {
     }
 
     res.status(201).json({
-      data: { id: newCashRegister },
+      data: {
+        id: newCashRegister,
+        shift
+      },
       message: 'Caja registradora creada exitosamente'
     });
   } catch (error) {
@@ -126,6 +129,31 @@ export const closeCashRegister = async (req, res) => {
     return res.status(500).json({
       data: false,
       message: 'Error al cerrar la caja registradora',
+      error: error.message
+    });
+  }
+}
+
+export const getLastClosedCashRegister = async (req, res) => {
+  try {
+    const lastClosedCashRegister = await CashRegisterModel.getLastClosedCashRegister();
+
+    if (!lastClosedCashRegister) {
+      return res.status(404).json({
+        data: false,
+        message: 'No se encontró ninguna caja registradora cerrada recientemente.',
+        error: true // Custom error code for no closed cash registers
+      });
+    }
+
+    res.status(200).json({
+      data: lastClosedCashRegister,
+      message: 'Ultima caja registradora cerrada obtenida exitosamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      data: false,
+      message: 'Error al obtener la última caja registradora cerrada',
       error: error.message
     });
   }

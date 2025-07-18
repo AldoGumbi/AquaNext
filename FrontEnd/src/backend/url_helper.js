@@ -75,6 +75,7 @@ const BASE_CASH_REGISTER_URL = '/cash-register';
 export const OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/open';
 export const GET_OPEN_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/AnyOpen';
 export const CLOSE_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/close';
+export const GET_LAST_CLOSED_CASH_REGISTER = BASE_CASH_REGISTER_URL + '/last-closed';
 
 // MENSUALIDADES E INSCRIPCIONES CRUD
 const BASE_INSCRIPCION_URL = '/school-transactions';

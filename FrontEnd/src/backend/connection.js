@@ -62,6 +62,7 @@ export const getCouponById = (id) => api.get(`${url.GET_COUPON_BY_ID}/${id}`,nul
 export const openCashRegister = (data) => api.create(url.OPEN_CASH_REGISTER, data);
 export const getOpenCashRegister = () => api.get(url.GET_OPEN_CASH_REGISTER, null);
 export const closeCashRegister = (cash_register_id,data) => api.put(`${url.CLOSE_CASH_REGISTER}/${cash_register_id}`, data);
+export const getLastClosedCashRegister = () => api.get(url.GET_LAST_CLOSED_CASH_REGISTER, null);
 
 // DASHBOARD
 export const getAlumnosStats = () => api.get(url.GET_ALUMNOS_STATS, null);
