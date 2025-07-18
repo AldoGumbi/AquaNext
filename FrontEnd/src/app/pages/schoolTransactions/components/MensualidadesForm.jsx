@@ -68,7 +68,6 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
         }
     }, [grupos]);
 
-    // MOVER LAS FUNCIONES AQUÍ - ANTES DEL useForm
     
     // Función para validar horarios del mismo día
     const validarHorariosMismoDia = useCallback((grupoId, horariosSeleccionados) => {
