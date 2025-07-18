@@ -9,7 +9,7 @@ import { CashWithrawalActionsModal } from "./Cash-Register/CashWithrawalActionsM
 import { useSelector, useDispatch } from "react-redux";
 import { GetOpenCashRegisterThunk } from "slices/thunk"
 import { useEffect, useState } from "react";
-import { Button } from "components/ui";
+// import { Button } from "components/ui";
 // import { useDisclosure } from "hooks";
 // ----------------------------------------------------------------------
 
@@ -62,9 +62,9 @@ export default function Pos() {
             </div>
             <div className="max-sm:block sm:sticky sm:top-20 sm:col-span-6 sm:self-start lg:col-span-4">
               <Basket />
-              <Button onClick={() => setIsModalOpen({ isOpen: true, isCreating: true })}>
-                Abrir Modal Manualmente
-              </Button>
+              {/*<Button onClick={() => setIsModalOpen({ isOpen: true, isCreating: true })}>*/}
+              {/*  Abrir Modal Manualmente*/}
+              {/*</Button>*/}
             </div>
           </main>
           <CashWithrawalActionsModal

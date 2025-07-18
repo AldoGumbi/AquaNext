@@ -39,7 +39,7 @@ export function OrdersDrawer({ isOpen, close, row }) {
   const timestapms = +row.original.created_at;
   const date = dayjs(timestapms).locale(locale).format("DD MMM YYYY");
   const time = dayjs(timestapms).locale(locale).format("hh:mm A");
-
+  
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-100" onClose={close}>

@@ -1,7 +1,7 @@
 import {
   HomeIcon,
   BanknotesIcon,
-  CurrencyDollarIcon,
+  // CurrencyDollarIcon,
   ShoppingBagIcon,
   InboxIcon,
   DivideIcon
@@ -35,13 +35,13 @@ export const salePoint = {
       Icon: BanknotesIcon,
     },
     // SALES TABLE
-    {
-      id: 'salePoint.sales',
-      path: path(ROOT_POINT_SALE, '/sales'),
-      type: NAV_TYPE_ITEM,
-      title: 'Ventas',
-      Icon: CurrencyDollarIcon,
-    },
+    // {
+    //   id: 'salePoint.sales',
+    //   path: path(ROOT_POINT_SALE, '/sales'),
+    //   type: NAV_TYPE_ITEM,
+    //   title: 'Ventas',
+    //   Icon: CurrencyDollarIcon,
+    // },
     // PRODUCTS
     {
       id: 'salePoint.products',
@@ -86,13 +86,13 @@ export const salePoint = {
           Icon: 'prototypes'
         },
         // CASH REGISTER HISTORY
-        {
-          id: 'salePoint.cashRegisterHistory',
-          type: NAV_TYPE_ITEM,
-          path: path(ROOT_POINT_SALE, '/cash-register/operations'),
-          title: 'Historicos de Cajas',
-          Icon: 'prototypes'
-        }
+        // {
+        //   id: 'salePoint.cashRegisterHistory',
+        //   type: NAV_TYPE_ITEM,
+        //   path: path(ROOT_POINT_SALE, '/cash-register/operations'),
+        //   title: 'Historicos de Cajas',
+        //   Icon: 'prototypes'
+        // }
       ]
     },
     // Discount Coupons

@@ -7,7 +7,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import {
-  ArrowUpRightIcon,
+  // ArrowUpRightIcon,
   EllipsisHorizontalIcon,
   EyeIcon,
   PencilIcon,
@@ -41,7 +41,10 @@ export function RowActions({ row, table }) {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
 
-  const [isDrawerOpen, { close: closeDrawer, open: openDrawer }] =
+  const [isDrawerOpen, {
+    close: closeDrawer,
+    // open: openDrawer
+  }] =
     useDisclosure(false);
 
   const closeModal = () => {
@@ -69,13 +72,13 @@ export function RowActions({ row, table }) {
   return (
     <>
       <div className="flex justify-center space-x-1.5 ">
-        <Button
-          isIcon
-          className="size-8 rounded-full"
-          onClick={() => openDrawer()}
-        >
-          <ArrowUpRightIcon className="size-4" />
-        </Button>
+        {/*<Button*/}
+        {/*  isIcon*/}
+        {/*  className="size-8 rounded-full"*/}
+        {/*  onClick={() => openDrawer()}*/}
+        {/*>*/}
+        {/*  <ArrowUpRightIcon className="size-4" />*/}
+        {/*</Button>*/}
 
         <Menu as="div" className="relative inline-block text-left">
           <MenuButton as={Button} isIcon className="size-8 rounded-full">

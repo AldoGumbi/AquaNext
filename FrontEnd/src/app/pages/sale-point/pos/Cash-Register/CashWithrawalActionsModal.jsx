@@ -71,7 +71,7 @@ export function CashWithrawalActionsModal({ isOpen, onClose }) {
                   <Button className="" onClick={onClose}>
                     Cerrar
                   </Button>
-                  <a href="/sale-point/cash-register/open">
+                  <a href="/sale-point/cash-register/home">
                   <Button color="primary" className="bg-blue-500" onClick={onClose}>
                     Abrir caja
                   </Button>
