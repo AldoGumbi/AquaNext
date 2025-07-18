@@ -31,40 +31,8 @@ import {
 import { getGruposConHorariosThunk } from "slices/thunk";
 
 // Componentes
-import { Input, Button, Card, Select } from "../../../../components/ui";
+import { Input, Button, Card, Select, ScrollShadow } from "../../../../components/ui";
 import { DatePicker } from "../../../../components/shared/form/Datepicker";
-
-// Schema de validación actualizado con dayjs
-const mensualidadSchema = Yup.object().shape({
-    mensualidades: Yup.array()
-        .of(
-            Yup.object().shape({
-                fecha_inicio: Yup.date()
-                    .required('La fecha de inicio es requerida')
-                    .min(dayjs().startOf('day').toDate(), 'La fecha de inicio no puede ser anterior a hoy'),
-                meses_duracion: Yup.number()
-                    .min(1, 'Debe ser al menos 1 mes')
-                    .max(12, 'Máximo 12 meses')
-                    .required('Los meses de duración son requeridos'),
-                grupo_id: Yup.number().required('Debe seleccionar un grupo'),
-                horarios: Yup.array()
-                    .of(
-                        Yup.object().shape({
-                            horario_id: Yup.number().required('Debe seleccionar un horario')
-                        })
-                    )
-                    .min(1, 'Debe seleccionar al menos un horario'),
-                descuento_aplicado: Yup.number()
-                    .min(0, 'El descuento no puede ser negativo')
-                    .test('descuento-valido', 'El descuento no puede ser mayor al monto total', function(value) {
-                        const monto_total = this.parent.monto_total;
-                        return !value || !monto_total || value <= monto_total;
-                    }),
-                metodo_pago: Yup.string().required('Debe seleccionar un método de pago')
-            })
-        )
-        .min(1, 'Debe agregar al menos una mensualidad')
-});
 
 const METODOS_PAGO = [
     { value: 'efectivo', label: 'Efectivo' },
@@ -85,8 +53,6 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
     const [sidebarMobile, setSidebarMobile] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    
-
     // Cargar profesores al montar el componente
     useEffect(() => {
         dispatch(getGruposConHorariosThunk());
@@ -101,6 +67,71 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             setGruposDisponibles([]);
         }
     }, [grupos]);
+
+    // MOVER LAS FUNCIONES AQUÍ - ANTES DEL useForm
+    
+    // Función para validar horarios del mismo día
+    const validarHorariosMismoDia = useCallback((grupoId, horariosSeleccionados) => {
+        const grupo = gruposDisponibles.find(g => g.id === parseInt(grupoId));
+        if (!grupo?.horarios) return true;
+        
+        const diasUsados = new Set();
+        
+        for (const horarioObj of horariosSeleccionados) {
+            const horarioCompleto = grupo.horarios.find(h => h.id === parseInt(horarioObj.horario_id));
+            if (horarioCompleto) {
+                if (diasUsados.has(horarioCompleto.dia)) {
+                    return false; // Ya hay un horario para este día
+                }
+                diasUsados.add(horarioCompleto.dia);
+            }
+        }
+        
+        return true;
+    }, [gruposDisponibles]);
+
+    // Schema de validación actualizado con dayjs - MOVER DESPUÉS DE LA FUNCIÓN
+    const mensualidadSchema = useMemo(() => Yup.object().shape({
+        mensualidades: Yup.array()
+            .of(
+                Yup.object().shape({
+                    fecha_inicio: Yup.date()
+                        .required('La fecha de inicio es requerida')
+                        .min(dayjs().startOf('day').toDate(), 'La fecha de inicio no puede ser anterior a hoy'),
+                    meses_duracion: Yup.number()
+                        .min(1, 'Debe ser al menos 1 mes')
+                        .max(12, 'Máximo 12 meses')
+                        .required('Los meses de duración son requeridos'),
+                    grupo_id: Yup.number().required('Debe seleccionar un grupo'),
+                    horarios: Yup.array()
+                        .of(
+                            Yup.object().shape({
+                                horario_id: Yup.number().required('Debe seleccionar un horario')
+                            })
+                        )
+                        .min(1, 'Debe seleccionar al menos un horario')
+                        .test('horarios-mismo-dia', 'No se pueden seleccionar múltiples horarios del mismo día', function(horarios) {
+                            if (!horarios || horarios.length <= 1) return true;
+                            
+                            const horariosValidos = horarios.filter(h => h.horario_id && h.horario_id !== '');
+                            if (horariosValidos.length <= 1) return true;
+                            
+                            const grupoId = this.parent.grupo_id;
+                            if (!grupoId) return true;
+                            
+                            return validarHorariosMismoDia(grupoId, horariosValidos);
+                        }),
+                    descuento_aplicado: Yup.number()
+                        .min(0, 'El descuento no puede ser negativo')
+                        .test('descuento-valido', 'El descuento no puede ser mayor al monto total', function(value) {
+                            const monto_total = this.parent.monto_total;
+                            return !value || !monto_total || value <= monto_total;
+                        }),
+                    metodo_pago: Yup.string().required('Debe seleccionar un método de pago')
+                })
+            )
+            .min(1, 'Debe agregar al menos una mensualidad')
+    }), [validarHorariosMismoDia]);
 
     const {
         register,
@@ -249,11 +280,12 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
         }
     }, []);
 
-    // Contar clases en un período específico
-    const contarClasesEnPeriodo = useCallback((fechaInicio, fechaFin, diasSemana) => {
+    // Contar clases en un período específico considerando horarios
+    const contarClasesEnPeriodo = useCallback((fechaInicio, fechaFin, horariosCompletos) => {
         let contador = 0;
         let fechaActual = dayjs(fechaInicio);
         const fechaFinDayjs = dayjs(fechaFin);
+        const ahora = dayjs();
         
         if (!fechaActual.isValid() || !fechaFinDayjs.isValid()) {
             console.error("Fechas inválidas en contarClasesEnPeriodo");
@@ -270,14 +302,32 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             'sabado': 6
         };
         
-        const diasNumeros = diasSemana.map(dia => mapaDias[dia.toLowerCase()]).filter(num => num !== undefined);
-        
         while (fechaActual.isSameOrBefore(fechaFinDayjs, 'day')) {
             const diaDeLaSemana = fechaActual.day();
             
-            if (diasNumeros.includes(diaDeLaSemana)) {
-                contador++;
-            }
+            // Verificar si hay horarios para este día
+            const horariosDelDia = horariosCompletos.filter(horario => {
+                const diaNumero = mapaDias[horario.dia.toLowerCase()];
+                return diaNumero === diaDeLaSemana;
+            });
+            
+            // Para cada horario de este día, verificar si la clase es válida
+            horariosDelDia.forEach(horario => {
+                // Crear la fecha y hora exacta de la clase
+                const fechaHoraClase = fechaActual
+                    .hour(parseInt(horario.hora_inicio.split(':')[0]))
+                    .minute(parseInt(horario.hora_inicio.split(':')[1]))
+                    .second(0);
+                
+                // Si la clase es en el futuro, o si es hoy pero aún no ha pasado la hora
+                if (fechaHoraClase.isAfter(ahora) || fechaHoraClase.isSame(fechaActual, 'day') && fechaHoraClase.isAfter(ahora)) {
+                    contador++;
+                } else if (!fechaHoraClase.isSame(ahora, 'day')) {
+                    // Si no es hoy, contar la clase normalmente
+                    contador++;
+                }
+                // Si es hoy pero ya pasó la hora, no contar
+            });
             
             fechaActual = fechaActual.add(1, 'day');
         }
@@ -285,6 +335,54 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
         return contador;
     }, []);
 
+    // Función para obtener días ya seleccionados
+    const getDiasSeleccionados = useCallback((mensualidadIndex) => {
+        const mensualidad = watchedMensualidades[mensualidadIndex];
+        if (!mensualidad?.grupo_id || !mensualidad?.horarios) return new Set();
+        
+        const grupo = gruposDisponibles.find(g => g.id === parseInt(mensualidad.grupo_id));
+        if (!grupo?.horarios) return new Set();
+        
+        const diasSeleccionados = new Set();
+        
+        mensualidad.horarios.forEach(horarioObj => {
+            if (horarioObj.horario_id && horarioObj.horario_id !== '') {
+                const horarioCompleto = grupo.horarios.find(h => h.id === parseInt(horarioObj.horario_id));
+                if (horarioCompleto) {
+                    diasSeleccionados.add(horarioCompleto.dia);
+                }
+            }
+        });
+        
+        return diasSeleccionados;
+    }, [watchedMensualidades, gruposDisponibles]);
+
+    // Función para verificar si un horario está deshabilitado
+    const isHorarioDeshabilitado = useCallback((mensualidadIndex, horarioId, horarioActualIndex) => {
+        const mensualidad = watchedMensualidades[mensualidadIndex];
+        if (!mensualidad?.grupo_id || !horarioId) return false;
+        
+        const grupo = gruposDisponibles.find(g => g.id === parseInt(mensualidad.grupo_id));
+        if (!grupo?.horarios) return false;
+        
+        const horarioCompleto = grupo.horarios.find(h => h.id === parseInt(horarioId));
+        if (!horarioCompleto) return false;
+        
+        const horarioActual = mensualidad.horarios[horarioActualIndex];
+        const horarioActualId = horarioActual?.horario_id;
+        
+        // Si es el horario actualmente seleccionado, no deshabilitar
+        if (horarioActualId && parseInt(horarioActualId) === parseInt(horarioId)) {
+            return false;
+        }
+        
+        // Verificar si hay otros horarios del mismo día ya seleccionados
+        const diasSeleccionados = getDiasSeleccionados(mensualidadIndex);
+        return diasSeleccionados.has(horarioCompleto.dia);
+    }, [watchedMensualidades, gruposDisponibles, getDiasSeleccionados]);
+
+    // RESTO DE FUNCIONES PERMANECEN IGUAL...
+    
     // Función para calcular monto de mensualidad con cálculo proporcional basado en clases reales
     const calcularMontoMensualidad = useCallback((mensualidad) => {
         if (!mensualidad.fecha_inicio || !mensualidad.meses_duracion || !mensualidad.grupo_id || !mensualidad.horarios?.length) {
@@ -311,7 +409,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             })
             .filter(Boolean);
 
-        const diasSemana = horariosSeleccionados.map(h => h.dia);
+        // const diasSemana = horariosSeleccionados.map(h => h.dia);
 
         const tarifa = tarifas?.find(t => 
             t.tipo_clase === grupoInfo.tipo && 
@@ -349,11 +447,11 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
             if (esPrimerMes) {
                 const finDelMes = fechaInicioMes.endOf('month');
                 
-                const clasesRealesEnPeriodo = contarClasesEnPeriodo(fechaInicioMes, finDelMes, diasSemana);
-                
+                const clasesRealesEnPeriodo = contarClasesEnPeriodo(fechaInicioMes, finDelMes, horariosSeleccionados);
+
                 const inicioMesCompleto = fechaInicioMes.startOf('month');
                 const finMesCompleto = fechaInicioMes.endOf('month');
-                const clasesTotalesDelMes = contarClasesEnPeriodo(inicioMesCompleto, finMesCompleto, diasSemana);
+                const clasesTotalesDelMes = contarClasesEnPeriodo(inicioMesCompleto, finMesCompleto, horariosSeleccionados);
                 
                 const semanasRestantes = (finDelMes.diff(fechaInicioMes, 'day') + 1) / 7;
                 
@@ -418,10 +516,10 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
 
         const diasSemana = horariosSeleccionados.map(h => h.dia);
 
-        const clasesRealesEnPeriodo = contarClasesEnPeriodo(fechaInicio, finDelMes, diasSemana);
+        const clasesRealesEnPeriodo = contarClasesEnPeriodo(fechaInicio, finDelMes, horariosSeleccionados);
         const inicioMesCompleto = fechaInicio.startOf('month');
         const finMesCompleto = fechaInicio.endOf('month');
-        const clasesTotalesDelMes = contarClasesEnPeriodo(inicioMesCompleto, finMesCompleto, diasSemana);
+        const clasesTotalesDelMes = contarClasesEnPeriodo(inicioMesCompleto, finMesCompleto, horariosSeleccionados);
 
         const tarifa = tarifas?.find(t => 
             t.tipo_clase === grupoInfo?.tipo && 
@@ -756,7 +854,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                             </div>
                         </div>
                         
-                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                        <ScrollShadow className="space-y-2 max-h-96 overflow-y-auto">
                             {mensualidadFields.map((field, index) => {
                                 const isActive = index === mensualidadActiva;
                                 const mensualidad = watchedMensualidades[index];
@@ -853,7 +951,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                                     </motion.div>
                                 );
                             })}
-                        </div>
+                        </ScrollShadow>
                         
                         {/* Botón agregar desde sidebar */}
                         <Button
@@ -901,6 +999,8 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                                     triggerResumenUpdate={triggerResumenUpdate}
                                     totalMensualidades={mensualidadFields.length}
                                     isInitialized={isInitialized}
+                                    getDiasSeleccionados={getDiasSeleccionados}
+                                    isHorarioDeshabilitado={isHorarioDeshabilitado}
                                 />
                             </motion.div>
                         )}
@@ -991,10 +1091,10 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                             <Card className="p-4">
                                 <h4 className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-4 flex items-center">
                                     <CalendarDaysIcon className="h-4 w-4 mr-2" />
-                                    📊 Resumen Detallado
+                                    Resumen Detallado
                                 </h4>
                                 
-                                <div className="space-y-3 max-h-80 overflow-y-auto">
+                                <ScrollShadow className="space-y-3 max-h-80 overflow-y-auto">
                                     {resumenDetallado.map((resumen, index) => (
                                         resumen.fechaInicio && (
                                             <div 
@@ -1044,7 +1144,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                                             </div>
                                         )
                                     ))}
-                                </div>
+                                </ScrollShadow>
                             </Card>
                         </motion.div>
                     )}
@@ -1055,11 +1155,12 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                             <InformationCircleIcon className="h-5 w-5 text-blue-600 mt-0.5" />
                             <div>
                                 <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
-                                    📋 Información Importante
+                                    Información Importante
                                 </h4>
                                 <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
                                     <li>• Solo se puede seleccionar un grupo por mensualidad</li>
                                     <li>• Se pueden seleccionar múltiples horarios del mismo grupo</li>
+                                    <li>• Solo un horario por día de la semana por mensualidad</li>
                                     <li>• El precio se calcula automáticamente según la duración y horarios</li>
                                     <li>• Para otro grupo, agregue una nueva mensualidad</li>
                                     <li>• Las fechas se muestran en formato día/mes/año</li>
@@ -1123,7 +1224,9 @@ const MensualidadCard = ({
     watchedMensualidades,
     triggerResumenUpdate,
     totalMensualidades,
-    isInitialized
+    isInitialized,
+    getDiasSeleccionados,
+    isHorarioDeshabilitado
 }) => {
     const { fields: horarioFields, append: appendHorario, remove: removeHorario } = useFieldArray({
         control,
@@ -1334,31 +1437,45 @@ const MensualidadCard = ({
                             </Button>
                         </div>
 
-                        {horarioFields.map((horarioField, horarioIndex) => (
-                            <div key={horarioField.id} className="flex items-center space-x-2">
-                                <div className="flex-1">
-                                    <Select
-                                        {...register(`mensualidades.${mensualidadIndex}.horarios.${horarioIndex}.horario_id`, {
-                                            onChange: (e) => {
-                                                console.log('🔄 Select de horario cambió:', e.target.value);
-                                                setTimeout(() => setForceUpdate(prev => prev + 1), 50);
-                                            }
-                                        })}
-                                        error={errors.mensualidades?.[mensualidadIndex]?.horarios?.[horarioIndex]?.horario_id?.message}
-                                    >
-                                        <option value="">Selecciona horario</option>
-                                        {horariosDisponibles.map(horario => (
-                                            <option key={horario.id} value={horario.id}>
-                                                {horario.dia} {horario.hora_inicio} - {horario.hora_fin}
-                                                {horario.nombre_profesor && ` (${horario.nombre_profesor})`}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </div>
-                                {horarioFields.length > 1 && (
-                                    <Button
-                                        type="button"
-                                        onClick={() => {
+                        {horarioFields.map((horarioField, horarioIndex) => {
+                            const diasSeleccionados = getDiasSeleccionados(mensualidadIndex);
+                            
+                            return (
+                                <div key={horarioField.id} className="flex items-center space-x-2">
+                                    <div className="flex-1">
+                                        <Select
+                                            {...register(`mensualidades.${mensualidadIndex}.horarios.${horarioIndex}.horario_id`, {
+                                                onChange: (e) => {
+                                                    console.log('🔄 Select de horario cambió:', e.target.value);
+                                                    setTimeout(() => setForceUpdate(prev => prev + 1), 50);
+                                                }
+                                            })}
+                                            error={errors.mensualidades?.[mensualidadIndex]?.horarios?.[horarioIndex]?.horario_id?.message}
+                                        >
+                                            <option value="">Selecciona horario</option>
+                                            {horariosDisponibles.map(horario => {
+                                                const estaDeshabilitado = isHorarioDeshabilitado(mensualidadIndex, horario.id, horarioIndex);
+                                                const yaSeleccionado = diasSeleccionados.has(horario.dia);
+                                                
+                                                return (
+                                                    <option 
+                                                        key={horario.id} 
+                                                        value={horario.id}
+                                                        disabled={estaDeshabilitado}
+                                                        style={estaDeshabilitado ? { color: '#9CA3AF', fontStyle: 'italic' } : {}}
+                                                    >
+                                                        {horario.dia} {horario.hora_inicio} - {horario.hora_fin}
+                                                        {horario.nombre_profesor && ` (${horario.nombre_profesor})`}
+                                                        {yaSeleccionado ? ' - Ya seleccionado' : ''}
+                                                    </option>
+                                                );
+                                            })}
+                                        </Select>
+                                    </div>
+                                    {horarioFields.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            onClick={() => {
                                                 removeHorario(horarioIndex)
 
                                                 setTimeout(() => {
@@ -1367,15 +1484,24 @@ const MensualidadCard = ({
                                                 }, 50);
                                             }
                                         }
-                                        variant="ghost"
-                                        size="sm"
-                                        className="text-red-600"
-                                    >
-                                        <TrashIcon className="h-3 w-3" />
-                                    </Button>
-                                )}
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-red-600"
+                                        >
+                                            <TrashIcon className="h-3 w-3" />
+                                        </Button>
+                                    )}
+                                </div>
+                            );
+                        })}
+
+                        {/* mensaje sobre la restricción */}
+                        {grupoSeleccionado && (
+                            <div className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-2">
+                                ⚠️ <strong>Restricción:</strong> Solo puedes seleccionar un horario por día de la semana. 
+                                Los horarios del mismo día aparecerán deshabilitados una vez que selecciones uno.
                             </div>
-                        ))}
+                        )}
                         
                         <div className="text-xs text-gray-500 dark:text-dark-400 bg-gray-100 dark:bg-dark-600 p-2 rounded">
                             <UsersIcon className="h-3 w-3 inline mr-1" />
