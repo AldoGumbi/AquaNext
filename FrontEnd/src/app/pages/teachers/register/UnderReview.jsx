@@ -21,7 +21,7 @@ export function UnderReview() {
       <Button
         color="primary"
         className="mt-8 w-full px-10 sm:w-auto"
-        to="/teachers/all-teachers"
+        to="/control-clases/all-teachers"
         component={Link}
       >
         Ir a lista de profesores
