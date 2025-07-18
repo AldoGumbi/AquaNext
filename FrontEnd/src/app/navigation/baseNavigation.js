@@ -17,7 +17,7 @@ export const baseNavigation = [
   {
     id: 'salePoint',
     type: NAV_TYPE_ITEM,
-    path: '/salePoint',
+    path: '/sale-point',
     title: 'Punto de Venta',
     Icon: Store,
   },
