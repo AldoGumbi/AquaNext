@@ -1,6 +1,7 @@
 // views/inscripciones/components/ResumenTransaccion.jsx
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import dayjs from "dayjs";
 import { 
     UserIcon,
     AcademicCapIcon,
@@ -224,13 +225,13 @@ const ResumenTransaccion = ({
                                     <div>
                                         <span className="text-sm text-gray-600 dark:text-dark-300">Válida desde:</span>
                                         <p className="font-medium text-gray-900 dark:text-white">
-                                            {new Date().toLocaleDateString()}
+                                            {dayjs().format('DD-MM-YYYY')}
                                         </p>
                                     </div>
                                     <div>
                                         <span className="text-sm text-gray-600 dark:text-dark-300">Válida hasta:</span>
                                         <p className="font-medium text-gray-900 dark:text-white">
-                                            {new Date(Date.now() + (datosInscripcion.anos_inscripcion * 365.25 * 24 * 60 * 60 * 1000)).toLocaleDateString()}
+                                            {dayjs().add(datosInscripcion.anos_inscripcion, 'year').subtract(1, 'day').format('DD-MM-YYYY')}
                                         </p>
                                     </div>
                                 </div>
@@ -277,7 +278,7 @@ const ResumenTransaccion = ({
                                                     Mensualidad {index + 1}
                                                 </h5>
                                                 <span className="text-sm text-gray-600 dark:text-dark-300">
-                                                    {new Date(mensualidad.fecha_inicio).toLocaleDateString()} - {new Date(mensualidad.fecha_fin).toLocaleDateString()}
+                                                    {dayjs(mensualidad.fecha_inicio).format('DD-MM-YYYY')} - {dayjs(mensualidad.fecha_fin).format('DD-MM-YYYY')}
                                                 </span>
                                             </div>
 

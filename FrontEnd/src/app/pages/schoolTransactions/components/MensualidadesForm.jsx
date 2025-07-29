@@ -1,5 +1,5 @@
 // views/inscripciones/components/MensualidadesForm.jsx
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -682,7 +682,7 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                 });
             return {
                 fecha_inicio: mensualidad.fecha_inicio,
-                fecha_fin: fechaFin.toISOString().split('T')[0],
+                fecha_fin: dayjs(fechaFin).format('YYYY-MM-DD'),
                 meses_duracion: parseInt(mensualidad.meses_duracion),
                 monto_total: montoCalculado,
                 descuento_aplicado: parseFloat(mensualidad.descuento_aplicado || 0),
@@ -696,6 +696,8 @@ const MensualidadesForm = ({ datosIniciales, onDatosCompletos, onVolver, loading
                 }]
             };
         });
+
+        console.log("Mensualidades procesadas:", mensualidadesProcesadas);
     
         if (onDatosCompletos) {
             onDatosCompletos(mensualidadesProcesadas);
@@ -1240,6 +1242,7 @@ const MensualidadCard = ({
 
     const [forceUpdate, setForceUpdate] = useState(0);
     const [isInternalInitialized, setIsInternalInitialized] = useState(false);
+    const grupoAnterior = useRef(grupoSeleccionado);
 
     const horariosDisponibles = getHorariosDisponibles(grupoSeleccionado);
 
@@ -1271,12 +1274,26 @@ const MensualidadCard = ({
     useEffect(() => {
         if (!isInitialized) {
             setIsInternalInitialized(true);
+            grupoAnterior.current = grupoSeleccionado;
             return;
         }
         
-        if (grupoSeleccionado && isInternalInitialized) {
+        // Convertir ambos a string para comparación consistente
+        const grupoActualStr = String(grupoSeleccionado || '');
+        const grupoAnteriorStr = String(grupoAnterior.current || '');
+        
+        // Solo limpiar si el grupo CAMBIÓ realmente
+        if (grupoSeleccionado && 
+            isInternalInitialized && 
+            isInitialized && 
+            grupoAnteriorStr !== grupoActualStr && 
+            grupoAnterior.current !== null) {
+            
+            console.log("🔄 Limpiando horarios al cambiar de grupo de:", grupoAnterior.current, "a:", grupoSeleccionado);
             setValue(`mensualidades.${mensualidadIndex}.horarios`, [{ horario_id: '' }]);
         }
+        
+        grupoAnterior.current = grupoSeleccionado;
     }, [grupoSeleccionado, setValue, mensualidadIndex, isInitialized, isInternalInitialized]);
 
     // Detectar cambios para actualizar resumen
