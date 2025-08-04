@@ -89,6 +89,42 @@ export const getAllAlumnos = async (req, res) => {
     }
 };
 
+export const getActiveAlumnos = async (req, res) => {
+    try {
+        const alumnos = await alumnosModel.getActiveAlumnos();
+        
+        if (alumnos.length === 0) {
+            return res.status(200).json({
+                data: [],
+                message: 'No se encontraron alumnos',
+                error: falseç
+                +''
+            });
+        }
+
+        // Formatear datos para el frontend
+        const alumnosFormatted = alumnos.map(alumno => ({
+            ...alumno,
+            firma: Boolean(alumno.firma), // Convertir a boolean para el frontend
+            fecha_nacimiento: alumno.fecha_nacimiento ? 
+                alumno.fecha_nacimiento.toISOString().split('T')[0] : null
+        }));
+
+        res.status(200).json({
+            data: alumnosFormatted,
+            message: 'Alumnos obtenidos correctamente',
+            error: false
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            data: false,
+            message: 'Error interno al obtener los alumnos',
+            error: error.message
+        });
+    }
+};
+
 export const updateAlumno = async (req, res) => {
     try {
         const { id } = req.params;
@@ -102,7 +138,7 @@ export const updateAlumno = async (req, res) => {
             });
         }
 
-        console.log('Datos recibidos para actualizar:', req.body);
+        // console.log('Datos recibidos para actualizar:', req.body);
 
         const {
             tipo_alumno,

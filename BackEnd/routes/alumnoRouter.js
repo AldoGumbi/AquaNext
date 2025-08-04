@@ -3,6 +3,7 @@ import express from 'express';
 import {
 	insertAlumno,
 	getAllAlumnos,
+	getActiveAlumnos,
 	updateAlumno,
 	deleteAlumno
 } from '../controllers/alumnoController.js';
@@ -14,6 +15,9 @@ router.post('/register', insertAlumno);
 
 // get all students
 router.get('/all-students', getAllAlumnos);
+
+// get all active students
+router.get('/active-students', getActiveAlumnos);
 
 // edit alumno
 router.patch('/update-student/:id', updateAlumno);

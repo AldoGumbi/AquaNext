@@ -13,6 +13,17 @@ export const verifyToken = (token, token_type) => {
   }
 };
 
+// Función para decodificar token sin validar expiración
+export const decodeTokenWithoutValidation = (token, token_type) => {
+  try {
+    const JWT_SECRET = token_type === 'refresh' ? JWT_CONFIG.refresh_token_secret : JWT_CONFIG.access_token_secret;
+    // Usar decode en lugar de verify para obtener el payload sin validar expiración
+    return jwt.decode(token, JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
+};
+
 // Middleware de autenticación
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -86,6 +97,39 @@ export const authMiddleware = async (req, res, next) => {
   }
 };
 
+// Middleware para extraer información del usuario sin validación estricta
+export const extractUserMiddleware = async (req, res, next) => {
+  try {
+    // Obtener el access token de las cookies
+    const accessToken = req.cookies?.access_token;
+    
+    if (!accessToken) {
+      // No hay token, continuar sin usuario
+      req.user = null;
+      return next();
+    }
+
+    // Decodificar el token sin validar expiración
+    const decoded = decodeTokenWithoutValidation(accessToken, 'access');
+    
+    if (decoded && decoded.userId) {
+      // Token decodificado exitosamente, establecer usuario
+      req.user = { userId: decoded.userId };
+    } else {
+      // No se pudo decodificar o no tiene userId
+      req.user = null;
+    }
+    
+    return next();
+    
+  } catch (error) {
+    console.error('Error en extractUserMiddleware:', error);
+    // En caso de error, continuar sin usuario
+    req.user = null;
+    return next();
+  }
+};
+
 // Middleware para aplicar solo en rutas específicas
 export const conditionalAuth = (req, res, next) => {
   // Rutas que no requieren autenticación
@@ -97,7 +141,7 @@ export const conditionalAuth = (req, res, next) => {
   );
   
   if (isPublicRoute) {
-    return next();
+    return extractUserMiddleware(req, res, next);
   }
   console.log(`Ruta protegida: ${req.path}`);
   // Aplicar middleware de autenticación

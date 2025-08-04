@@ -36,7 +36,7 @@ export const insertProduct = async (req, res) => {
 
 		const productId = await productsModel.create(newProduct);
 
-		if(!productId){
+		if(!productId){k
 			return res.status(400).send({
 				data: false,
 				message: 'No se pudo crear el producto, por favor verifica los datos enviados.'

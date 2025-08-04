@@ -3,6 +3,8 @@ import db from '../config/db.js';
 import clasesService from '../services/clasesService.js';
 import asistenciasService from '../services/asistenciasService.js';
 
+import { DateTime } from 'luxon';
+
 class mensualidadesModel {
 
     // Crear mensualidades solas (requiere inscripción vigente)
@@ -66,10 +68,10 @@ class mensualidadesModel {
         const mensualidadesCreadas = [];
 
         for (const mensualidad of mensualidades) {
-            const fechaInicio = new Date(mensualidad.fecha_inicio);
-            const fechaFin = new Date(mensualidad.fecha_fin);
-            const mes = fechaInicio.getMonth() + 1;
-            const year = fechaInicio.getFullYear();
+            const fechaInicio = DateTime.fromISO(mensualidad.fecha_inicio);
+            const fechaFin = DateTime.fromISO(mensualidad.fecha_fin);
+            const mes = fechaInicio.month;
+            const year = fechaInicio.year;
 
             // Crear mensualidad principal
             const [mensualidadResult] = await connection.query(`
@@ -90,8 +92,8 @@ class mensualidadesModel {
                 inscripcion_id,
                 mes,
                 year,
-                mensualidad.fecha_inicio,
-                mensualidad.fecha_fin,
+                fechaInicio.toISODate(), // Formato YYYY-MM-DD compatible con MySQL DATE
+                fechaFin.toISODate(),    // Formato YYYY-MM-DD compatible con MySQL DATE
                 mensualidad.monto_total,
                 mensualidad.monto_total,
                 mensualidad.descuento_aplicado || 0,
@@ -161,6 +163,8 @@ class mensualidadesModel {
                 mensualidad_id: mensualidadId,
                 mes,
                 year,
+                fecha_inicio: mensualidad.fecha_inicio,
+                fecha_fin: mensualidad.fecha_fin,
                 monto: mensualidad.monto_total,
                 grupos: mensualidad.grupos
             });

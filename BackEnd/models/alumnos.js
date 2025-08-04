@@ -82,7 +82,37 @@ class alumnosModel {
           fecha_creacion,
           fecha_modificacion
         FROM alumnos
-				WHERE deleted = 0
+        WHERE deleted = 0
+        ORDER BY fecha_creacion DESC;
+      `);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Método para obtener alumnos activos
+  static async getActiveAlumnos() {
+    try {
+      const [rows] = await db.query(`
+        SELECT
+          id,
+          tipo_alumno,
+          nombre, 
+          apellido_paterno, 
+          apellido_materno,
+          fecha_nacimiento,
+          domicilio,
+          email, 
+          telefono, 
+          telefono_emergencia, 
+          foto,
+          estatus,
+          firma,
+          fecha_creacion,
+          fecha_modificacion
+        FROM alumnos
+        WHERE deleted = 0 AND estatus = 'activo'
         ORDER BY fecha_creacion DESC;
       `);
       return rows;

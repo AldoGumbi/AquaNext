@@ -42,6 +42,7 @@ class inscripcionesModel {
             const yearInscripcion = fechaInscripcion.getFullYear();
             const fechaFin = new Date(fechaInscripcion);
             fechaFin.setFullYear(fechaFin.getFullYear() + parseInt(anos_inscripcion));
+            fechaFin.setDate(fechaFin.getDate() - 1); // Restar un día
 
             // Crear inscripción
             const [inscripcionResult] = await connection.query(`
@@ -157,6 +158,8 @@ class inscripcionesModel {
             const anosInscripcion = parseInt(inscripcion.anos_inscripcion || 1);
             const fechaFin = new Date(fechaInscripcion);
             fechaFin.setFullYear(fechaFin.getFullYear() + anosInscripcion);
+            fechaFin.setDate(fechaFin.getDate() - 1); // Restar un día
+
 
             const [inscripcionResult] = await connection.query(`
                 INSERT INTO inscripciones (
