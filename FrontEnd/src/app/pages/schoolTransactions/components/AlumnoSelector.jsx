@@ -1,5 +1,6 @@
 // views/inscripciones/components/AlumnoSelector.jsx
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { 
@@ -105,12 +106,13 @@ const AlumnoSelector = ({ onAlumnoSeleccionado, alumnoActual }) => {
     // Filtrar alumnos basado en la búsqueda
     const alumnosFiltrados = useMemo(() => {
         if (!searchTerm.trim()) {
-            return alumnos.filter(alumno => alumno.estatus === 'activo').slice(0, 20);
+            // return alumnos.filter(alumno => alumno.estatus === 'activo').slice(0, 20);
+            return alumnos.slice(0.50);
         }
 
         const term = searchTerm.toLowerCase().trim();
         return alumnos.filter(alumno => {
-            if (alumno.estatus !== 'activo') return false;
+            // if (alumno.estatus !== 'activo') return false;
             
             const nombreCompleto = `${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno || ''}`.toLowerCase();
             const telefono = alumno.telefono?.toLowerCase() || '';
@@ -153,15 +155,23 @@ const AlumnoSelector = ({ onAlumnoSeleccionado, alumnoActual }) => {
                             Busca y selecciona el alumno para crear la inscripción o mensualidad
                         </p>
                     </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCrearNuevoAlumno}
-                        className="flex items-center space-x-2"
-                    >
+                    <Link
+                        to="/students/register"
+                        className={`
+                            inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 
+                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white 
+                            dark:focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed 
+                            transform hover:scale-[1.02] active:scale-[0.98]
+                            border border-gray-300 dark:border-dark-500 bg-white dark:bg-dark-800 
+                            text-gray-700 dark:text-dark-100 hover:bg-gray-50 dark:hover:bg-dark-700 
+                            focus:ring-primary-500 shadow-sm hover:shadow-md
+                            px-3 py-1.5 text-sm
+                            space-x-2
+                        `}
+                        >
                         <PlusIcon className="h-4 w-4" />
                         <span>Nuevo Alumno</span>
-                    </Button>
+                    </Link>
                 </div>
 
                 {/* Buscador */}

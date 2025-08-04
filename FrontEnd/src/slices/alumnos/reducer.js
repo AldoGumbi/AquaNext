@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   addAlumnoThunk,
   getAlumnosThunk,
+  getActiveAlumnosThunk,
   updateAlumnoThunk,
   deleteAlumnoThunk
 } from "./thunk.js";
 
 const initialState = {
 	alumnos: [],
+  activeAlumnos: [],
 	loading: false,
 	error: false,
 	error_message: "",
@@ -50,6 +52,22 @@ const alumnosSlice = createSlice({
       state.error = false;
       state.loading = true;
     });
+
+    // GET ALL ACTIVE ALUMNOS
+    builder.addCase(getActiveAlumnosThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = false;
+      state.activeAlumnos = action.payload;
+    });
+    builder.addCase(getActiveAlumnosThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error_message = action.payload.error;
+      state.error = true;
+    });
+    builder.addCase(getActiveAlumnosThunk.pending, (state) => {
+      state.error = false;
+      state.loading = true;
+    })
 
     // EDIT ALUMNO
     builder.addCase(updateAlumnoThunk.fulfilled, (state, action) => {

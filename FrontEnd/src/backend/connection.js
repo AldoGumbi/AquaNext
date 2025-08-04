@@ -45,6 +45,7 @@ export const addAlumno = (data) => api.create(url.ADD_ALUMNO, data);
 export const getAlumnos = () => api.get(url.GET_ALUMNOS, null);
 export const updateAlumno = (data) => api.update(`${url.EDIT_ALUMNO}/${data.id}`, data.data);
 export const deleteAlumno = (data) => api.delete(`${url.DELETE_ALUMNO}/${data.id}`);
+export const getActiveAlumnos = () => api.get(url.GET_ACTIVE_ALUMNOS, null);
 
 // PROFESORES CRUD
 export const addProfesor = (data) => api.create(url.ADD_PROFESOR, data);

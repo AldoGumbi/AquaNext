@@ -156,7 +156,7 @@ const inscripcionesSlice = createSlice({
                 state.error = false;
                 state.operationSuccess = true;
                 state.operationMessage = 'Inscripción creada exitosamente';
-                state.ultimaTransaccion = action.payload.data;
+                state.ultimaTransaccion = action.payload;
                 
                 // Actualizar estado de inscripción vigente si es para el mismo alumno
                 if (state.inscripcionVigente && state.inscripcionVigente.alumno_id === action.meta.arg.alumno_id) {
@@ -183,7 +183,7 @@ const inscripcionesSlice = createSlice({
                 state.error = false;
                 state.operationSuccess = true;
                 state.operationMessage = 'Mensualidades creadas exitosamente';
-                state.ultimaTransaccion = action.payload.data;
+                state.ultimaTransaccion = action.payload;
             })
             .addCase(createMensualidadSolaThunk.rejected, (state, action) => {
                 state.mensualidadLoading = false;
@@ -205,7 +205,7 @@ const inscripcionesSlice = createSlice({
                 state.error = false;
                 state.operationSuccess = true;
                 state.operationMessage = 'Inscripción y mensualidades creadas exitosamente';
-                state.ultimaTransaccion = action.payload.data;
+                state.ultimaTransaccion = action.payload;
                 
                 // Actualizar estado de inscripción vigente
                 state.tieneInscripcionVigente = true;

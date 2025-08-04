@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import {
 	addAlumno,
 	getAlumnos,
+	getActiveAlumnos,
 	updateAlumno,
 	deleteAlumno
 } from "../../backend/connection.js";
@@ -22,6 +23,17 @@ export const addAlumnoThunk = createAsyncThunk("alumnos/add", async (data, { rej
 export const getAlumnosThunk = createAsyncThunk("alumnos/getAll", async (_, { rejectWithValue }) => {
 		try {
 			const response = await getAlumnos();
+			return response.data; // Return the data to be added to the state
+		} catch (error) {
+			console.log("Error 500 al obtener los alumnos, thunk.js: ", error);
+			return rejectWithValue({error});
+		}
+	}
+);
+
+export const getActiveAlumnosThunk = createAsyncThunk("alumnos/getActive", async (_, { rejectWithValue }) => {
+		try {
+			const response = await getActiveAlumnos();
 			return response.data; // Return the data to be added to the state
 		} catch (error) {
 			console.log("Error 500 al obtener los alumnos, thunk.js: ", error);

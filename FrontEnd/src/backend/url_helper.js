@@ -44,6 +44,7 @@ export const UPDATE_BASKET_ITEM = BASE_BASKET_ITEM_URL + '/update-items';
 const BASE_ALUMNO_URL = '/alumnos';
 export const ADD_ALUMNO = BASE_ALUMNO_URL + '/register';
 export const GET_ALUMNOS = BASE_ALUMNO_URL + '/all-students';
+export const GET_ACTIVE_ALUMNOS = BASE_ALUMNO_URL + '/active-students';
 export const EDIT_ALUMNO = BASE_ALUMNO_URL + '/update-student';
 export const DELETE_ALUMNO = BASE_ALUMNO_URL + '/delete-student';
 

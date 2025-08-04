@@ -11,6 +11,7 @@ import InscripcionForm from "./components/InscripcionForm";
 import MensualidadesForm from "./components/MensualidadesForm";
 import ResumenTransaccion from "./components/ResumenTransaccion";
 import ConfirmacionPago from "./components/ConfirmacionPago";
+import { useAuthContext } from "app/contexts/auth/context";
 
 // Redux
 import {
@@ -74,6 +75,7 @@ const staggerContainer = {
 };
 
 export default function CrearInscripcionMensualidad() {
+    const { user } = useAuthContext();
     const dispatch = useDispatch();
     const {
         loading,
@@ -120,6 +122,7 @@ export default function CrearInscripcionMensualidad() {
     useEffect(() => {
         if (operationSuccess && operationMessage) {
             toast.success(operationMessage);
+            console.log("Last operation success: ", ultimaTransaccion);
             if (ultimaTransaccion) {
                 setTransaccionCompletada(true);
                 setPasoActual(PASOS.CONFIRMACION);
@@ -185,7 +188,7 @@ export default function CrearInscripcionMensualidad() {
         const datosBase = {
             alumno_id: alumnoSeleccionado.id,
             metodo_pago: metodoPagoSeleccionado,
-            usuario_id: 1 // TODO: Obtener del contexto de usuario
+            usuario_id: user.id 
         };
 
         try {
