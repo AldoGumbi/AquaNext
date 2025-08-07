@@ -41,5 +41,12 @@ export const controlClases = {
       title: 'Profesores',
       Icon: GraduationCap,
     },
+    {
+      id: 'control-clases.cuposAvailability',
+      path: path(ROOT_CONTROL_CLASES, '/disponibilidad-cupos'),
+      type: NAV_TYPE_ITEM,
+      title: 'Disponibilidad de Cupos',
+      Icon: GraduationCap,
+    },
   ],
 };

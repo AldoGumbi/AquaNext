@@ -219,7 +219,6 @@ const protectedRoutes = {
                 Component: (await import("app/pages/groups/all-groups/index_1")).default,
               }),
             },
-            
             {
               path: "register-teacher",
               lazy: async () => ({
@@ -230,6 +229,12 @@ const protectedRoutes = {
               path: "all-teachers",
               lazy: async () => ({
                 Component: (await import("app/pages/teachers/all-teachers")).default,
+              }),
+            },
+            {
+              path: "disponibilidad-cupos",
+              lazy: async () => ({
+                Component: (await import("app/pages/DisponibilidadCupos")).default,
               }),
             },
           ],

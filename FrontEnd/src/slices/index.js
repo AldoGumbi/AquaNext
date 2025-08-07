@@ -11,6 +11,7 @@ import cashRegisterSlicer from './cash-register/reducer.js';
 import groupsSlicer from './groups/reducer.js';
 import dashboardSlicer from './dashboard/reducer.js';
 import schoolTransactionSlicer from './schoolTransactions/reducer.js';
+import availabilityOfCuposSlicer from './availabilityOfCupos/reducer.js';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -34,6 +35,8 @@ const rootReducer = combineReducers({
   dashboard: dashboardSlicer, 
   // school transactions
   inscripciones: schoolTransactionSlicer,
+  // disponibilidad de cupos
+  disponibilidad: availabilityOfCuposSlicer,
 });
 
 // Export the combined reducer

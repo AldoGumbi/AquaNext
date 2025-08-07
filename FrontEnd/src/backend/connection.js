@@ -90,3 +90,7 @@ export const createTarifaMensualidad = (data) => api.create(url.CREATE_TARIFA_ME
 export const updateTarifaMensualidad = (data) => api.update(`${url.UPDATE_TARIFA_MENSUALIDAD}/${data.id}`, data.data);
 export const deleteTarifaMensualidad = (data) => api.delete(`${url.DELETE_TARIFA_MENSUALIDAD}/${data.id}`);
 export const getEstadisticasInscripciones = (params) => api.get(url.GET_ESTADISTICAS_INSCRIPCIONES, params);
+
+// DISPONIBILIDAD DE CUPOS
+export const getDisponibilidadPorMes = ({ year, mes }) => api.get(url.GET_DISPONIBILIDAD_POR_MES + `/${year}/${mes}`, { year, mes });
+export const getDisponibilidadPorRango = ({ yearInicio, mesInicio, yearFin, mesFin }) => api.get(url.GET_DISPONIBILIDAD_POR_RANGO, { yearInicio, mesInicio, yearFin, mesFin });
