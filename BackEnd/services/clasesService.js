@@ -1,9 +1,10 @@
-
+// services/clasesService.js - Optimizado con Luxon
 import db from '../config/db.js';
+import { DateTime } from 'luxon';
 
 class clasesService {
     
-    // Generar clases para un período específico
+    // Generar clases para un período específico - OPTIMIZADO con Luxon
     static async generarClasesParaPeriodo(connection, horario_id, fecha_inicio, fecha_fin) {
         try {
             // Obtener información del horario
@@ -19,70 +20,157 @@ class clasesService {
             }
 
             const horario = horarioInfo[0];
-            const clasesCreadas = [];
-
-            // Calcular todas las fechas que coinciden con el día de la semana del horario
-            const fechaInicioDate = new Date(fecha_inicio);
-            const fechaFinDate = new Date(fecha_fin);
             const diaSemanaNombre = horario.dia;
 
-            // Mapeo de días de la semana
+            // Usar Luxon para manejo consistente de fechas
+            const fechaInicio = DateTime.fromISO(fecha_inicio);
+            const fechaFin = DateTime.fromISO(fecha_fin);
+
+            // Mapeo de días de la semana para Luxon (1 = lunes, 7 = domingo)
             const diasSemana = {
-                'domingo': 0,
                 'lunes': 1,
-                'martes': 2,
+                'martes': 2, 
                 'miercoles': 3,
                 'jueves': 4,
                 'viernes': 5,
-                'sabado': 6
+                'sabado': 6,
+                'domingo': 7
             };
 
             const diaNumero = diasSemana[diaSemanaNombre];
             
+            if (!diaNumero) {
+                throw new Error(`Día de la semana inválido: ${diaSemanaNombre}`);
+            }
+            
+            // Calcular todas las fechas usando Luxon
+            const fechasClases = [];
+            let fechaActual = fechaInicio;
+            
             // Encontrar la primera fecha que coincida con el día de la semana
-            let fechaActual = new Date(fechaInicioDate);
-            while (fechaActual.getDay() !== diaNumero && fechaActual <= fechaFinDate) {
-                fechaActual.setDate(fechaActual.getDate() + 1);
+            while (fechaActual.weekday !== diaNumero && fechaActual <= fechaFin) {
+                fechaActual = fechaActual.plus({ days: 1 });
             }
 
-            // Generar clases para todas las fechas que coincidan
-            while (fechaActual <= fechaFinDate) {
-                const fechaClase = fechaActual.toISOString().split('T')[0];
+            // Generar todas las fechas del día específico
+            while (fechaActual <= fechaFin) {
+                fechasClases.push(fechaActual.toISODate()); // Formato YYYY-MM-DD
+                fechaActual = fechaActual.plus({ weeks: 1 }); // Siguiente semana
+            }
 
-                // Verificar si la clase ya existe
-                const [claseExistente] = await connection.query(`
-                    SELECT id FROM clases 
-                    WHERE horario_id = ? AND fecha = ?
-                `, [horario_id, fechaClase]);
+            if (fechasClases.length === 0) {
+                // console.log(`No se encontraron fechas para ${diaSemanaNombre} entre ${fecha_inicio} y ${fecha_fin}`);
+                return [];
+            }
 
-                let claseId;
-                if (claseExistente.length > 0) {
-                    claseId = claseExistente[0].id;
+            // console.log('Fechas a procesar:', fechasClases);
+
+            // OPTIMIZACIÓN: Verificar clases existentes en una sola consulta
+            const placeholders = fechasClases.map(() => '?').join(',');
+            const [clasesExistentes] = await connection.query(`
+                SELECT DATE(fecha) as fecha_str, fecha, id FROM clases 
+                WHERE horario_id = ? AND DATE(fecha) IN (${placeholders})
+            `, [horario_id, ...fechasClases]);
+
+            // console.log('Clases existentes encontradas:', clasesExistentes);
+
+            // Crear mapa de clases existentes usando fecha en formato string para comparación correcta
+            const clasesExistentesMap = new Map();
+            clasesExistentes.forEach(clase => {
+                // Usar la fecha en formato string para comparación
+                const fechaStr = DateTime.fromJSDate(clase.fecha).toISODate();
+                clasesExistentesMap.set(fechaStr, clase.id);
+            });
+
+            // console.log('Mapa de clases existentes:', clasesExistentesMap);
+
+            // OPTIMIZACIÓN: Preparar datos para inserción en lote
+            const clasesNuevas = [];
+            const clasesIds = [];
+
+            for (const fechaStr of fechasClases) {
+                // console.log(`Procesando fecha: ${fechaStr}, existe: ${clasesExistentesMap.has(fechaStr)}`);
+                
+                if (clasesExistentesMap.has(fechaStr)) {
+                    // Usar clase existente
+                    clasesIds.push(clasesExistentesMap.get(fechaStr));
+                    // console.log(`Usando clase existente ID: ${clasesExistentesMap.get(fechaStr)}`);
                 } else {
-                    // Crear nueva clase
-                    const [result] = await connection.query(`
-                        INSERT INTO clases (
-                            horario_id,
-                            fecha,
-                            cancelada,
-                            observaciones
-                        ) VALUES (?, ?, 0, ?)
-                    `, [
+                    // Preparar para crear nueva clase
+                    clasesNuevas.push([
                         horario_id,
-                        fechaClase,
-                        `Clase generada automáticamente para ${diaSemanaNombre} ${fechaClase}`
+                        fechaStr, // Usar formato YYYY-MM-DD
+                        0, // cancelada = false
+                        `Clase generada automáticamente para ${diaSemanaNombre} ${fechaStr}`
                     ]);
-
-                    claseId = result.insertId;
+                    // console.log(`Preparando nueva clase para: ${fechaStr}`);
                 }
-
-                clasesCreadas.push(claseId);
-
-                // Avanzar a la siguiente semana
-                fechaActual.setDate(fechaActual.getDate() + 7);
             }
 
-            return clasesCreadas;
+            // console.log('Clases nuevas a insertar:', clasesNuevas.length);
+
+            // OPTIMIZACIÓN: Insertar todas las clases nuevas de una vez
+            if (clasesNuevas.length > 0) {
+                try {
+                    const placeholdersInsert = clasesNuevas.map(() => '(?, ?, ?, ?)').join(',');
+                    const flatValues = clasesNuevas.flat();
+                    
+                    // console.log('SQL a ejecutar:', `INSERT INTO clases (horario_id, fecha, cancelada, observaciones) VALUES ${placeholdersInsert}`);
+                    // console.log('Valores:', flatValues);
+
+                    const [result] = await connection.query(`
+                        INSERT INTO clases (horario_id, fecha, cancelada, observaciones) 
+                        VALUES ${placeholdersInsert}
+                    `, flatValues);
+
+                    // Agregar los IDs de las clases recién creadas
+                    const firstInsertId = result.insertId;
+                    for (let i = 0; i < clasesNuevas.length; i++) {
+                        clasesIds.push(firstInsertId + i);
+                    }
+
+                    // console.log(`Insertadas ${clasesNuevas.length} clases nuevas, primer ID: ${firstInsertId}`);
+                } catch (insertError) {
+                    console.error('Error en inserción de clases:', insertError);
+                    
+                    // Si hay error de duplicate key, intentar insertar una por una e ignorar duplicados
+                    if (insertError.code === 'ER_DUP_ENTRY') {
+                        // console.log('Duplicate entry detectado, insertando una por una...');
+                        
+                        for (const claseData of clasesNuevas) {
+                            try {
+                                const [singleResult] = await connection.query(`
+                                    INSERT IGNORE INTO clases (horario_id, fecha, cancelada, observaciones) 
+                                    VALUES (?, ?, ?, ?)
+                                `, claseData);
+                                
+                                if (singleResult.insertId > 0) {
+                                    clasesIds.push(singleResult.insertId);
+                                    // console.log(`Clase individual insertada: ${singleResult.insertId}`);
+                                } else {
+                                    // La clase ya existía, buscar su ID
+                                    const [existing] = await connection.query(`
+                                        SELECT id FROM clases 
+                                        WHERE horario_id = ? AND DATE(fecha) = ?
+                                    `, [claseData[0], claseData[1]]);
+                                    
+                                    if (existing.length > 0) {
+                                        clasesIds.push(existing[0].id);
+                                        // console.log(`Usando clase existente encontrada: ${existing[0].id}`);
+                                    }
+                                }
+                            } catch (singleError) {
+                                console.error(`Error insertando clase individual ${claseData[1]}:`, singleError.message);
+                            }
+                        }
+                    } else {
+                        throw insertError;
+                    }
+                }
+            }
+
+            // console.log('IDs finales de clases:', clasesIds);
+            return clasesIds;
 
         } catch (error) {
             console.error('Error al generar clases:', error);
@@ -90,7 +178,7 @@ class clasesService {
         }
     }
 
-    // Obtener clases por horario y rango de fechas
+    // Resto de métodos sin cambios...
     static async getClasesByHorarioYRango(horario_id, fecha_inicio, fecha_fin) {
         try {
             const [rows] = await db.query(`
@@ -120,7 +208,6 @@ class clasesService {
         }
     }
 
-    // Cancelar clase
     static async cancelarClase(clase_id, motivo = null, usuario_id = null) {
         const connection = await db.getConnection();
         try {
@@ -143,7 +230,6 @@ class clasesService {
                 return false;
             }
 
-            // Registrar en log de cancelaciones si es necesario
             if (usuario_id) {
                 await connection.query(`
                     INSERT INTO log_cancelaciones (
@@ -167,7 +253,6 @@ class clasesService {
         }
     }
 
-    // Obtener estadísticas de clases
     static async getEstadisticas(fecha_inicio = null, fecha_fin = null) {
         try {
             let whereClause = 'WHERE 1=1';

@@ -1,8 +1,7 @@
-// models/mensualidades.js
+// models/mensualidades.js - Optimizado
 import db from '../config/db.js';
 import clasesService from '../services/clasesService.js';
 import asistenciasService from '../services/asistenciasService.js';
-
 import { DateTime } from 'luxon';
 
 class mensualidadesModel {
@@ -63,129 +62,194 @@ class mensualidadesModel {
         }
     }
 
-    // Método interno para crear mensualidades (usado por inscripciones y mensualidades solas)
+    // CAMBIO PRINCIPAL: Método createMensualidadesInternas
     static async createMensualidadesInternas(connection, inscripcion_id, alumno_id, mensualidades, transaccion_id) {
         const mensualidadesCreadas = [];
 
+        // CAMBIO: Preparar datos SIN mes y año
+        const mensualidadesData = [];
+        const detallesTransaccionData = [];
+
         for (const mensualidad of mensualidades) {
+            console.log("Procesando mensualidad:", mensualidad);
             const fechaInicio = DateTime.fromISO(mensualidad.fecha_inicio);
             const fechaFin = DateTime.fromISO(mensualidad.fecha_fin);
-            const mes = fechaInicio.month;
-            const year = fechaInicio.year;
 
-            // Crear mensualidad principal
-            const [mensualidadResult] = await connection.query(`
-                INSERT INTO mensualidades (
-                    inscripcion_id,
-                    mes,
-                    year,
-                    fecha_inicio,
-                    fecha_fin,
-                    monto_total,
-                    monto_pagado,
-                    descuento_aplicado,
-                    metodo_pago,
-                    pagada,
-                    fecha_pago
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())
-            `, [
+            // CAMBIO: Solo fecha_inicio, fecha_fin, SIN mes y año
+            mensualidadesData.push([
                 inscripcion_id,
-                mes,
-                year,
-                fechaInicio.toISODate(), // Formato YYYY-MM-DD compatible con MySQL DATE
-                fechaFin.toISODate(),    // Formato YYYY-MM-DD compatible con MySQL DATE
+                fechaInicio.toISODate(),
+                fechaFin.toISODate(),
                 mensualidad.monto_total,
-                mensualidad.monto_total,
+                Number(mensualidad.monto_total) - (mensualidad.descuento_aplicado ? Number(mensualidad.descuento_aplicado) : 0),
                 mensualidad.descuento_aplicado || 0,
                 mensualidad.metodo_pago || 'efectivo'
             ]);
 
-            const mensualidadId = mensualidadResult.insertId;
-
-            // Crear detalle de transacción
-            await connection.query(`
-                INSERT INTO transaccion_detalles (
-                    transaccion_id,
-                    concepto,
-                    cantidad,
-                    precio_unitario,
-                    subtotal,
-                    descuento,
-                    total,
-                    referencia_id,
-                    referencia_tipo
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `, [
+            // Para el detalle de transacción, usar mes/año de inicio como referencia
+            const mes = fechaInicio.month;
+            const year = fechaInicio.year;
+            detallesTransaccionData.push([
                 transaccion_id,
                 `Mensualidad ${this.getMonthName(mes)} ${year}`,
                 1,
                 mensualidad.monto_total,
                 mensualidad.monto_total,
                 mensualidad.descuento_aplicado || 0,
-                mensualidad.monto_total,
-                mensualidadId,
-                'mensualidad'
+                Number(mensualidad.monto_total) - (mensualidad.descuento_aplicado ? Number(mensualidad.descuento_aplicado) : 0),
             ]);
+        }
 
-            // Procesar grupos y horarios
+        // CAMBIO: Query sin mes y año
+        const placeholdersMensualidades = mensualidadesData.map(() => '(?, ?, ?, ?, ?, ?, ?)').join(',');
+        const flatValuesMensualidades = mensualidadesData.flat();
+
+        const [mensualidadesResult] = await connection.query(`
+            INSERT INTO mensualidades (
+                inscripcion_id, fecha_inicio, fecha_fin,
+                monto_total, monto_pagado, descuento_aplicado, metodo_pago
+            ) VALUES ${placeholdersMensualidades}
+        `, flatValuesMensualidades);
+
+        const firstMensualidadId = mensualidadesResult.insertId;
+
+        // Insertar detalles de transacción
+        const detallesCompletos = detallesTransaccionData.map((detalle, index) => [
+            ...detalle,
+            firstMensualidadId + index,
+            'mensualidad'
+        ]);
+
+        const placeholdersDetalles = detallesCompletos.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?)').join(',');
+        const flatValuesDetalles = detallesCompletos.flat();
+
+        await connection.query(`
+            INSERT INTO transaccion_detalles (
+                transaccion_id, concepto, cantidad, precio_unitario,
+                subtotal, descuento, total, referencia_id, referencia_tipo
+            ) VALUES ${placeholdersDetalles}
+        `, flatValuesDetalles);
+
+        // CAMBIO PRINCIPAL: Procesar grupos y horarios por cada mes
+        const gruposHorariosData = [];
+        const todasLasClases = new Map();
+
+        for (let i = 0; i < mensualidades.length; i++) {
+            const mensualidad = mensualidades[i];
+            const mensualidadId = firstMensualidadId + i;
+            
+            const fechaInicio = DateTime.fromISO(mensualidad.fecha_inicio);
+            const fechaFin = DateTime.fromISO(mensualidad.fecha_fin);
+
+            // NUEVO: Generar todos los meses que abarca esta mensualidad
+            const mesesAbarcados = this.generarMesesEnPeriodo(fechaInicio, fechaFin);
+            
+            console.log(`Mensualidad ${mensualidadId} abarca meses:`, mesesAbarcados);
+
             for (const grupo of mensualidad.grupos) {
                 for (const horario of grupo.horarios) {
-                    // Registrar relación mensualidad-grupo-horario
-                    await connection.query(`
-                        INSERT INTO mensualidad_grupos (
-                            mensualidad_id,
-                            grupo_id,
-                            horario_id
-                        ) VALUES (?, ?, ?)
-                    `, [mensualidadId, grupo.grupo_id, horario.horario_id]);
-
-                    // Generar clases para el período
-                    const clasesGeneradas = await clasesService.generarClasesParaPeriodo(
-                        connection,
-                        horario.horario_id,
-                        mensualidad.fecha_inicio,
-                        mensualidad.fecha_fin
-                    );
-
-                    // Crear registros de asistencia para cada clase
-                    for (const claseId of clasesGeneradas) {
-                        await asistenciasService.crearRegistroAsistencia(
-                            connection,
-                            alumno_id,
-                            claseId,
-                            mensualidadId
-                        );
+                    // CAMBIO CRÍTICO: Crear un registro por cada mes que abarca
+                    for (const mesInfo of mesesAbarcados) {
+                        gruposHorariosData.push([
+                            mensualidadId, 
+                            grupo.grupo_id, 
+                            horario.horario_id, 
+                            mesInfo.mes, 
+                            mesInfo.year
+                        ]);
                     }
+
+                    // Para clases, mantener lógica existente
+                    const horarioKey = horario.horario_id;
+                    if (!todasLasClases.has(horarioKey)) {
+                        todasLasClases.set(horarioKey, {
+                            horario_id: horario.horario_id,
+                            periodos: [],
+                            alumnos_mensualidades: []
+                        });
+                    }
+
+                    todasLasClases.get(horarioKey).periodos.push({
+                        fecha_inicio: mensualidad.fecha_inicio,
+                        fecha_fin: mensualidad.fecha_fin
+                    });
+
+                    todasLasClases.get(horarioKey).alumnos_mensualidades.push({
+                        alumno_id,
+                        mensualidad_id: mensualidadId
+                    });
                 }
             }
 
             mensualidadesCreadas.push({
                 mensualidad_id: mensualidadId,
-                mes,
-                year,
                 fecha_inicio: mensualidad.fecha_inicio,
                 fecha_fin: mensualidad.fecha_fin,
                 monto: mensualidad.monto_total,
-                grupos: mensualidad.grupos
+                grupos: mensualidad.grupos,
+                meses_abarcados: mesesAbarcados // NUEVO: información de meses
             });
+        }
+
+        // CAMBIO: Insertar con mes y año
+        if (gruposHorariosData.length > 0) {
+            const placeholdersGrupos = gruposHorariosData.map(() => '(?, ?, ?, ?, ?)').join(',');
+            const flatValuesGrupos = gruposHorariosData.flat();
+
+            console.log('Insertando relaciones grupo-horario-mes:', gruposHorariosData.length);
+
+            await connection.query(`
+                INSERT INTO mensualidad_grupos (mensualidad_id, grupo_id, horario_id, mes, year) 
+                VALUES ${placeholdersGrupos}
+            `, flatValuesGrupos);
+        }
+
+        // Resto del código para clases y asistencias permanece igual...
+        for (const [horarioId, datosHorario] of todasLasClases) {
+            let fechaMinima = datosHorario.periodos[0].fecha_inicio;
+            let fechaMaxima = datosHorario.periodos[0].fecha_fin;
+
+            for (const periodo of datosHorario.periodos) {
+                if (periodo.fecha_inicio < fechaMinima) fechaMinima = periodo.fecha_inicio;
+                if (periodo.fecha_fin > fechaMaxima) fechaMaxima = periodo.fecha_fin;
+            }
+
+            const clasesGeneradas = await clasesService.generarClasesParaPeriodo(
+                connection,
+                horarioId,
+                fechaMinima,
+                fechaMaxima
+            );
+
+            for (const alumnoMensualidad of datosHorario.alumnos_mensualidades) {
+                await asistenciasService.crearRegistrosAsistenciaEnLote(
+                    connection,
+                    alumnoMensualidad.alumno_id,
+                    clasesGeneradas,
+                    alumnoMensualidad.mensualidad_id
+                );
+            }
         }
 
         return mensualidadesCreadas;
     }
 
-    // Obtener mensualidades por alumno
+    // MODIFICACIÓN: Método getByAlumno - Cambiar joins por nueva estructura
     static async getByAlumno(alumno_id, filters = {}) {
         try {
             let whereClause = 'WHERE m.inscripcion_id IN (SELECT id FROM inscripciones WHERE alumno_id = ?)';
             let params = [alumno_id];
+            let havingClause = '';
 
             if (filters.year) {
-                whereClause += ' AND m.year = ?';
+                havingClause += havingClause ? ' AND ' : ' HAVING ';
+                havingClause += 'FIND_IN_SET(?, GROUP_CONCAT(DISTINCT mg.year))';
                 params.push(filters.year);
             }
 
             if (filters.mes) {
-                whereClause += ' AND m.mes = ?';
+                havingClause += havingClause ? ' AND ' : ' HAVING ';
+                havingClause += 'FIND_IN_SET(?, GROUP_CONCAT(DISTINCT mg.mes))';
                 params.push(filters.mes);
             }
 
@@ -205,15 +269,19 @@ class mensualidadesModel {
                         WHEN m.pagada = 1 AND CURDATE() > m.fecha_fin THEN 'FINALIZADA'
                         WHEN m.pagada = 1 AND CURDATE() < m.fecha_inicio THEN 'PENDIENTE'
                         ELSE 'CANCELADA'
-                    END as estado_mensualidad
+                    END as estado_mensualidad,
+                    GROUP_CONCAT(DISTINCT CONCAT(mg.mes, '-', mg.year) ORDER BY mg.year, mg.mes) as meses_abarcados
                 FROM mensualidades m
                 INNER JOIN inscripciones i ON m.inscripcion_id = i.id
                 INNER JOIN alumnos a ON i.alumno_id = a.id
+                LEFT JOIN mensualidad_grupos mg ON m.id = mg.mensualidad_id
                 ${whereClause}
-                ORDER BY m.year DESC, m.mes DESC, m.created_at DESC
+                GROUP BY m.id
+                ${havingClause}
+                ORDER BY m.fecha_inicio DESC, m.created_at DESC
             `, params);
 
-            // Obtener grupos para cada mensualidad
+            // Obtener grupos para cada mensualidad (CAMBIO: incluir mes y año)
             for (let mensualidad of rows) {
                 const [grupos] = await db.query(`
                     SELECT 
@@ -224,13 +292,14 @@ class mensualidadesModel {
                         h.dia,
                         h.hora_inicio,
                         h.hora_fin,
-                        CONCAT(p.nombre, ' ', p.apellido) as nombre_profesor
+                        CONCAT(p.nombre, ' ', p.apellido) as nombre_profesor,
+                        CONCAT(mg.mes, '-', mg.year) as periodo
                     FROM mensualidad_grupos mg
                     INNER JOIN grupos g ON mg.grupo_id = g.id
                     INNER JOIN horarios h ON mg.horario_id = h.id
-                    LEFT JOIN profesores p ON h.profesor_id = p.id
+                    LEFT JOIN profesores p ON h.profesor_id = p.id AND p.deleted = 0
                     WHERE mg.mensualidad_id = ?
-                    ORDER BY 
+                    ORDER BY mg.year, mg.mes,
                         CASE h.dia
                             WHEN 'lunes' THEN 1
                             WHEN 'martes' THEN 2
@@ -252,7 +321,7 @@ class mensualidadesModel {
         }
     }
 
-    // Obtener mensualidades por inscripción
+    // MODIFICACIÓN: Método getByInscripcion
     static async getByInscripcion(inscripcion_id) {
         try {
             const [rows] = await db.query(`
@@ -263,10 +332,13 @@ class mensualidadesModel {
                         WHEN m.pagada = 1 AND CURDATE() > m.fecha_fin THEN 'FINALIZADA'
                         WHEN m.pagada = 1 AND CURDATE() < m.fecha_inicio THEN 'PENDIENTE'
                         ELSE 'CANCELADA'
-                    END as estado_mensualidad
+                    END as estado_mensualidad,
+                    GROUP_CONCAT(DISTINCT CONCAT(mg.mes, '-', mg.year) ORDER BY mg.year, mg.mes) as meses_abarcados
                 FROM mensualidades m
+                LEFT JOIN mensualidad_grupos mg ON m.id = mg.mensualidad_id
                 WHERE m.inscripcion_id = ?
-                ORDER BY m.year DESC, m.mes DESC
+                GROUP BY m.id
+                ORDER BY m.fecha_inicio DESC
             `, [inscripcion_id]);
 
             // Obtener grupos para cada mensualidad
@@ -280,12 +352,14 @@ class mensualidadesModel {
                         h.dia,
                         h.hora_inicio,
                         h.hora_fin,
-                        CONCAT(p.nombre, ' ', p.apellido) as nombre_profesor
+                        CONCAT(p.nombre, ' ', p.apellido) as nombre_profesor,
+                        CONCAT(mg.mes, '-', mg.year) as periodo
                     FROM mensualidad_grupos mg
                     INNER JOIN grupos g ON mg.grupo_id = g.id
                     INNER JOIN horarios h ON mg.horario_id = h.id
-                    LEFT JOIN profesores p ON h.profesor_id = p.id
+                    LEFT JOIN profesores p ON h.profesor_id = p.id AND p.deleted = 0
                     WHERE mg.mensualidad_id = ?
+                    ORDER BY mg.year, mg.mes, h.hora_inicio
                 `, [mensualidad.id]);
 
                 mensualidad.grupos = grupos;
@@ -297,7 +371,6 @@ class mensualidadesModel {
         }
     }
 
-    // Cancelar mensualidad
     static async cancelar(mensualidad_id, motivo = null) {
         const connection = await db.getConnection();
         try {
@@ -357,7 +430,6 @@ class mensualidadesModel {
         }
     }
 
-    // Generar folio único
     static async generateFolio(connection) {
         const year = new Date().getFullYear();
         const [result] = await connection.query(`
@@ -370,7 +442,6 @@ class mensualidadesModel {
         return maxFolio + 1;
     }
 
-    // Obtener nombre del mes
     static getMonthName(mes) {
         const meses = [
             'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -379,16 +450,17 @@ class mensualidadesModel {
         return meses[mes - 1] || 'Mes desconocido';
     }
 
-    // Verificar mensualidades duplicadas
+    // Método verificarDuplicada
     static async verificarDuplicada(inscripcion_id, mes, year) {
         try {
             const [rows] = await db.query(`
-                SELECT id
-                FROM mensualidades
-                WHERE inscripcion_id = ? 
-                AND mes = ? 
-                AND year = ?
-                AND pagada = 1
+                SELECT DISTINCT m.id
+                FROM mensualidades m
+                INNER JOIN mensualidad_grupos mg ON m.id = mg.mensualidad_id
+                WHERE m.inscripcion_id = ? 
+                AND mg.mes = ? 
+                AND mg.year = ?
+                AND m.pagada = 1
                 LIMIT 1
             `, [inscripcion_id, mes, year]);
 
@@ -398,11 +470,13 @@ class mensualidadesModel {
         }
     }
 
-    // Obtener estadísticas de mensualidades
+
+    // MODIFICACIÓN: Método getEstadisticas
     static async getEstadisticas(year = null) {
         try {
             const currentYear = year || new Date().getFullYear();
 
+            // Estadísticas generales (basadas en fecha_inicio)
             const [stats] = await db.query(`
                 SELECT 
                     COUNT(*) as total_mensualidades,
@@ -411,19 +485,21 @@ class mensualidadesModel {
                     SUM(CASE WHEN pagada = 1 AND CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 1 ELSE 0 END) as mensualidades_activas,
                     SUM(monto_total) as ingresos_total_mensualidades,
                     AVG(monto_total) as promedio_monto_mensualidad
-                FROM mensualidades
-                WHERE year = ?
+                FROM mensualidades m
+                WHERE YEAR(m.fecha_inicio) = ?
             `, [currentYear]);
 
+            // Estadísticas por mes (basadas en mensualidad_grupos)
             const [monthlyStats] = await db.query(`
                 SELECT 
-                    mes,
-                    COUNT(*) as mensualidades_mes,
-                    SUM(monto_total) as ingresos_mes
-                FROM mensualidades
-                WHERE year = ? AND pagada = 1
-                GROUP BY mes
-                ORDER BY mes
+                    mg.mes,
+                    COUNT(DISTINCT m.id) as mensualidades_mes,
+                    SUM(m.monto_total) as ingresos_mes
+                FROM mensualidades m
+                INNER JOIN mensualidad_grupos mg ON m.id = mg.mensualidad_id
+                WHERE mg.year = ? AND m.pagada = 1
+                GROUP BY mg.mes
+                ORDER BY mg.mes
             `, [currentYear]);
 
             return {
@@ -437,7 +513,6 @@ class mensualidadesModel {
         }
     }
 
-    // Obtener mensualidades activas por grupo
     static async getActivasByGrupo(grupo_id) {
         try {
             const [rows] = await db.query(`
@@ -462,7 +537,6 @@ class mensualidadesModel {
         }
     }
 
-    // Obtener mensualidades próximas a vencer
     static async getProximasAVencer(dias = 7) {
         try {
             const [rows] = await db.query(`
@@ -489,6 +563,23 @@ class mensualidadesModel {
         } catch (error) {
             throw error;
         }
+    }
+
+    // NUEVO MÉTODO: Generar meses en un período
+    static generarMesesEnPeriodo(fechaInicio, fechaFin) {
+        const meses = [];
+        let fechaActual = fechaInicio.startOf('month');
+        const fechaFinMes = fechaFin.startOf('month');
+
+        while (fechaActual <= fechaFinMes) {
+            meses.push({
+                mes: fechaActual.month,
+                year: fechaActual.year
+            });
+            fechaActual = fechaActual.plus({ months: 1 });
+        }
+
+        return meses;
     }
 }
 

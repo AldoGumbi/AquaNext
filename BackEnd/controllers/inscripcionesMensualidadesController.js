@@ -1,11 +1,11 @@
-// controllers/inscripcionesController.js
+// controllers/inscripcionesController.js - Optimizado
 import inscripcionesModel from '../models/inscripciones.js';
 import mensualidadesModel from '../models/mensualidades.js';
 import tarifasModel from '../models/tarifas.js';
-// import transaccionesModel from '../models/transacciones.js';
 import gruposModel from '../models/groups.js';
 import clasesService from '../services/clasesService.js';
 import asistenciasService from '../services/asistenciasService.js';
+import { executeWithRetry } from '../config/db.js';
 
 // === CONTROLADORES DE INSCRIPCIONES ===
 
@@ -28,7 +28,7 @@ export const createInscripcionSola = async (req, res) => {
             });
         }
 
-        // Verificar si ya tiene una inscripción vigente para este año
+        // Verificar si ya tiene una inscripción vigente
         const inscripcionVigente = await inscripcionesModel.getInscripcionVigente(alumno_id);
         if (inscripcionVigente) {
             return res.status(400).json({
@@ -82,7 +82,7 @@ export const createInscripcionConMensualidades = async (req, res) => {
             });
         }
 
-        // Verificar inscripción vigente
+        // OPTIMIZACIÓN: Verificar inscripción duplicada antes de la transacción
         const inscripcionVigente = await inscripcionesModel.getInscripcionVigente(alumno_id);
         if (inscripcionVigente) {
             return res.status(400).json({
@@ -112,13 +112,15 @@ export const createInscripcionConMensualidades = async (req, res) => {
             }
         }
 
-        // Crear inscripción con mensualidades
-        const resultado = await inscripcionesModel.createInscripcionConMensualidades({
-            alumno_id,
-            inscripcion,
-            mensualidades,
-            metodo_pago,
-            usuario_id
+        // OPTIMIZACIÓN: Usar executeWithRetry para transacciones pesadas
+        const resultado = await executeWithRetry(async (connection) => {
+            return await inscripcionesModel.createInscripcionConMensualidades({
+                alumno_id,
+                inscripcion,
+                mensualidades,
+                metodo_pago,
+                usuario_id
+            });
         });
 
         res.status(201).json({
@@ -129,6 +131,15 @@ export const createInscripcionConMensualidades = async (req, res) => {
 
     } catch (error) {
         console.error('Error al crear inscripción con mensualidades:', error);
+        
+        if (error.code === 'ER_LOCK_WAIT_TIMEOUT' || error.code === 'ER_LOCK_DEADLOCK') {
+            return res.status(503).json({
+                data: false,
+                message: 'El servidor está ocupado. Intente nuevamente en unos momentos.',
+                error: true
+            });
+        }
+        
         res.status(500).json({
             data: false,
             message: 'Error interno al crear inscripción con mensualidades',
@@ -137,6 +148,7 @@ export const createInscripcionConMensualidades = async (req, res) => {
     }
 };
 
+// OPTIMIZADO: createMensualidadSola con reintentos y mejor manejo de errores
 export const createMensualidadSola = async (req, res) => {
     try {
         const {
@@ -155,7 +167,7 @@ export const createMensualidadSola = async (req, res) => {
             });
         }
 
-        // Verificar inscripción vigente
+        // OPTIMIZACIÓN: Verificar inscripción vigente antes de la transacción
         const inscripcionVigente = await inscripcionesModel.getInscripcionVigente(alumno_id);
         if (!inscripcionVigente) {
             return res.status(400).json({
@@ -165,25 +177,36 @@ export const createMensualidadSola = async (req, res) => {
             });
         }
 
-        // Validar mensualidades
-        for (let i = 0; i < mensualidades.length; i++) {
-            const mensualidad = mensualidades[i];
+        // OPTIMIZACIÓN: Validar grupos y horarios existan antes de la transacción
+        const gruposIds = [];
+        const horariosIds = [];
+        
+        for (const mensualidad of mensualidades) {
             if (!mensualidad.grupos || !Array.isArray(mensualidad.grupos) || mensualidad.grupos.length === 0) {
                 return res.status(400).json({
                     data: false,
-                    message: `Mensualidad ${i + 1}: Debe especificar al menos un grupo`,
+                    message: 'Debe especificar al menos un grupo para cada mensualidad',
                     error: true
                 });
             }
+
+            for (const grupo of mensualidad.grupos) {
+                gruposIds.push(grupo.grupo_id);
+                for (const horario of grupo.horarios) {
+                    horariosIds.push(horario.horario_id);
+                }
+            }
         }
 
-        // Crear mensualidades
-        const resultado = await mensualidadesModel.createMensualidadesSolas({
-            alumno_id,
-            inscripcion_id: inscripcionVigente.id,
-            mensualidades,
-            metodo_pago,
-            usuario_id
+        // OPTIMIZACIÓN: Usar executeWithRetry para transacciones pesadas
+        const resultado = await executeWithRetry(async (connection) => {
+            return await mensualidadesModel.createMensualidadesSolas({
+                alumno_id,
+                inscripcion_id: inscripcionVigente.id,
+                mensualidades,
+                metodo_pago,
+                usuario_id
+            });
         });
 
         res.status(201).json({
@@ -194,6 +217,16 @@ export const createMensualidadSola = async (req, res) => {
 
     } catch (error) {
         console.error('Error al crear mensualidades:', error);
+        
+        // Manejo específico de errores de timeout o deadlock
+        if (error.code === 'ER_LOCK_WAIT_TIMEOUT' || error.code === 'ER_LOCK_DEADLOCK') {
+            return res.status(503).json({
+                data: false,
+                message: 'El servidor está ocupado procesando otras transacciones. Intente nuevamente en unos momentos.',
+                error: true
+            });
+        }
+        
         res.status(500).json({
             data: false,
             message: 'Error interno al crear las mensualidades',
