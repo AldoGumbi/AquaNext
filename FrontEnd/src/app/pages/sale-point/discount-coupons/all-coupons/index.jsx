@@ -19,7 +19,7 @@ import { Page } from "components/shared/Page";
 import { useLockScrollbar, useDidUpdate, useLocalStorage } from "hooks";
 import { fuzzyFilter } from "utils/react-table/fuzzyFilter";
 import { useSkipper } from "utils/react-table/useSkipper";
-// import { Toolbar } from "./Toolbar";
+import { Toolbar } from "./Toolbar";
 import { columns } from "./columns";
 import { PaginationSection } from "components/shared/table/PaginationSection";
 import { SelectedRowsActions } from "./SelectedRowsActions";
@@ -56,7 +56,6 @@ export default function OrdersDatatableV1() {
     setDiscounts(coupons);
   }, [coupons]);
 
-  console.log("Coupons:", discounts);
   
   const [tableSettings, setTableSettings] = useState({
     enableFullScreen: false,
@@ -155,12 +154,8 @@ export default function OrdersDatatableV1() {
               "fixed inset-0 z-61 bg-white pt-3 dark:bg-dark-900",
           )}
         >
-          <div className="min-w-0 m-6">
-            <h2 className="truncate text-xl font-medium tracking-wide text-gray-800 dark:text-dark-50">
-              Códigos de descuento
-            </h2>
-          </div>
-          {/*<Toolbar table={table} />*/}
+
+          <Toolbar table={table} />
           <div
             className={clsx(
               "transition-content flex grow flex-col pt-3",

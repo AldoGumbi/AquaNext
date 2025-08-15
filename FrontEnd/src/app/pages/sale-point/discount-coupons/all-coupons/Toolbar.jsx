@@ -2,8 +2,7 @@
 import {
   ChevronUpDownIcon,
   MagnifyingGlassIcon,
-  PrinterIcon,
-  MapPinIcon,
+  ReceiptPercentIcon,
 } from "@heroicons/react/24/outline";
 import { TbUpload } from "react-icons/tb";
 import clsx from "clsx";
@@ -15,21 +14,23 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
-// import { TbCurrencyDollar } from "react-icons/tb";
 import PropTypes from "prop-types";
 
 import { Link } from "react-router";
 
 // Local Imports
-import { DateFilter } from "components/shared/table/DateFilter";
-import { FacedtedFilter } from "components/shared/table/FacedtedFilter";
-// import { RangeFilter } from "components/shared/table/RangeFilter";
 import { Button, Input } from "components/ui";
 import { TableConfig } from "./TableConfig";
 import { useBreakpointsContext } from "app/contexts/breakpoint/context";
-import { orderStatusOptions } from "./data";
+import {toast} from "sonner";
 
 // ----------------------------------------------------------------------
+
+function ExportToCsv(){
+  // Aquí va la lógica para exportar a CSV
+  console.log("Exportando a CSV...");
+  toast.info("Funcionalidad en desarrollo");
+}
 
 export function Toolbar({ table }) {
   const { isXs } = useBreakpointsContext();
@@ -82,63 +83,11 @@ export function Toolbar({ table }) {
                   </Link>
                 )}
               </MenuItem>
-              <MenuItem>
-                {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>Share</span>
-                  </button>
-                )}
-              </MenuItem>
-              <MenuItem>
-                {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>Print</span>
-                  </button>
-                )}
-              </MenuItem>
               <hr className="mx-3 my-1.5 h-px border-gray-150 dark:border-dark-500" />
               <MenuItem>
                 {({ focus }) => (
                   <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>Import Orders</span>
-                  </button>
-                )}
-              </MenuItem>
-              <hr className="mx-3 my-1.5 h-px border-gray-150 dark:border-dark-500" />
-              <MenuItem>
-                {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>Exportar PDF</span>
-                  </button>
-                )}
-              </MenuItem>
-              <MenuItem>
-                {({ focus }) => (
-                  <button
+                    onClick={ExportToCsv}
                     className={clsx(
                       "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
                       focus &&
@@ -149,19 +98,6 @@ export function Toolbar({ table }) {
                   </button>
                 )}
               </MenuItem>
-              <MenuItem>
-                {({ focus }) => (
-                  <button
-                    className={clsx(
-                      "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                      focus &&
-                        "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                    )}
-                  >
-                    <span>Save Table as View</span>
-                  </button>
-                )}
-              </MenuItem>
             </Transition>
           </Menu>
         ) : (
@@ -169,9 +105,11 @@ export function Toolbar({ table }) {
             <Button
               variant="outlined"
               className="h-8 space-x-2 rounded-md px-3 text-xs "
+              component={Link}
+              to="/sale-point/discount-coupons/add-coupon"
             >
-              <PrinterIcon className="size-4" />
-              <span>Imprimir</span>
+              <ReceiptPercentIcon className="size-4" />
+              <span>Crear codigo</span>
             </Button>
 
             <Menu
@@ -184,7 +122,7 @@ export function Toolbar({ table }) {
                 className="h-8 space-x-2 rounded-md px-3 text-xs "
               >
                 <TbUpload className="size-4" />
-                <span>Export</span>
+                <span>Reportes</span>
                 <ChevronUpDownIcon className="size-4" />
               </MenuButton>
               <Transition
@@ -200,111 +138,22 @@ export function Toolbar({ table }) {
                 <MenuItem>
                   {({ focus }) => (
                     <button
+                      onClick={ExportToCsv}
                       className={clsx(
                         "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
                         focus &&
                           "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
                       )}
                     >
-                      <span>Export as PDF</span>
-                    </button>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>Export as CSV</span>
+                      <span>Exportar a CSV</span>
                     </button>
                   )}
                 </MenuItem>
               </Transition>
             </Menu>
 
-            <Menu
-              as="div"
-              className="relative inline-block whitespace-nowrap text-left"
-            >
-              <MenuButton
-                as={Button}
-                variant="outlined"
-                className="h-8 shrink-0 rounded-md px-2.5"
-              >
-                <EllipsisHorizontalIcon className="size-4.5" />
-              </MenuButton>
-              <Transition
-                as={MenuItems}
-                enter="transition ease-out"
-                enterFrom="opacity-0 translate-y-2"
-                enterTo="opacity-100 translate-y-0"
-                leave="transition ease-in"
-                leaveFrom="opacity-100 translate-y-0"
-                leaveTo="opacity-0 translate-y-2"
-                className="absolute z-100 mt-1.5 min-w-[10rem] whitespace-nowrap rounded-lg border border-gray-300 bg-white py-1 shadow-lg shadow-gray-200/50 outline-hidden focus-visible:outline-hidden dark:border-dark-500 dark:bg-dark-700 dark:shadow-none ltr:right-0 rtl:left-0"
-              >
-                <MenuItem>
-                  {({ focus }) => (
-                    <Link to="/sale-point/discount-coupons/add-coupon">
-                      <button
-                        className={clsx(
-                          "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                          focus &&
-                            "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                        )}
-                      >
-                        <span>Crear código</span>
-                      </button>
-                    </Link>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>Share Orders</span>
-                    </button>
-                  )}
-                </MenuItem>
-                <hr className="mx-3 my-1.5 h-px border-gray-150 dark:border-dark-500" />
-                <MenuItem>
-                  {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>Import Orders</span>
-                    </button>
-                  )}
-                </MenuItem>
-                <hr className="mx-3 my-1.5 h-px border-gray-150 dark:border-dark-500" />
-                <MenuItem>
-                  {({ focus }) => (
-                    <button
-                      className={clsx(
-                        "flex h-9 w-full items-center px-3 tracking-wide outline-hidden transition-colors",
-                        focus &&
-                          "bg-gray-100 text-gray-800 dark:bg-dark-600 dark:text-dark-100",
-                      )}
-                    >
-                      <span>Save Table as View</span>
-                    </button>
-                  )}
-                </MenuItem>
-              </Transition>
-            </Menu>
+
+
           </div>
         )}
       </div>
@@ -326,7 +175,6 @@ export function Toolbar({ table }) {
               isFullScreenEnabled ? "px-4 sm:px-5" : "px-(--margin-x)",
             )}
           >
-            <Filters table={table} />
           </div>
         </>
       ) : (
@@ -343,9 +191,7 @@ export function Toolbar({ table }) {
         >
           <div className="flex shrink-0 space-x-2 ">
             <SearchInput table={table} />
-            <Filters table={table} />
           </div>
-
           <TableConfig table={table} />
         </div>
       )}
@@ -360,72 +206,11 @@ function SearchInput({ table }) {
       onChange={(e) => table.setGlobalFilter(e.target.value)}
       prefix={<MagnifyingGlassIcon className="size-4" />}
       classNames={{
-        input: "h-8 text-xs ring-primary-500/50 focus:ring-3",
+        input: "h-8 text-xs w-auto ring-primary-500/50 focus:ring-3",
         root: "shrink-0",
       }}
-      placeholder="Search ID, Customer..."
+      placeholder="Nombre, Codigo, Fecha"
     />
-  );
-}
-
-function Filters({ table }) {
-  const isFiltered = table.getState().columnFilters.length > 0;
-  return (
-    <>
-      {table.getColumn("descuento") && (
-        <FacedtedFilter
-        options={orderStatusOptions}
-          column={table.getColumn("descuento")}
-          title="Descuento"
-          Icon={MapPinIcon}
-        />
-      )}
-
-     {table.getColumn("codeName") && (
-        <FacedtedFilter
-          options={orderStatusOptions}
-          column={table.getColumn("codeName")}
-          title="Nombre / Código"
-          Icon={MapPinIcon}
-        />
-      )}
-      {table.getColumn("created_at") && (
-        <DateFilter
-          column={table.getColumn("created_at")}
-          title="Validez"
-          config={{
-            // maxDate: new Date().fp_incr(1),  
-            mode: "range",
-          }}
-        />
-      )}
-
-      {/* {table.getColumn("total") && (
-        <RangeFilter
-          column={table.getColumn("total")}
-          title="Total Amount"
-          Icon={TbCurrencyDollar}
-          MinPrefixIcon={TbCurrencyDollar}
-          MaxPrefixIcon={TbCurrencyDollar}
-          buttonText={({ min, max }) => (
-            <>
-              {min && <>From ${min}</>}
-              {min && max && " - "}
-              {max && <>To ${max}</>}
-            </>
-          )}
-        />
-      )} */}
-
-      {isFiltered && (
-        <Button
-          onClick={() => table.resetColumnFilters()}
-          className="h-8 whitespace-nowrap px-2.5 text-xs"
-        >
-          Reset Filters
-        </Button>
-      )}
-    </>
   );
 }
 
@@ -434,9 +219,5 @@ Toolbar.propTypes = {
 };
 
 SearchInput.propTypes = {
-  table: PropTypes.object,
-};
-
-Filters.propTypes = {
   table: PropTypes.object,
 };

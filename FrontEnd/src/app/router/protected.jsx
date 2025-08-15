@@ -100,7 +100,6 @@ const protectedRoutes = {
                     Component: (await import("app/pages/sale-point/cash-register/caja-status")).default,
                   }),
                 },
-
               ],
             },
             // DISCOUNT COUPONS

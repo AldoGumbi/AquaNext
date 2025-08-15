@@ -13,7 +13,7 @@ import { Fragment } from "react";
 // Local Imports
 import { Button } from "components/ui";
 // import { useDisclosure } from "hooks";
-
+import { Link } from "react-router";
 // ----------------------------------------------------------------------
 
 export function CashWithrawalActionsModal({ isOpen, onClose }) {
@@ -71,11 +71,11 @@ export function CashWithrawalActionsModal({ isOpen, onClose }) {
                   <Button className="" onClick={onClose}>
                     Cerrar
                   </Button>
-                  <a href="/sale-point/cash-register/home">
-                  <Button color="primary" className="bg-blue-500" onClick={onClose}>
-                    Abrir caja
-                  </Button>
-                  </a>
+                  <Link to="/sale-point/cash-register/home">
+                    <Button color="primary" className="bg-blue-500" onClick={onClose}>
+                      Abrir caja
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </DialogPanel>
