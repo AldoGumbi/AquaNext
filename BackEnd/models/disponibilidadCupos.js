@@ -5,6 +5,10 @@ class disponibilidadCuposModel {
     // Obtener disponibilidad de cupos por mes específico
     static async getDisponibilidadPorMes(year, mes) {
         try {
+            // Calcular año y mes anterior
+            const mesAnterior = mes === 1 ? 12 : mes - 1;
+            const yearAnterior = mes === 1 ? year - 1 : year;
+
             const [rows] = await db.query(`
                 SELECT 
                     g.id as grupo_id,
@@ -27,12 +31,63 @@ class disponibilidadCuposModel {
                         WHEN COUNT(DISTINCT mg.mensualidad_id) >= COALESCE(h.cupo_maximo, 16) THEN 'Lleno'
                         ELSE 'Parcialmente ocupado'
                     END as estado_disponibilidad,
-                    CONCAT(p.nombre, ' ', p.apellido) as profesor_asignado
+                    CONCAT(p.nombre, ' ', p.apellido) as profesor_asignado,
+                    
+                    -- Información de alumnos actuales
+                    JSON_ARRAYAGG(
+                        CASE 
+                            WHEN mg.mensualidad_id IS NOT NULL THEN
+                                JSON_OBJECT(
+                                    'alumno_id', a.id,
+                                    'nombre_completo', CONCAT(a.nombre, ' ', a.apellido_paterno, ' ', COALESCE(a.apellido_materno, '')),
+                                    'mensualidad_id', mg.mensualidad_id,
+                                    'fecha_inicio', m.fecha_inicio,
+                                    'fecha_fin', m.fecha_fin,
+                                    'pagada', m.pagada,
+                                    'tipo_pago', 'actual'
+                                )
+                            ELSE NULL
+                        END
+                    ) as alumnos_actuales,
+                    
+                    -- Alumnos del mes anterior que no pagaron el actual
+                    (
+                        SELECT JSON_ARRAYAGG(
+                            JSON_OBJECT(
+                                'alumno_id', a_prev.id,
+                                'nombre_completo', CONCAT(a_prev.nombre, ' ', a_prev.apellido_paterno, ' ', COALESCE(a_prev.apellido_materno, '')),
+                                'mensualidad_id', mg_prev.mensualidad_id,
+                                'fecha_inicio', m_prev.fecha_inicio,
+                                'fecha_fin', m_prev.fecha_fin,
+                                'tipo_pago', 'mes_anterior'
+                            )
+                        )
+                        FROM mensualidad_grupos mg_prev
+                        INNER JOIN mensualidades m_prev ON mg_prev.mensualidad_id = m_prev.id
+                        INNER JOIN inscripciones i_prev ON m_prev.inscripcion_id = i_prev.id
+                        INNER JOIN alumnos a_prev ON i_prev.alumno_id = a_prev.id
+                        WHERE mg_prev.horario_id = h.id 
+                            AND mg_prev.year = ?
+                            AND mg_prev.mes = ?
+                            AND a_prev.deleted = 0
+                            AND a_prev.id NOT IN (
+                                SELECT DISTINCT i_curr.alumno_id
+                                FROM mensualidad_grupos mg_curr
+                                INNER JOIN mensualidades m_curr ON mg_curr.mensualidad_id = m_curr.id
+                                INNER JOIN inscripciones i_curr ON m_curr.inscripcion_id = i_curr.id
+                                WHERE mg_curr.horario_id = h.id 
+                                    AND mg_curr.year = ? 
+                                    AND mg_curr.mes = ?
+                                    AND i_curr.alumno_id IS NOT NULL
+                            )
+                    ) as alumnos_mes_anterior
                 FROM grupos g
                 INNER JOIN horarios h ON g.id = h.grupo_id
                 LEFT JOIN mensualidad_grupos mg ON h.id = mg.horario_id 
                     AND mg.year = ? AND mg.mes = ?
                 LEFT JOIN mensualidades m ON mg.mensualidad_id = m.id
+                LEFT JOIN inscripciones i ON m.inscripcion_id = i.id
+                LEFT JOIN alumnos a ON i.alumno_id = a.id AND a.deleted = 0
                 LEFT JOIN profesores p ON h.profesor_id = p.id AND p.deleted = 0
                 WHERE g.deleted = 0 
                     AND g.activo = 1
@@ -50,10 +105,18 @@ class disponibilidadCuposModel {
                         WHEN 'domingo' THEN 7
                     END,
                     h.hora_inicio
-            `, [year, mes]);
+            `, [
+                yearAnterior,  // Para mg_prev.year
+                mesAnterior,   // Para mg_prev.mes
+                year,          // Para mg_curr.year (subconsulta NOT IN)
+                mes,           // Para mg_curr.mes (subconsulta NOT IN)
+                year,          // Para mg.year (query principal)
+                mes            // Para mg.mes (query principal)
+            ]);
 
             return rows;
         } catch (error) {
+            console.error('Error en getDisponibilidadPorMes:', error);
             throw error;
         }
     }
@@ -76,7 +139,7 @@ class disponibilidadCuposModel {
             }
 
             // Crear la subconsulta UNION para los meses del rango
-            const mesesUnion = mesesRango.map((m, index) => 
+            const mesesUnion = mesesRango.map((m) => 
                 `SELECT ${m.year} as year, ${m.mes} as mes`
             ).join(' UNION ALL ');
 
@@ -114,7 +177,19 @@ class disponibilidadCuposModel {
                         WHEN COALESCE(COUNT(DISTINCT mg.mensualidad_id), 0) = 0 THEN 'Disponible'
                         WHEN COALESCE(COUNT(DISTINCT mg.mensualidad_id), 0) >= COALESCE(h.cupo_maximo, 16) THEN 'Lleno'
                         ELSE 'Parcialmente ocupado'
-                    END as estado_disponibilidad
+                    END as estado_disponibilidad,
+                    -- Información de alumnos para cada mes
+                    JSON_ARRAYAGG(
+                        CASE 
+                            WHEN mg.mensualidad_id IS NOT NULL THEN
+                                JSON_OBJECT(
+                                    'alumno_id', a.id,
+                                    'nombre_completo', CONCAT(a.nombre, ' ', a.apellido_paterno, ' ', COALESCE(a.apellido_materno, '')),
+                                    'mensualidad_id', mg.mensualidad_id
+                                )
+                            ELSE NULL
+                        END
+                    ) as alumnos_mes
                 FROM grupos g
                 INNER JOIN horarios h ON g.id = h.grupo_id
                 CROSS JOIN (
@@ -124,6 +199,8 @@ class disponibilidadCuposModel {
                     AND mg.year = meses_rango.year 
                     AND mg.mes = meses_rango.mes
                 LEFT JOIN mensualidades m ON mg.mensualidad_id = m.id
+                LEFT JOIN inscripciones i ON m.inscripcion_id = i.id
+                LEFT JOIN alumnos a ON i.alumno_id = a.id AND a.deleted = 0
                 WHERE g.deleted = 0 
                     AND g.activo = 1
                     AND h.deleted = 0 
@@ -134,6 +211,38 @@ class disponibilidadCuposModel {
 
             return rows;
         } catch (error) {
+            console.error('Error en getDisponibilidadPorRango:', error);
+            throw error;
+        }
+    }
+
+    // Método adicional para debugging - obtener alumnos específicos de un horario y mes
+    static async getAlumnosPorHorarioYMes(horarioId, year, mes) {
+        try {
+            const [rows] = await db.query(`
+                SELECT 
+                    a.id as alumno_id,
+                    CONCAT(a.nombre, ' ', a.apellido_paterno, ' ', COALESCE(a.apellido_materno, '')) as nombre_completo,
+                    mg.mensualidad_id,
+                    m.fecha_inicio,
+                    m.fecha_fin,
+                    m.pagada,
+                    mg.year,
+                    mg.mes
+                FROM mensualidad_grupos mg
+                INNER JOIN mensualidades m ON mg.mensualidad_id = m.id
+                INNER JOIN inscripciones i ON m.inscripcion_id = i.id
+                INNER JOIN alumnos a ON i.alumno_id = a.id
+                WHERE mg.horario_id = ?
+                    AND mg.year = ?
+                    AND mg.mes = ?
+                    AND a.deleted = 0
+                ORDER BY a.nombre, a.apellido_paterno
+            `, [horarioId, year, mes]);
+
+            return rows;
+        } catch (error) {
+            console.error('Error en getAlumnosPorHorarioYMes:', error);
             throw error;
         }
     }
