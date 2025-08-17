@@ -1,6 +1,7 @@
 // Local Imports
 import { Page } from "components/shared/Page";
 import { DisponibilidadView } from "./components";
+export { AlumnosModal } from './components/AlumnosModal';
 
 // ----------------------------------------------------------------------
 

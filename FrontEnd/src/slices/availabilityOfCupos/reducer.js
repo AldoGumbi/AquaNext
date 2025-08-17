@@ -63,13 +63,26 @@ const disponibilidadSlice = createSlice({
       }
 
       const totalGrupos = data.length;
-      const gruposDisponibles = data.filter(item => item.estado_disponibilidad === 'Disponible').length;
-      const gruposLlenos = data.filter(item => item.estado_disponibilidad === 'Lleno').length;
-      const gruposParciales = data.filter(item => item.estado_disponibilidad === 'Parcialmente ocupado').length;
+      
+      // Usar valores ajustados cuando estén disponibles
+      const gruposDisponibles = data.filter(item => {
+        const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+        return estado === 'Disponible';
+      }).length;
+      
+      const gruposLlenos = data.filter(item => {
+        const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+        return estado === 'Lleno';
+      }).length;
+      
+      const gruposParciales = data.filter(item => {
+        const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+        return estado === 'Parcialmente ocupado';
+      }).length;
       
       // Calcular promedio de ocupación de forma segura
       const sumaPorcentajes = data.reduce((sum, item) => {
-        const porcentaje = parseFloat(item.porcentaje_ocupacion) || 0;
+        const porcentaje = parseFloat(item.porcentaje_ocupacion_ajustado || item.porcentaje_ocupacion) || 0;
         return sum + porcentaje;
       }, 0);
       
@@ -96,7 +109,7 @@ const disponibilidadSlice = createSlice({
       state.currentMonth = action.payload.month;
       state.currentYear = action.payload.year;
       
-      // Calculate stats automatically
+      // Calculate stats automatically usando valores ajustados cuando estén disponibles
       const data = action.payload.data;
       if (data.length === 0) {
         state.stats = {
@@ -108,13 +121,26 @@ const disponibilidadSlice = createSlice({
         };
       } else {
         const totalGrupos = data.length;
-        const gruposDisponibles = data.filter(item => item.estado_disponibilidad === 'Disponible').length;
-        const gruposLlenos = data.filter(item => item.estado_disponibilidad === 'Lleno').length;
-        const gruposParciales = data.filter(item => item.estado_disponibilidad === 'Parcialmente ocupado').length;
+        
+        // Usar valores ajustados cuando estén disponibles
+        const gruposDisponibles = data.filter(item => {
+          const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+          return estado === 'Disponible';
+        }).length;
+        
+        const gruposLlenos = data.filter(item => {
+          const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+          return estado === 'Lleno';
+        }).length;
+        
+        const gruposParciales = data.filter(item => {
+          const estado = item.estado_disponibilidad_ajustado || item.estado_disponibilidad;
+          return estado === 'Parcialmente ocupado';
+        }).length;
         
         // Calcular promedio de ocupación de forma segura
         const sumaPorcentajes = data.reduce((sum, item) => {
-          const porcentaje = parseFloat(item.porcentaje_ocupacion) || 0;
+          const porcentaje = parseFloat(item.porcentaje_ocupacion_ajustado || item.porcentaje_ocupacion) || 0;
           return sum + porcentaje;
         }, 0);
         

@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState, useMemo } from "react";
+import { AlumnosModal } from "./AlumnosModal";
 
 // Local Imports
 import { Card, Table, THead, TBody, Th, Tr, Td, Badge } from "components/ui";
@@ -53,6 +54,59 @@ export function DisponibilidadTable({ data, loading /**,viewType = "mensual"**/ 
     { id: 'tipo', desc: false },
     { id: 'codigo', desc: false }
   ]);
+
+  // Estado para el modal de alumnos
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    grupoCodigo: '',
+    horario: '',
+    alumnos: [],
+    alumnosMesAnterior: []
+  });
+
+  const openAlumnosModal = (row) => {
+    // Parsear alumnos actuales
+    let alumnosActuales = [];
+    try {
+      alumnosActuales = row.original.alumnos_actuales ? row.original.alumnos_actuales : [];
+      if (!Array.isArray(alumnosActuales)) {
+        alumnosActuales = [];
+      }
+    } catch (e) {
+      console.error("Error parsing alumnos actuales:", e);
+      alumnosActuales = [];
+    }
+
+    // Parsear alumnos del mes anterior
+    let alumnosMesAnterior = [];
+    try {
+      alumnosMesAnterior = row.original.alumnos_mes_anterior ? row.original.alumnos_mes_anterior : [];
+      if (!Array.isArray(alumnosMesAnterior)) {
+        alumnosMesAnterior = [];
+      }
+    } catch (e) {
+      console.error("Error parsing alumnos mes anterior:", e);
+      alumnosMesAnterior = [];
+    }
+
+    setModalState({
+      isOpen: true,
+      grupoCodigo: row.original.codigo,
+      horario: `${row.original.dia} ${row.original.hora_inicio} - ${row.original.hora_fin}`,
+      alumnos: alumnosActuales.filter(a => a !== null),
+      alumnosMesAnterior: alumnosMesAnterior.filter(a => a !== null)
+    });
+  };
+
+  const closeAlumnosModal = () => {
+    setModalState({
+      isOpen: false,
+      grupoCodigo: '',
+      horario: '',
+      alumnos: [],
+      alumnosMesAnterior: []
+    });
+  };
 
   // Definir columnas
   const columns = useMemo(() => [
@@ -135,41 +189,67 @@ export function DisponibilidadTable({ data, loading /**,viewType = "mensual"**/ 
     {
       accessorKey: 'cupos',
       header: 'Cupos',
-      cell: ({ row }) => (
-        <div className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-1">
-            <UserGroupIcon className="w-4 h-4 text-gray-500" />
-            <span className="font-semibold">
-              {row.original.cupos_ocupados} / {row.original.cupo_maximo}
-            </span>
+      cell: ({ row }) => {
+        const usarAjustados = row.original.cupos_ocupados_ajustados !== undefined;
+        const ocupados = usarAjustados ? row.original.cupos_ocupados_ajustados : row.original.cupos_ocupados;
+        // const disponibles = usarAjustados ? row.original.cupos_disponibles_ajustados : row.original.cupos_disponibles;
+        const reservaActiva = row.original.reserva_activa;
+        const alumnosMesAnterior = row.original.alumnos_mes_anterior_count || 0;
+        
+        return (
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-1">
+              <UserGroupIcon className="w-4 h-4 text-gray-500" />
+              <button
+                onClick={() => openAlumnosModal(row)}
+                className="font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                title="Ver detalles de alumnos"
+              >
+                {ocupados} / {row.original.cupo_maximo}
+              </button>
+            </div>
+            {alumnosMesAnterior > 0 && (
+              <div className={`text-xs px-2 py-1 rounded-full mb-1 ${
+                reservaActiva ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {alumnosMesAnterior} reserva(s) {reservaActiva ? 'activas' : 'liberadas'}
+              </div>
+            )}
+            <div className="w-full bg-gray-200 dark:bg-dark-600 rounded-full h-2">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ 
+                  width: `${Math.min((ocupados / row.original.cupo_maximo) * 100, 100)}%` 
+                }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-dark-600 rounded-full h-2">
-            <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${Math.min((row.original.cupos_ocupados / row.original.cupo_maximo) * 100, 100)}%` 
-              }}
-            />
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       accessorKey: 'cupos_disponibles',
       header: 'Disponibles',
-      cell: ({ getValue }) => (
-        <div className="text-center">
-          <span className="text-lg font-bold text-green-600 dark:text-green-400">
-            {getValue()}
-          </span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const usarAjustados = row.original.cupos_disponibles_ajustados !== undefined;
+        const disponibles = usarAjustados ? row.original.cupos_disponibles_ajustados : row.original.cupos_disponibles;
+        
+        return (
+          <div className="text-center">
+            <span className="text-lg font-bold text-green-600 dark:text-green-400">
+              {disponibles}
+            </span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'porcentaje_ocupacion',
       header: 'Ocupación',
-      cell: ({ getValue }) => {
-        const percentage = getValue();
+      cell: ({ row }) => {
+        const usarAjustados = row.original.porcentaje_ocupacion_ajustado !== undefined;
+        const percentage = usarAjustados ? row.original.porcentaje_ocupacion_ajustado : row.original.porcentaje_ocupacion;
+        
         let colorClass = 'text-green-600 dark:text-green-400';
         
         if (percentage >= 80) {
@@ -343,6 +423,16 @@ export function DisponibilidadTable({ data, loading /**,viewType = "mensual"**/ 
           <PaginationSection table={table} />
         </div>
       )}
+
+      {/* Modal de alumnos */}
+      <AlumnosModal
+        isOpen={modalState.isOpen}
+        onClose={closeAlumnosModal}
+        grupoCodigo={modalState.grupoCodigo}
+        horario={modalState.horario}
+        alumnos={modalState.alumnos}
+        alumnosMesAnterior={modalState.alumnosMesAnterior}
+      />
     </Card>
   );
 }
