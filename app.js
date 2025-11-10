@@ -42,6 +42,8 @@ import mensualidadMovimientoRouter from './routes/mensualidadMovimientoRouter.js
 // Movimientos de asistencias
 import asistenciaMovimientosRouter from './routes/asistenciaMovimientosRouter.js'
 
+// DISPONIBILIDAD DE CUPOS IA
+import disponibilidadCuposIA from "./routes/disponibilidadCuposIARouter.js";
 const app = express();
 
 // middlewares basicos
@@ -84,7 +86,7 @@ app.use('/usuarios', usuarios);
 app.use("/api/acceso-alumnos", accesoAlumnosRouter);
 app.use('/mensualidad-movimiento', mensualidadMovimientoRouter);
 app.use('/asistencia-movimientos', asistenciaMovimientosRouter);
-
+app.use('/availability-ia', disponibilidadCuposIA);
 // Errores
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Not found' });

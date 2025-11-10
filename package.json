@@ -19,6 +19,7 @@
     "https": "^1.0.0",
     "jsonwebtoken": "9.0.2",
     "luxon": "3.6.1",
+    "ml-cart": "^2.1.1",
     "morgan": "1.10.0",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10"

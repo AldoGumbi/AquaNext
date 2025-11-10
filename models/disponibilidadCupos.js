@@ -336,6 +336,50 @@ class disponibilidadCuposModel {
             throw error;
         }
     }
+
+
+    // Obtener lista completa de grupos y sus horarios (para IA o diagnóstico)
+    static async getListaGruposYHorarios() {
+        try {
+            const [rows] = await db.query(`
+                SELECT 
+                    g.id AS grupo_id,
+                    g.codigo AS codigo_grupo,
+                    g.nombre AS nombre_grupo,
+                    g.tipo AS tipo_clase,
+                    g.nivel AS nivel,
+                    h.id AS horario_id,
+                    h.dia,
+                    TIME_FORMAT(h.hora_inicio, '%H:%i') AS hora_inicio,
+                    TIME_FORMAT(h.hora_fin, '%H:%i') AS hora_fin,
+                    COALESCE(h.cupo_maximo, 16) AS cupo_maximo,
+                    CONCAT(p.nombre, ' ', p.apellido) AS profesor_asignado
+                FROM grupos g
+                INNER JOIN horarios h ON g.id = h.grupo_id
+                LEFT JOIN profesores p ON h.profesor_id = p.id
+                WHERE g.deleted = 0
+                  AND g.activo = 1
+                  AND h.deleted = 0
+                  AND h.activo = 1
+                ORDER BY g.tipo, g.nivel, g.codigo, 
+                    CASE h.dia
+                        WHEN 'lunes' THEN 1
+                        WHEN 'martes' THEN 2
+                        WHEN 'miercoles' THEN 3
+                        WHEN 'jueves' THEN 4
+                        WHEN 'viernes' THEN 5
+                        WHEN 'sabado' THEN 6
+                        WHEN 'domingo' THEN 7
+                    END,
+                    h.hora_inicio
+            `);
+
+            return rows;
+        } catch (error) {
+            console.error("Error en getListaGruposYHorarios:", error);
+            throw error;
+        }
+    }
 }
 
 export default disponibilidadCuposModel;
